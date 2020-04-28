@@ -1,15 +1,5 @@
 # Gizmo
 
-[![Version](https://img.shields.io/github/package-json/v/GizmoJay/Gizmo)](https://github.com/GizmoJay/Gizmo)
-[![Open Issues](https://img.shields.io/github/issues/GizmoJay/Gizmo)](https://github.com/GizmoJay/Gizmo/issues)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fgizmo.com%2F)](https://gizmo.com/)
-[![Fork This Repo](https://img.shields.io/github/forks/GizmoJay/Gizmo)](https://github.com/GizmoJay/Gizmo/fork)
-[![Star This Repo](https://img.shields.io/github/stars/GizmoJay/Gizmo)](https://github.com/GizmoJay/Gizmo)
-[![Watch This Repo](https://img.shields.io/github/watchers/GizmoJay/Gizmo)](https://github.com/GizmoJay/Gizmo)
-[![MPL-2.0 License](https://img.shields.io/github/license/GizmoJay/Gizmo)](https://github.com/GizmoJay/Gizmo/blob/master/LICENSE)
-[![Discord](https://img.shields.io/discord/583033499741847574)](https://discord.gg/MmbGAaw)
-[![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/gizmo?style=social)](https://www.reddit.com/r/gizmo/)
-
 Gizmo is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive. This project is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest (BQ). This game uses original BQ assets as well as custom-made ones. The entire code-base has been written from scratch, using more modern approaches.
 
 ![Demo](https://i.imgur.com/slnzrZB.png)
