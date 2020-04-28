@@ -1,0 +1,112 @@
+/* global _ */
+
+define(["../renderer/bubbles/blob"], (Blob) => {
+  return class {
+    constructor(game) {
+      this.game = game;
+      this.bubbles = {};
+
+      this.container = $("#bubbles");
+    }
+
+    /**
+     * This creates the blob that will be used to display text.
+     *
+     * `id` - An identifier for the bubble we are creating.
+     * `message` - A string of the text we are displaying.
+     * `duration` - How long the bubble will display for.
+     * `isObject` - (optional) Boolean value used to determine object.
+     * `info` - (optional) Used in conjunction with `isObject` to specify object data.
+     */
+
+    create(id, message, duration, isObject, info) {
+      if (this.bubbles[id]) {
+        this.bubbles[id].reset(this.game.time);
+        $("#" + id + " p").html(message);
+      } else {
+        const element = $(
+          "<div id='" +
+            id +
+            "' class='bubble'><p>" +
+            message +
+            "</p><div class='bubbleTip'></div></div>"
+        );
+
+        $(element).appendTo(this.container);
+
+        this.bubbles[id] = new Blob(id, element, duration, isObject, info);
+
+        return this.bubbles[id];
+      }
+    }
+
+    setTo(info) {
+      const bubble = this.get(info.id);
+
+      if (!bubble || !info) {
+        return;
+      }
+
+      const scale = this.game.renderer.getScale();
+      const tileSize = 16 * scale;
+      const x = (info.x - this.game.getCamera().x) * scale;
+      const width = parseInt(bubble.element.css("width")) + 24;
+      const offset = width / 2 - tileSize / 2;
+      const offsetY = -20;
+
+      const y = (info.y - this.game.getCamera().y) * scale - tileSize * 2 - offsetY;
+
+      bubble.element.css(
+        "left",
+        x - offset + (2 + this.game.renderer.scale) + "px"
+      );
+      bubble.element.css("top", y + "px");
+    }
+
+    update(time) {
+      _.each(this.bubbles, (bubble) => {
+        const entity = this.game.entities.get(bubble.id);
+
+        if (entity) {
+          this.setTo(entity);
+        }
+
+        if (bubble.type === "object") {
+          this.setTo(bubble.info);
+        }
+
+        if (bubble.isOver(time)) {
+          bubble.destroy();
+          delete this.bubbles[bubble.id];
+        }
+      });
+    }
+
+    get(id) {
+      if (id in this.bubbles) {
+        return this.bubbles[id];
+      }
+
+      return null;
+    }
+
+    clean() {
+      _.each(this.bubbles, (bubble) => {
+        bubble.destroy();
+      });
+
+      this.bubbles = {};
+    }
+
+    destroy(id) {
+      const bubble = this.get(id);
+
+      if (!bubble) {
+        return;
+      }
+
+      bubble.destroy();
+      delete this.bubbles[id];
+    }
+  };
+});

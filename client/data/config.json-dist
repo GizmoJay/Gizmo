@@ -1,0 +1,8 @@
+{
+  "ip": "127.0.0.1",
+  "port": 8080,
+  "version": 1,
+  "ssl": false,
+  "debug": false,
+  "worldSwitch": false
+}
