@@ -14,13 +14,13 @@
     "build": "webpack --config webpack.config.js",
     "lint": "eslint .",
     "format": "prettier \"**\" --write",
+    "setup": "mv ./client/data/config.json-dist ./client/data/config.json && mv ./server/config.js-dist ./server/config.js",
     "map": "cd tools/map && node exportmap data/map-refactor.json",
-    "setup": "mv ./client/data/config.json-dist ./client/data/config.json && mv ./server/config.js-dist ./server/config.js"
+    "bot": "node ./tools/bot/bot"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",
     "connect": "^3.7.0",
-    "discord.js": "^12.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.7",
     "request": "^2.88.2",

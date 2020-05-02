@@ -9,7 +9,7 @@ module.exports = {
     es6: true,
     node: true
   },
-  extends: ["standard"],
+  extends: ["eslint:recommended", "standard"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly"
@@ -83,5 +83,12 @@ module.exports = {
       }
     ]
   },
-  ignorePatterns: ["dist/", "client-dist", "lib/", "*.min.*"]
+  ignorePatterns: [
+    "node_modules/",
+    "dist/",
+    "client-dist",
+    "lib/",
+    "*.min.*",
+    "~*"
+  ]
 };
