@@ -10,17 +10,7 @@ define([
   "../entity/character/mob/mob",
   "../entity/character/npc/npc",
   "../entity/objects/projectile"
-], (
-  Grids,
-  Chest,
-  Character,
-  Player,
-  Item,
-  Sprites,
-  Mob,
-  NPC,
-  Projectile
-) => {
+], (Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) => {
   return class {
     constructor(game) {
       this.game = game;
@@ -226,7 +216,7 @@ define([
           player.setSprite(this.getSprite(info.armour.string));
           player.idle();
 
-          _.each(equipments, (equipment) => {
+          _.each(equipments, equipment => {
             player.setEquipment(
               equipment.type,
               equipment.name,
@@ -308,7 +298,7 @@ define([
     clean(ids) {
       ids = ids[0];
 
-      _.each(this.entities, (entity) => {
+      _.each(this.entities, entity => {
         if (ids) {
           if (
             ids.indexOf(parseInt(entity.id)) < 0 &&
@@ -325,7 +315,7 @@ define([
     }
 
     clearPlayers(exception) {
-      _.each(this.entities, (entity) => {
+      _.each(this.entities, entity => {
         if (entity.id !== exception.id && entity.type === "player") {
           this.removeEntity(entity);
         }
@@ -410,7 +400,7 @@ define([
     }
 
     forEachEntity(callback) {
-      _.each(this.entities, (entity) => {
+      _.each(this.entities, entity => {
         callback(entity);
       });
     }
@@ -422,7 +412,7 @@ define([
             continue;
           }
 
-          _.each(this.grids.renderingGrid[j][i], (entity) => {
+          _.each(this.grids.renderingGrid[j][i], entity => {
             callback(entity);
           });
         }

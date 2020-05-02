@@ -20,13 +20,13 @@ define(() => {
       const dropAccept = $("#dropAccept");
       const dropCancel = $("#dropCancel");
 
-      dropAccept.click((event) => {
+      dropAccept.click(event => {
         if (this.activeClass === "inventory") {
           this.interface.inventory.clickAction(event);
         }
       });
 
-      dropCancel.click((event) => {
+      dropCancel.click(event => {
         if (this.activeClass === "inventory") {
           this.interface.inventory.clickAction(event);
         }
@@ -90,7 +90,7 @@ define(() => {
     add(button, misc) {
       this.body.find("ul").prepend($("<li></li>").append(button));
 
-      button.click((event) => {
+      button.click(event => {
         if (this.activeClass === "inventory") {
           this.interface.inventory.clickAction(event);
         }

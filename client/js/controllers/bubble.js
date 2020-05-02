@@ -1,6 +1,6 @@
 /* global _ */
 
-define(["../renderer/bubbles/blob"], (Blob) => {
+define(["../renderer/bubbles/blob"], Blob => {
   return class {
     constructor(game) {
       this.game = game;
@@ -54,7 +54,8 @@ define(["../renderer/bubbles/blob"], (Blob) => {
       const offset = width / 2 - tileSize / 2;
       const offsetY = -20;
 
-      const y = (info.y - this.game.getCamera().y) * scale - tileSize * 2 - offsetY;
+      const y =
+        (info.y - this.game.getCamera().y) * scale - tileSize * 2 - offsetY;
 
       bubble.element.css(
         "left",
@@ -64,7 +65,7 @@ define(["../renderer/bubbles/blob"], (Blob) => {
     }
 
     update(time) {
-      _.each(this.bubbles, (bubble) => {
+      _.each(this.bubbles, bubble => {
         const entity = this.game.entities.get(bubble.id);
 
         if (entity) {
@@ -91,7 +92,7 @@ define(["../renderer/bubbles/blob"], (Blob) => {
     }
 
     clean() {
-      _.each(this.bubbles, (bubble) => {
+      _.each(this.bubbles, bubble => {
         bubble.destroy();
       });
 

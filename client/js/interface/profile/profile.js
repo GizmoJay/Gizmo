@@ -83,13 +83,13 @@ define([
     }
 
     update() {
-      _.each(this.pages, (page) => {
+      _.each(this.pages, page => {
         page.update();
       });
     }
 
     resize() {
-      _.each(this.pages, (page) => {
+      _.each(this.pages, page => {
         page.resize();
       });
     }

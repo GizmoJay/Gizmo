@@ -1,9 +1,6 @@
 /* global log, _ */
 
-define(["../entity/sprite", "../entity/animation"], (
-  Sprite,
-  Animation
-) => {
+define(["../entity/sprite", "../entity/animation"], (Sprite, Animation) => {
   /**
    * Class responsible for loading all the necessary sprites from the JSON.
    */
@@ -16,7 +13,7 @@ define(["../entity/sprite", "../entity/animation"], (
 
       this.sparksAnimation = null;
 
-      $.getJSON("data/sprites.json", (json) => {
+      $.getJSON("data/sprites.json", json => {
         this.load(json);
       });
 
@@ -24,7 +21,7 @@ define(["../entity/sprite", "../entity/animation"], (
     }
 
     load(spriteData) {
-      _.each(spriteData, (sprite) => {
+      _.each(spriteData, sprite => {
         this.sprites[sprite.id] = new Sprite(sprite, this.renderer.scale);
       });
 
@@ -43,7 +40,7 @@ define(["../entity/sprite", "../entity/animation"], (
     }
 
     updateSprites() {
-      _.each(this.sprites, (sprite) => {
+      _.each(this.sprites, sprite => {
         sprite.update(this.renderer.getScale());
       });
 

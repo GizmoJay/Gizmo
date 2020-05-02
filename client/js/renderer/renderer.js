@@ -112,7 +112,7 @@ define([
       this.input = null;
       this.stopRendering = true;
 
-      this.forEachContext((context) => {
+      this.forEachContext(context => {
         context.fillStyle = "#12100D";
         context.fillRect(0, 0, context.canvas.width, context.canvas.height);
       });
@@ -127,7 +127,7 @@ define([
     }
 
     removeSmoothing() {
-      this.forAllContexts((context) => {
+      this.forAllContexts(context => {
         if (!context) {
           return;
         }
@@ -155,7 +155,7 @@ define([
       this.canvasWidth = this.screenWidth * this.superScaling;
       this.canvasHeight = this.screenHeight * this.superScaling;
 
-      this.forEachCanvas((canvas) => {
+      this.forEachCanvas(canvas => {
         canvas.width = this.canvasWidth;
         canvas.height = this.canvasHeight;
       });
@@ -354,7 +354,7 @@ define([
       this.context.save();
       this.setCameraView(this.context);
 
-      this.forEachAnimatedTile((tile) => {
+      this.forEachAnimatedTile(tile => {
         if (!this.camera.isVisible(tile.x, tile.y, 3, 1)) {
           return;
         }
@@ -387,7 +387,7 @@ define([
 
         this.overlayContext.globalCompositeOperation = "lighter";
 
-        this.forEachLighting((lighting) => {
+        this.forEachLighting(lighting => {
           if (this.inRadius(lighting)) {
             this.drawLighting(lighting);
           }
@@ -403,7 +403,7 @@ define([
         return;
       }
 
-      this.game.info.forEachInfo((info) => {
+      this.game.info.forEachInfo(info => {
         this.textContext.save();
         this.setCameraView(this.textContext);
         this.textContext.globalAlpha = info.opacity;
@@ -442,7 +442,7 @@ define([
 
       this.setCameraView(this.context);
 
-      this.forEachVisibleEntity((entity) => {
+      this.forEachVisibleEntity(entity => {
         if (!entity) return;
 
         if (entity.spriteLoaded) {
@@ -931,7 +931,7 @@ define([
         return;
       }
 
-      _.each(this.game.player.path, (path) => {
+      _.each(this.game.player.path, path => {
         this.drawCellHighlight(path[0], path[1], "rgba(50, 255, 50, 0.5)");
       });
     }
@@ -1233,7 +1233,7 @@ define([
         return;
       }
 
-      this.forEachVisibleIndex((index) => {
+      this.forEachVisibleIndex(index => {
         const indexData = this.map.data[index];
 
         if (Array.isArray(indexData)) {
@@ -1247,7 +1247,7 @@ define([
     }
 
     forEachAnimatedTile(callback) {
-      _.each(this.animatedTiles, (tile) => {
+      _.each(this.animatedTiles, tile => {
         callback(tile);
       });
     }
@@ -1261,7 +1261,7 @@ define([
 
       this.camera.forEachVisiblePosition((x, y) => {
         if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x]) {
-          _.each(grids.renderingGrid[y][x], (entity) => {
+          _.each(grids.renderingGrid[y][x], entity => {
             callback(entity);
           });
         }
@@ -1277,7 +1277,7 @@ define([
     }
 
     clear() {
-      this.forEachContext((context) => {
+      this.forEachContext(context => {
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
       });
     }
@@ -1298,31 +1298,31 @@ define([
     }
 
     clearDrawing() {
-      this.forEachDrawingContext((context) => {
+      this.forEachDrawingContext(context => {
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
       });
     }
 
     save() {
-      this.forEachContext((context) => {
+      this.forEachContext(context => {
         context.save();
       });
     }
 
     saveDrawing() {
-      this.forEachDrawingContext((context) => {
+      this.forEachDrawingContext(context => {
         context.save();
       });
     }
 
     restore() {
-      this.forEachContext((context) => {
+      this.forEachContext(context => {
         context.restore();
       });
     }
 
     restoreDrawing() {
-      this.forEachDrawingContext((context) => {
+      this.forEachDrawingContext(context => {
         context.restore();
       });
     }
@@ -1385,13 +1385,13 @@ define([
      */
 
     updateView() {
-      this.forEachContext((context) => {
+      this.forEachContext(context => {
         this.setCameraView(context);
       });
     }
 
     updateDrawingView() {
-      this.forEachDrawingContext((context) => {
+      this.forEachDrawingContext(context => {
         this.setCameraView(context);
       });
     }
@@ -1462,31 +1462,31 @@ define([
      */
 
     forAllContexts(callback) {
-      _.each(this.allContexts, (context) => {
+      _.each(this.allContexts, context => {
         callback(context);
       });
     }
 
     forEachContext(callback) {
-      _.each(this.contexts, (context) => {
+      _.each(this.contexts, context => {
         callback(context);
       });
     }
 
     forEachDrawingContext(callback) {
-      _.each(this.drawingContexts, (context) => {
+      _.each(this.drawingContexts, context => {
         callback(context);
       });
     }
 
     forEachCanvas(callback) {
-      _.each(this.canvases, (canvas) => {
+      _.each(this.canvases, canvas => {
         callback(canvas);
       });
     }
 
     forEachLighting(callback) {
-      _.each(this.lightings, (lighting) => {
+      _.each(this.lightings, lighting => {
         callback(lighting);
       });
     }
@@ -1583,7 +1583,7 @@ define([
     }
 
     removeNonRelativeLights() {
-      _.each(this.lightings, (lighting) => {
+      _.each(this.lightings, lighting => {
         if (!lighting.light.relative) {
           this.lightings.splice(i, 1);
           this.darkMask.lights.splice(i, 1);

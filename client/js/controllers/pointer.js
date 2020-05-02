@@ -1,4 +1,4 @@
-define(["../renderer/pointers/pointer"], (Pointer) => {
+define(["../renderer/pointers/pointer"], Pointer => {
   return class {
     constructor(game) {
       this.game = game;
@@ -34,7 +34,7 @@ define(["../renderer/pointers/pointer"], (Pointer) => {
     }
 
     resize() {
-      _.each(this.pointers, (pointer) => {
+      _.each(this.pointers, pointer => {
         switch (pointer.type) {
           case Modules.Pointers.Relative:
             const scale = this.getScale();
@@ -63,7 +63,7 @@ define(["../renderer/pointers/pointer"], (Pointer) => {
     }
 
     clean() {
-      _.each(this.pointers, (pointer) => {
+      _.each(this.pointers, pointer => {
         pointer.destroy();
       });
 
@@ -170,7 +170,7 @@ define(["../renderer/pointers/pointer"], (Pointer) => {
     }
 
     update() {
-      _.each(this.pointers, (pointer) => {
+      _.each(this.pointers, pointer => {
         switch (pointer.type) {
           case Modules.Pointers.Entity:
             const entity = this.game.entities.get(pointer.id);

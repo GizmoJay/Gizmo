@@ -1,6 +1,6 @@
 /* global log, Detect */
 
-define(["../page"], (Page) => {
+define(["../page"], Page => {
   return class {
     // TODO - Hide crpyto mining option on mobiles and completely disable it.
 

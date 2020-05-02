@@ -52,7 +52,7 @@ define(() => {
         const worker = new Worker("./js/map/mapworker.js");
         worker.postMessage(1);
 
-        worker.onmessage = (event) => {
+        worker.onmessage = event => {
           const map = event.data;
 
           this.parseMap(map);
@@ -66,7 +66,7 @@ define(() => {
 
         $.get(
           "data/maps/map.json",
-          (data) => {
+          data => {
             this.parseMap(data);
             this.loadCollisions();
             this.mapLoaded = true;
@@ -122,8 +122,8 @@ define(() => {
         return;
       }
 
-      _.each(this.rawTilesets, (rawTileset) => {
-        this.loadTileset(rawTileset, (tileset) => {
+      _.each(this.rawTilesets, rawTileset => {
+        this.loadTileset(rawTileset, tileset => {
           this.tilesets[tileset.index] = tileset;
 
           if (this.tilesets.length === this.rawTilesets.length) {
@@ -323,12 +323,12 @@ define(() => {
         }
       }
 
-      _.each(this.collisions, (index) => {
+      _.each(this.collisions, index => {
         const position = this.indexToGridPosition(index + 1);
         this.grid[position.y][position.x] = 1;
       });
 
-      _.each(this.blocking, (index) => {
+      _.each(this.blocking, index => {
         const position = this.indexToGridPosition(index + 1);
 
         if (this.grid[position.y]) {
@@ -338,7 +338,7 @@ define(() => {
     }
 
     updateCollisions() {
-      _.each(this.collisions, (index) => {
+      _.each(this.collisions, index => {
         const position = this.indexToGridPosition(index + 1);
 
         if (position.x > this.width - 1) {

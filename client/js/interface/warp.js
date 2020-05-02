@@ -27,7 +27,7 @@ define(() => {
         const warp = this.mapFrame.find("#warp" + i);
 
         if (warp) {
-          warp.click((event) => {
+          warp.click(event => {
             this.hide();
 
             this.game.socket.send(Packets.Warp, [

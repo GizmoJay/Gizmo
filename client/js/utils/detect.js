@@ -40,7 +40,7 @@ Detect.isFirefoxAndroid = () => {
   );
 };
 
-Detect.userAgentContains = (string) => {
+Detect.userAgentContains = string => {
   return navigator.userAgent.indexOf(string) !== -1;
 };
 

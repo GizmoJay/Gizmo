@@ -64,7 +64,7 @@ define(() => {
         return this.game.findPath(this.player, x, y, ignores);
       });
 
-      this.player.onStartPathing((path) => {
+      this.player.onStartPathing(path => {
         const i = path.length - 1;
 
         this.player.moving = true;

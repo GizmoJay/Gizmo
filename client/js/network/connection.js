@@ -1,6 +1,6 @@
 /* global log, _ */
 
-define(["./impl/teamwar"], (TeamWar) => {
+define(["./impl/teamwar"], TeamWar => {
   return class {
     constructor(game) {
       this.game = game;
@@ -26,7 +26,7 @@ define(["./impl/teamwar"], (TeamWar) => {
     }
 
     load() {
-      this.messages.onHandshake((data) => {
+      this.messages.onHandshake(data => {
         this.game.id = data.id;
         this.game.development = data.development;
 
@@ -84,7 +84,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         }
       });
 
-      this.messages.onWelcome((data) => {
+      this.messages.onWelcome(data => {
         this.interface.loadHeader();
 
         this.game.player.load(data);
@@ -96,7 +96,7 @@ define(["./impl/teamwar"], (TeamWar) => {
       this.messages.onEquipment((opcode, info) => {
         switch (opcode) {
           case Packets.EquipmentOpcode.Batch:
-            _.each(info, (data) => {
+            _.each(info, data => {
               this.game.player.setEquipment(
                 data.type,
                 data.name,
@@ -144,18 +144,16 @@ define(["./impl/teamwar"], (TeamWar) => {
         }
       });
 
-      this.messages.onSpawn((data) => {
+      this.messages.onSpawn(data => {
         this.entities.create(data.shift());
       });
 
-      this.messages.onEntityList((data) => {
+      this.messages.onEntityList(data => {
         const ids = _.pluck(this.entities.getAll(), "id");
         const known = _.intersection(ids, data);
         const newIds = _.difference(data, known);
 
-        this.entities.decrepit = _.reject(this.entities.getAll(), (
-          entity
-        ) => {
+        this.entities.decrepit = _.reject(this.entities.getAll(), entity => {
           return (
             _.include(known, entity.id) || entity.id === this.game.player.id
           );
@@ -166,7 +164,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         this.socket.send(Packets.Who, newIds);
       });
 
-      this.messages.onSync((data) => {
+      this.messages.onSync(data => {
         const entity = this.entities.get(data.id);
 
         if (!entity || entity.type !== "player") {
@@ -286,7 +284,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         }
       });
 
-      this.messages.onTeleport((info) => {
+      this.messages.onTeleport(info => {
         const entity = this.entities.get(info.id);
         const isPlayer = info.id === this.game.player.id;
 
@@ -360,7 +358,7 @@ define(["./impl/teamwar"], (TeamWar) => {
                     }); */
       });
 
-      this.messages.onDespawn((id) => {
+      this.messages.onDespawn(id => {
         const entity = this.entities.get(id);
 
         if (!entity) {
@@ -545,11 +543,11 @@ define(["./impl/teamwar"], (TeamWar) => {
         }
       });
 
-      this.messages.onPopulation((population) => {
+      this.messages.onPopulation(population => {
         this.population = population;
       });
 
-      this.messages.onPoints((data) => {
+      this.messages.onPoints(data => {
         const entity = this.entities.get(data.id);
 
         if (!entity) {
@@ -577,7 +575,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         this.socket.send(Packets.Network, [Packets.NetworkOpcode.Pong]);
       });
 
-      this.messages.onChat((info) => {
+      this.messages.onChat(info => {
         if (this.game.isDebug()) {
           log.info(info);
         }
@@ -602,7 +600,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         this.input.chatHandler.add(info.name, info.text, info.colour);
       });
 
-      this.messages.onCommand((info) => {
+      this.messages.onCommand(info => {
         /**
          * This is for random miscellaneous commands that require
          * a specific action done by the client as opposed to
@@ -736,7 +734,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         }
       });
 
-      this.messages.onBlink((instance) => {
+      this.messages.onBlink(instance => {
         const item = this.entities.get(instance);
 
         if (!item) {
@@ -746,7 +744,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         item.blink(150);
       });
 
-      this.messages.onHeal((info) => {
+      this.messages.onHeal(info => {
         const entity = this.entities.get(info.id);
 
         if (!entity) {
@@ -784,7 +782,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         entity.triggerHealthBar();
       });
 
-      this.messages.onExperience((info) => {
+      this.messages.onExperience(info => {
         const entity = this.entities.get(info.id);
 
         if (!entity || entity.type !== "player") {
@@ -824,7 +822,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         this.interface.profile.update();
       });
 
-      this.messages.onDeath((id) => {
+      this.messages.onDeath(id => {
         const entity = this.entities.get(id);
 
         if (!entity || id !== this.game.player.id) {
@@ -842,7 +840,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         this.app.body.addClass("death");
       });
 
-      this.messages.onAudio((newSong) => {
+      this.messages.onAudio(newSong => {
         this.audio.newSong = newSong;
 
         if (!this.audio.newSong || Detect.isMobile()) {
@@ -1176,7 +1174,7 @@ define(["./impl/teamwar"], (TeamWar) => {
         }
       });
 
-      this.messages.onBubble((info) => {
+      this.messages.onBubble(info => {
         if (!info.text) {
           this.bubble.destroy(info.id);
           return;

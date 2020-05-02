@@ -25,7 +25,7 @@ define(() => {
     }
 
     forEachQueue(callback) {
-      _.each(this.queue, (object) => {
+      _.each(this.queue, object => {
         callback(object);
       });
     }

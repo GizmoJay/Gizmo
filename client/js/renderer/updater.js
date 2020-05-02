@@ -1,6 +1,6 @@
 /* global log, Modules */
 
-define(["../entity/character/character"], (Character) => {
+define(["../entity/character/character"], Character => {
   return class {
     constructor(game) {
       this.game = game;
@@ -25,7 +25,7 @@ define(["../entity/character/character"], (Character) => {
     }
 
     updateEntities() {
-      this.game.entities.forEachEntity((entity) => {
+      this.game.entities.forEachEntity(entity => {
         if (!entity) return;
 
         if (entity.spriteLoaded) {
@@ -51,7 +51,7 @@ define(["../entity/character/character"], (Character) => {
 
                   entity.movement.start(
                     this.game.time,
-                    (x) => {
+                    x => {
                       entity.x = x;
                       entity.moved();
                     },
@@ -73,7 +73,7 @@ define(["../entity/character/character"], (Character) => {
 
                   entity.movement.start(
                     this.game.time,
-                    (y) => {
+                    y => {
                       entity.y = y;
                       entity.moved();
                     },

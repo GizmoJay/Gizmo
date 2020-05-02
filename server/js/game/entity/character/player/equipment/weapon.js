@@ -1,56 +1,56 @@
 /* global module */
 
 const Equipment = require("./equipment");
-    const Items = require("../../../../../util/items");
-    const Modules = require("../../../../../util/modules");
+const Items = require("../../../../../util/items");
+const Modules = require("../../../../../util/modules");
 
 class Weapon extends Equipment {
-    constructor (name, id, count, ability, abilityLevel) {
-        super(name, id, count, ability, abilityLevel);
+  constructor(name, id, count, ability, abilityLevel) {
+    super(name, id, count, ability, abilityLevel);
 
-        const self = this;
+    const self = this;
 
-        self.level = Items.getWeaponLevel(name);
-        self.ranged = Items.isArcherWeapon(name);
+    self.level = Items.getWeaponLevel(name);
+    self.ranged = Items.isArcherWeapon(name);
 
-        log.debug(`weapon level: ${self.level}`);
+    log.debug(`weapon level: ${self.level}`);
 
-        self.breakable = false;
-    }
+    self.breakable = false;
+  }
 
-    getBaseAmplifier () {
-        const base = super.getBaseAmplifier();
+  getBaseAmplifier() {
+    const base = super.getBaseAmplifier();
 
-        return base + (0.05 * this.abilityLevel);
-    }
+    return base + 0.05 * this.abilityLevel;
+  }
 
-    hasCritical () {
-        return this.ability === 1;
-    }
+  hasCritical() {
+    return this.ability === 1;
+  }
 
-    hasExplosive () {
-        return this.ability === 4;
-    }
+  hasExplosive() {
+    return this.ability === 4;
+  }
 
-    hasStun () {
-        return this.ability === 5;
-    }
+  hasStun() {
+    return this.ability === 5;
+  }
 
-    isRanged () {
-        return this.ranged;
-    }
+  isRanged() {
+    return this.ranged;
+  }
 
-    setLevel (level) {
-        this.level = level;
-    }
+  setLevel(level) {
+    this.level = level;
+  }
 
-    getLevel () {
-        return this.level;
-    }
+  getLevel() {
+    return this.level;
+  }
 
-    getType () {
-        return Modules.Equipment.Weapon;
-    }
+  getType() {
+    return Modules.Equipment.Weapon;
+  }
 }
 
 module.exports = Weapon;

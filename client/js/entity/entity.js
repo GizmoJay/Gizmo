@@ -1,6 +1,6 @@
 /* global Modules, log, _ */
 
-define(["./entityhandler"], (EntityHandler) => {
+define(["./entityhandler"], EntityHandler => {
   return class {
     constructor(id, kind) {
       this.id = id;

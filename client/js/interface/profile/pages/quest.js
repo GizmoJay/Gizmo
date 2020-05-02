@@ -1,4 +1,4 @@
-define(["../page"], (Page) => {
+define(["../page"], Page => {
   return class Quest extends Page {
     constructor() {
       super("#questPage");
@@ -22,7 +22,7 @@ define(["../page"], (Page) => {
     loadAchievements(achievements) {
       this.achievementsLength = achievements.length;
 
-      _.each(achievements, (achievement) => {
+      _.each(achievements, achievement => {
         const item = this.getItem(false, achievement.id);
         const name = this.getName(false, achievement.id);
 
@@ -66,7 +66,7 @@ define(["../page"], (Page) => {
     loadQuests(quests) {
       this.questsLength = quests.length;
 
-      _.each(quests, (quest) => {
+      _.each(quests, quest => {
         const item = this.getItem(true, quest.id);
         const name = this.getName(true, quest.id);
 

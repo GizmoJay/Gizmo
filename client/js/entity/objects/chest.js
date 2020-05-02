@@ -1,4 +1,4 @@
-define(["../entity"], (Entity) => {
+define(["../entity"], Entity => {
   return class Chest extends Entity {
     constructor(id, kind) {
       super(id, kind);

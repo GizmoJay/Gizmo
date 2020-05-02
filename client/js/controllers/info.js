@@ -116,17 +116,17 @@ define([
     addInfo(info) {
       this.infos[info.id] = info;
 
-      info.onDestroy((id) => {
+      info.onDestroy(id => {
         this.destroyQueue.add(id);
       });
     }
 
     update(time) {
-      this.forEachInfo((info) => {
+      this.forEachInfo(info => {
         info.update(time);
       });
 
-      this.destroyQueue.forEachQueue((id) => {
+      this.destroyQueue.forEachQueue(id => {
         delete this.infos[id];
       });
 
@@ -142,7 +142,7 @@ define([
     }
 
     forEachInfo(callback) {
-      _.each(this.infos, (info) => {
+      _.each(this.infos, info => {
         callback(info);
       });
     }

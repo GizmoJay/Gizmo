@@ -1,81 +1,101 @@
 const fs = require("fs");
 
 class Log {
-    /**
-     * Simple logging file that serves to be used globally
-     * and to neatly display logs, errors, warnings, and notices.
-     * Can be adapted and expanded, without using megabytes of npm repos.
-     **/
+  /**
+   * Simple logging file that serves to be used globally
+   * and to neatly display logs, errors, warnings, and notices.
+   * Can be adapted and expanded, without using megabytes of npm repos.
+   **/
 
-    constructor () {
-        const self = this;
+  constructor() {
+    const self = this;
 
-		// Stream can be used to keep a log of what happened.
-        self.logLevel = config.debugLevel || "all";
-		self.stream = config.fsDebugging ? fs.createWriteStream("runtime.log") : null; // Write to a different stream
+    // Stream can be used to keep a log of what happened.
+    self.logLevel = config.debugLevel || "all";
+    self.stream = config.fsDebugging
+      ? fs.createWriteStream("runtime.log")
+      : null; // Write to a different stream
 
-		self.debugging = config.debug;
+    self.debugging = config.debug;
+  }
+
+  info(message) {
+    const self = this;
+
+    if (self.isLoggable("info")) {
+      return;
     }
 
-    info (message) {
-        const self = this;
+    self.send(null, `[${new Date()}] INFO ${message}`);
+  }
 
-        if (self.isLoggable("info")) { return; }
+  debug(message) {
+    const self = this;
 
-        self.send(null, `[${new Date()}] INFO ${message}`);
+    if (!self.debugging) {
+      return;
     }
 
-	debug (message) {
-		const self = this;
+    self.send("\x1b[36m%s\x1b[0m", `[${new Date()}] DEBUG ${message}`);
+  }
 
-		if (!self.debugging) { return; }
+  warning(message) {
+    const self = this;
 
-		self.send("\x1b[36m%s\x1b[0m", `[${new Date()}] DEBUG ${message}`);
-	}
-
-    warning (message) {
-        const self = this;
-
-        if (self.isLoggable("warning")) { return; }
-
-        self.send("\x1b[33m%s\x1b[0m", `[${new Date()}] WARNING ${message}`);
+    if (self.isLoggable("warning")) {
+      return;
     }
 
-    error (message) {
-        const self = this;
+    self.send("\x1b[33m%s\x1b[0m", `[${new Date()}] WARNING ${message}`);
+  }
 
-        if (self.isLoggable("error")) { return; }
+  error(message) {
+    const self = this;
 
-        self.send("\x1b[31m%s\x1b[0m", `[${new Date()}] ERROR ${message}`);
+    if (self.isLoggable("error")) {
+      return;
     }
 
-    notice (message) {
-        const self = this;
+    self.send("\x1b[31m%s\x1b[0m", `[${new Date()}] ERROR ${message}`);
+  }
 
-        if (self.isLoggable("notice")) { return; }
+  notice(message) {
+    const self = this;
 
-        self.send("\x1b[32m%s\x1b[0m", `[${new Date()}] NOTICE ${message}`);
+    if (self.isLoggable("notice")) {
+      return;
     }
 
-	trace (message) {
-		const self = this;
+    self.send("\x1b[32m%s\x1b[0m", `[${new Date()}] NOTICE ${message}`);
+  }
 
-		self.send("\x1b[35m%s\x1b[0m", `[${new Date()}] TRACE ${message}`, true);
-	}
+  trace(message) {
+    const self = this;
 
-    send (colour, message, trace) {
-    	const self = this;
+    self.send("\x1b[35m%s\x1b[0m", `[${new Date()}] TRACE ${message}`, true);
+  }
 
-		if (self.stream) { self.stream.write(message + "\n"); }
+  send(colour, message, trace) {
+    const self = this;
 
-		if (!colour) { console.log(message); } else if (trace) { console.trace(colour, message); } else { console.log(colour, message); }
+    if (self.stream) {
+      self.stream.write(message + "\n");
     }
 
-	isLoggable (type) {
-		return this.logLevel !== "all" && this.logLevel !== type;
-	}
+    if (!colour) {
+      console.log(message);
+    } else if (trace) {
+      console.trace(colour, message);
+    } else {
+      console.log(colour, message);
+    }
+  }
 
-    /**
+  isLoggable(type) {
+    return this.logLevel !== "all" && this.logLevel !== type;
+  }
+
+  /**
      * Reset = "\x1b[0m"
      * Bright = "\x1b[1m"
      * Dim = "\x1b[2m"

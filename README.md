@@ -1,59 +1,128 @@
 # Gizmo
 
-Gizmo is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive. This project is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest (BQ). This game uses original BQ assets as well as custom-made ones. The entire code-base has been written from scratch, using more modern approaches.
+Gizmo is a game-engine created to aid those interested in entering the game
+development realm. The codebase is simple, clean, and intuitive. This project is
+intended to be used as a learning tool. The original idea is based on Little
+Workshop's demo game &ndash; BrowserQuest (BQ). This game uses original BQ
+assets as well as custom-made ones. The entire code-base has been written from
+scratch, using more modern approaches.
 
-![Demo](https://i.imgur.com/slnzrZB.png)
-![Demo1](https://i.imgur.com/jS5d3oq.png)
-![Demo2](https://i.imgur.com/cZTFqnd.png)
+## Table of Contents
+
+- [Gizmo](#gizmo)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+    - [Regions](#regions)
+    - [Tilemap](#tilemap)
+  - [Get Started](#get-started)
+    - [Prerequisites](#prerequisites)
+      - [NOTE: MongoDB](#note-mongodb)
+    - [Installing and Running](#installing-and-running)
+  - [Deployment](#deployment)
+  - [Map Parsing](#map-parsing)
+  - [TODO](#todo)
+    - [Gameplay](#gameplay)
+    - [Codebase Development](#codebase-development)
+    - [Miscellaneous](#miscellaneous)
+  - [License](#license)
 
 ## Features
 
-BQ was intended as an experiment to showcase HTML5 capabilities, since then, technology has only served to advance. Gizmo contains a lot of ideas and features that builds on top of its predecesor, a couple are:
+BQ was intended as an experiment to showcase HTML5 capabilities, since then,
+technology has only served to advance. Gizmo contains a lot of ideas and
+features that build on top of its predecessor, a couple is:
 
-- Multiplayer using Socket.IO
-- Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles)
+- Multiplayer using [Socket.IO](https://socket.io)
+
+- Enhanced rendering engine (includes dynamic lighting, overlays, animated
+  tiles)
+
 - Region system (client receives only necessary data and saves it)
+
 - Questing and achievements system.
-- Plugin-based combat system (for bosses/special enemies).
-- Supports RESTful API.
-- Discord server integration.
-- Cross-server private messaging and interactions.
+
+- Plugin-based combat system (for bosses/special enemies)
+
 - And much more
 
 ### Regions
 
-The region system sends data to the client according to the map data of the server. The collisions are checked both server-side and client-side to avoid cheating. The region system makes use of dynamic tiles, which are unlocked according to a player's progress. Furthermore, there is integrated support for instancing, where we can use a section of the map (or clone it) and reuse it for certain groups of players. The instancing is perfect for activities such as minigames, where we will want to run multiple instances in parallel.
+The region system sends data to the client according to the map data of the
+server. The collisions are checked both server-side and client-side to avoid
+cheating. The region system makes use of dynamic tiles, which are unlocked
+according to a player's progress. Furthermore, there is integrated support for
+instance, where we can use a section of the map (or clone it) and reuse it for
+certain groups of players. The instancing is perfect for activities such as
+minigames, where we will want to run multiple instances in parallel.
 
 ### Tilemap
 
-Gizmo is built with modularity in mind, as such, the client supports multiple tileset parsing. The tilemap can easily be constructed using [Tiled Map Editor](https://www.mapeditor.org/). Using our map parsing tool located in `tools/map/exportmap.js` you can easily export your creation to both the client and the server.
+Gizmo is built with modularity in mind, as such, the client supports multiple
+tileset parsing. The tilemap can easily be constructed using
+[Tiled Map Editor](https://www.mapeditor.org/). Using our map parsing tool
+located in [`tools/map/exportmap.js`](tools/map/exportmap.js) you can easily
+export your creation to both the client and the server.
 
-### Gizmo Hub
+## Get Started
 
-There is also support for a hub server. This can help connect servers across one another, allowing players to interact with their friends across them in a variety of ways (private messaging and guilds). Furthermore, the hub serves as a gateway for determining what server to place players in. If a server is full, it simply returns another server that has room for the player.
+### Prerequisites
 
-## Installing and Running
+You must first [install Node.js](https://nodejs.org/en/download/) to run the
+server, and [install MongoDB](https://www.mongodb.com/download-center/community)
+database to store user data.
 
-Before starting Gizmo, there is some configuration that must be done. In `server/` directory, rename `config.js-dist` to `config.js`. Modify the file as to fit your needs. Similar procedure for the `client/data` directory, simply rename `config.json-dist` to `config.json`. Make sure the settings in the client match those in the server.
+#### NOTE: MongoDB
 
-MongoDB is a requirement for Gizmo to run with all the features enabled, but you can still run your own limited version if you do not want to install MongoDB. To do this, set `offlineMode = true` in the server configuration.
+> MongoDB is a requirement for Gizmo to run with all the features enabled, but
+> you can still run your own limited version if you do not want to install
+> MongoDB. To do this, set `Config.offlineMode = true` in the server
+> configuration. _If you do choose to install MongoDB, a user is not necessary,
+> but you can enable authentication with the `Config.mongoAuth` variable in the
+> [server configuration](server/config.js)._
 
-If you do choose to install MongoDB, a user is not necessary, but you can enable authentication with the `mongoAuth` variable in the server configuration.
+After installing Node.js, install all packages by running
 
 ```console
 npm install
+```
+
+### Installing and Running
+
+Before starting Gizmo, there is some pre-configuration that must be done. Run
+
+```console
+npm run setup
+```
+
+this renames the client configurations([`config.js-dist`](config.js-dist) to
+[`config.js`](config.js)), and the server
+configurations([`config.js-dist`](config.js-dist) to
+[`config.json`](config.js-dist)). Make sure the settings in the client match
+those in the server. Modify the file accordingly to fit your needs.
+
+```console
+npm install
+npm run build
 npm start
 ```
 
+## Deployment
+
+You want to run this on your network or server? Well first, set the `host`name
+and `port` of the server in the [server configuration](server/config.js) and
+[client configuration](client/data/config.js) to match.
+
 ## Map Parsing
 
-Once you finish modifying your map in `tools/maps/data` you can parse the map data by executing `exportmap.js` in `tools/maps` directory. Example command:
+Once you finish modifying your map in [`tools/map/data`](tools/map/data) you can
+parse the map data by executing [`exportmap.js`](exportmap.js) in
+[`tools/map`](tools/map) directory. Example command:
 
 ```console
-./exportmap.js ./data/map.json
+npx node ./exportmap.js ./data/map.json
 ```
 
-In order to build the current game map you can run
+To build the current game map you can run
 
 ```console
 npm run map
@@ -64,17 +133,25 @@ npm run map
 ### Gameplay
 
 - Finalize the new map.
+
 - Polish mob attributes.
+
 - Have a consistent storyline that goes with the game.
+
 - Implement special abilities and weapon perks.
+
 - Improve anti-cheating detections.
+
 - Add minigames
 
-#### Code-base Development
+### Codebase Development
 
 - Write documentation outlining the entirety of the source code.
-- Improvements and optimizations to the lighting system.
 
-#### Miscellaneous
+### Miscellaneous
 
-- Add (continue) to NPC talking -- spacebar when talking
+- Add (continue) to NPC talking &mdash; spacebar when talking
+
+## License
+
+This project is Unlicensed

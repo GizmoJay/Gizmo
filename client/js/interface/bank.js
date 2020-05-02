@@ -1,4 +1,4 @@
-define(["./container/container"], (Container) => {
+define(["./container/container"], Container => {
   return class {
     constructor(game, inventoryContainer, size) {
       this.game = game;
@@ -45,7 +45,7 @@ define(["./container/container"], (Container) => {
           );
         }
 
-        slot.click((event) => {
+        slot.click(event => {
           this.click("bank", event);
         });
 
@@ -108,7 +108,7 @@ define(["./container/container"], (Container) => {
           );
         }
 
-        iSlot.click((event) => {
+        iSlot.click(event => {
           this.click("inventory", event);
         });
 

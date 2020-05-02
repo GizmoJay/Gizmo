@@ -1,6 +1,6 @@
 /* global log, Detect, Packets */
 
-define(["./container/container"], (Container) => {
+define(["./container/container"], Container => {
   return class {
     constructor(game, size) {
       this.game = game;
@@ -37,11 +37,11 @@ define(["./container/container"], (Container) => {
 
         itemSlot.css("background-size", "600%");
 
-        itemSlot.dblclick((event) => {
+        itemSlot.dblclick(event => {
           this.clickDouble(event);
         });
 
-        itemSlot.click((event) => {
+        itemSlot.click(event => {
           this.click(event);
         });
 
