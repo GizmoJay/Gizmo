@@ -10,7 +10,7 @@ _ = require("underscore");
 log = new Log();
 
 class ExportMap {
-  constructor () {
+  constructor() {
     const self = this;
 
     self.source = process.argv[2];
@@ -31,7 +31,7 @@ class ExportMap {
     });
   }
 
-  handleMap (data) {
+  handleMap(data) {
     const self = this;
     const worldClientJSON = "../../server/data/map/world_client.json";
     const worldServerJSON = "../../server/data/map/world_server.json";
@@ -47,7 +47,7 @@ class ExportMap {
     self.copyTilesets();
   }
 
-  parse (data, destination, mode, worldClient, isJS) {
+  parse(data, destination, mode, worldClient, isJS) {
     const self = this;
     const map = processMap(data, { mode: mode });
 
@@ -72,7 +72,7 @@ class ExportMap {
     return map;
   }
 
-  copyTilesets () {
+  copyTilesets() {
     const self = this;
     const source = "./data";
     const destination = "../../client-dist/img/tilesets";
@@ -94,11 +94,11 @@ class ExportMap {
   }
 }
 
-String.prototype.format = function () {
+String.prototype.format = function() {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
-String.prototype.startsWith = function (str) {
+String.prototype.startsWith = function(str) {
   return str.length > 0 && this.substring(0, str.length) === str;
 };
 
