@@ -7,11 +7,11 @@ const Combat = require("../../js/game/entity/character/combat/combat");
  */
 
 class Default extends Combat {
-    constructor (character) {
-        super(character);
+  constructor(character) {
+    super(character);
 
-        const self = this;
+    const self = this;
 
-        self.character = character;
-    }
+    self.character = character;
+  }
 }

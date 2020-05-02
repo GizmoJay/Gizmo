@@ -314,7 +314,7 @@ define([
       }
 
       if (ignores) {
-        _.each(ignores, (entity) => {
+        _.each(ignores, entity => {
           this.pathfinder.ignoreEntity(entity);
         });
       }
@@ -435,7 +435,7 @@ define([
       const items = this.entities.grids.itemGrid[y][x];
 
       if (_.size(items) > 0) {
-        _.each(items, (item) => {
+        _.each(items, item => {
           if (item.stackable) {
             return item;
           }

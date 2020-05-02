@@ -1,81 +1,93 @@
 /* global module */
 
 const Modules = require("../../../../util/modules");
-    const Utils = require("../../../../util/utils");
+const Utils = require("../../../../util/utils");
 
 class Warp {
-    constructor (player) {
-        const self = this;
+  constructor(player) {
+    const self = this;
 
-        self.player = player;
+    self.player = player;
 
-        self.lastWarp = 0;
-        self.warpTimeout = 30000;
+    self.lastWarp = 0;
+    self.warpTimeout = 30000;
+  }
+
+  warp(id) {
+    const self = this;
+
+    if (!self.isCooldown()) {
+      self.player.notify(
+        "You must wait another " + self.getDuration() + " to warp."
+      );
+      return;
     }
 
-    warp (id) {
-        const self = this;
+    const data = Modules.Warps[id];
 
-        if (!self.isCooldown()) {
-            self.player.notify("You must wait another " + self.getDuration() + " to warp.");
-            return;
-        }
-
-        const data = Modules.Warps[id];
-
-        if (!data) { return; }
-
-        const name = data[0];
-            const x = data[3] ? data[1] + Utils.randomInt(0, 1) : data[1];
-            const y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2];
-            const levelRequirement = data[4];
-
-        if (!self.player.finishedTutorial()) {
-            self.player.notify("You cannot warp while in this event.");
-            return;
-        }
-
-        if (self.hasRequirement()) {
-            self.player.notify("You must be at least level " + levelRequirement + " to warp here!");
-            return;
-        }
-
-        self.player.teleport(x, y, false, true);
-
-        self.player.notify("You have been warped to " + name);
-
-        self.lastWarp = new Date().getTime();
+    if (!data) {
+      return;
     }
 
-    setLastWarp (lastWarp) {
-        const self = this;
+    const name = data[0];
+    const x = data[3] ? data[1] + Utils.randomInt(0, 1) : data[1];
+    const y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2];
+    const levelRequirement = data[4];
 
-        if (isNaN(lastWarp)) {
-            self.lastWarp = 0;
-            self.player.save();
-        } else { self.lastWarp = lastWarp; }
+    if (!self.player.finishedTutorial()) {
+      self.player.notify("You cannot warp while in this event.");
+      return;
     }
 
-    isCooldown () {
-        return this.getDifference() > this.warpTimeout || this.player.rights > 1;
+    if (self.hasRequirement()) {
+      self.player.notify(
+        "You must be at least level " + levelRequirement + " to warp here!"
+      );
+      return;
     }
 
-    hasRequirement (levelRequirement) {
-        return this.player.level < levelRequirement || !this.player.rights > 1;
+    self.player.teleport(x, y, false, true);
+
+    self.player.notify("You have been warped to " + name);
+
+    self.lastWarp = new Date().getTime();
+  }
+
+  setLastWarp(lastWarp) {
+    const self = this;
+
+    if (isNaN(lastWarp)) {
+      self.lastWarp = 0;
+      self.player.save();
+    } else {
+      self.lastWarp = lastWarp;
+    }
+  }
+
+  isCooldown() {
+    return this.getDifference() > this.warpTimeout || this.player.rights > 1;
+  }
+
+  hasRequirement(levelRequirement) {
+    return this.player.level < levelRequirement || !this.player.rights > 1;
+  }
+
+  getDuration() {
+    const self = this;
+    const difference = this.warpTimeout - self.getDifference();
+
+    if (!difference) {
+      return "5 minutes";
     }
 
-    getDuration () {
-        const self = this;
-            const difference = this.warpTimeout - self.getDifference();
+    return difference > 60000
+      ? Math.ceil(difference / 60000) + " minutes"
+      : Math.floor(difference / 1000) + " seconds";
+  }
 
-        if (!difference) { return "5 minutes"; }
-
-        return difference > 60000 ? Math.ceil(difference / 60000) + " minutes" : Math.floor(difference / 1000) + " seconds";
-    }
-
-    getDifference () {
-        return new Date().getTime() - this.lastWarp;
-    }
+  getDifference() {
+    return new Date().getTime() - this.lastWarp;
+  }
 }
 
 module.exports = Warp;

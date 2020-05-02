@@ -3,41 +3,45 @@
 const Points = require("./points");
 
 class Mana extends Points {
-    constructor (mana, maxMana) {
-        super(mana, maxMana);
+  constructor(mana, maxMana) {
+    super(mana, maxMana);
+  }
+
+  setMana(mana) {
+    const self = this;
+
+    self.points = mana;
+
+    if (self.manaCallback) {
+      self.manaCallback();
     }
+  }
 
-    setMana (mana) {
-        const self = this;
+  setMaxMana(maxMana) {
+    const self = this;
 
-        self.points = mana;
+    self.maxPoints = maxMana;
 
-        if (self.manaCallback) { self.manaCallback(); }
+    if (self.maxManaCallback) {
+      self.maxManaCallback();
     }
+  }
 
-    setMaxMana (maxMana) {
-        const self = this;
+  getMana() {
+    return this.points;
+  }
 
-        self.maxPoints = maxMana;
+  getMaxMana() {
+    return this.maxPoints;
+  }
 
-        if (self.maxManaCallback) { self.maxManaCallback(); }
-    }
+  onMana(callback) {
+    this.manaCallback = callback;
+  }
 
-    getMana () {
-        return this.points;
-    }
-
-    getMaxMana () {
-        return this.maxPoints;
-    }
-
-    onMana (callback) {
-        this.manaCallback = callback;
-    }
-
-    onMaxMana (callback) {
-        this.maxManaCallback = callback;
-    }
+  onMaxMana(callback) {
+    this.maxManaCallback = callback;
+  }
 }
 
 module.exports = Mana;

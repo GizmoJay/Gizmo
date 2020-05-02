@@ -11,7 +11,7 @@ const https = require("https");
 const Utils = require("../util/utils");
 
 class WebSocket extends Socket {
-  constructor (host, port, version) {
+  constructor(host, port, version) {
     super(port);
 
     const self = this;
@@ -24,7 +24,7 @@ class WebSocket extends Socket {
     const app = connect();
     app.use(serve("client-dist", { index: ["index.html"] }), null);
 
-    const readyWebSocket = function (port) {
+    const readyWebSocket = function(port) {
       log.info("Server is now listening on: " + port);
 
       if (self.webSocketReadyCallback) {
@@ -69,15 +69,15 @@ class WebSocket extends Socket {
     });
   }
 
-  createId () {
+  createId() {
     return "1" + Utils.random(9999) + "" + this._counter++;
   }
 
-  onConnect (callback) {
+  onConnect(callback) {
     this.connectionCallback = callback;
   }
 
-  onWebSocketReady (callback) {
+  onWebSocketReady(callback) {
     this.webSocketReadyCallback = callback;
   }
 }

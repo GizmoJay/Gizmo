@@ -3,6 +3,6 @@ define([
   "./stacktrace",
   "./class",
   "../utils/util"
-], function() {
+], function () {
   require(["../main"]);
 });

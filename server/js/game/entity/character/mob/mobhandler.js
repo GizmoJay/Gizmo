@@ -1,116 +1,153 @@
 const Utils = require("../../../../util/utils");
-    const Messages = require("../../../../network/messages");
-    const Mobs = require("../../../../util/mobs");
-    const Packets = require("../../../../network/packets");
+const Messages = require("../../../../network/messages");
+const Mobs = require("../../../../util/mobs");
+const Packets = require("../../../../network/packets");
 
 class MobHandler {
-    constructor (mob, world) {
-        const self = this;
+  constructor(mob, world) {
+    const self = this;
 
-        self.mob = mob;
-        self.combat = mob.combat;
-        self.world = world;
-        self.map = world.map;
+    self.mob = mob;
+    self.combat = mob.combat;
+    self.world = world;
+    self.map = world.map;
 
-        self.roamingInterval = null;
-        self.spawnLocation = mob.spawnLocation;
-        self.maxRoamingDistance = mob.maxRoamingDistance;
+    self.roamingInterval = null;
+    self.spawnLocation = mob.spawnLocation;
+    self.maxRoamingDistance = mob.maxRoamingDistance;
 
-        self.load();
-        self.loadCallbacks();
+    self.load();
+    self.loadCallbacks();
+  }
+
+  load() {
+    const self = this;
+
+    if (!self.mob.roaming) {
+      return;
     }
 
-    load () {
-        const self = this;
+    self.roamingInterval = setInterval(() => {
+      if (!self.mob.dead) {
+        // Calculate a random position near the mobs spawn location.
+        const newX =
+          self.spawnLocation[0] +
+          Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance);
+        const newY =
+          self.spawnLocation[1] +
+          Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance);
+        const distance = Utils.getDistance(
+          self.spawnLocation[0],
+          self.spawnLocation[1],
+          newX,
+          newY
+        );
 
-        if (!self.mob.roaming) { return; }
+        // Return if the tile is colliding.
+        if (self.map.isColliding(newX, newY)) {
+          return;
+        }
 
-        self.roamingInterval = setInterval(() => {
-            if (!self.mob.dead) {
-                // Calculate a random position near the mobs spawn location.
-                const newX = self.spawnLocation[0] + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance);
-                    const newY = self.spawnLocation[1] + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance);
-                    const distance = Utils.getDistance(self.spawnLocation[0], self.spawnLocation[1], newX, newY);
+        // Prevent movement if the area is empty.
+        if (self.map.isEmpty(newX, newY)) {
+          return;
+        }
 
-                // Return if the tile is colliding.
-                if (self.map.isColliding(newX, newY)) { return; }
+        // Don't have mobs block a door.
+        if (self.map.isDoor(newX, newY)) {
+          return;
+        }
 
-                // Prevent movement if the area is empty.
-                if (self.map.isEmpty(newX, newY)) { return; }
+        // Prevent mobs from going outside of their roaming radius.
+        if (distance < self.mob.maxRoamingDistance) {
+          return;
+        }
 
-                // Don't have mobs block a door.
-                if (self.map.isDoor(newX, newY)) { return; }
+        // No need to move mobs to the same position as theirs.
+        if (newX === self.mob.x && newY === self.mob.y) {
+          return;
+        }
 
-                // Prevent mobs from going outside of their roaming radius.
-                if (distance < self.mob.maxRoamingDistance) { return; }
+        // We don't want mobs randomly roaming while in combat.
+        if (self.mob.combat.started) {
+          return;
+        }
 
-                // No need to move mobs to the same position as theirs.
-                if (newX === self.mob.x && newY === self.mob.y) { return; }
+        /**
+         * An expansion of the plateau level present in BrowserQuest.
+         * Because the map is far more complex, we will require multiple
+         * levels of plateau in order to properly roam entities without
+         * them walking into other regions (or clipping).
+         */
 
-                // We don't want mobs randomly roaming while in combat.
-                if (self.mob.combat.started) { return; }
+        if (
+          self.mob.getPlateauLevel() !== self.map.getPlateauLevel(newX, newY)
+        ) {
+          return;
+        }
 
-                /**
-                 * An expansion of the plateau level present in BrowserQuest.
-                 * Because the map is far more complex, we will require multiple
-                 * levels of plateau in order to properly roam entities without
-                 * them walking into other regions (or clipping).
-                 */
+        // if (config.debug)
+        //    self.forceTalk('Yes hello, I am moving.');
 
-                if (self.mob.getPlateauLevel() !== self.map.getPlateauLevel(newX, newY)) { return; }
-
-                // if (config.debug)
-                //    self.forceTalk('Yes hello, I am moving.');
-
-                self.mob.setPosition(newX, newY);
-
-                self.world.push(Packets.PushOpcode.Regions, {
-                    regionId: self.mob.region,
-                    message: new Messages.Movement(Packets.MovementOpcode.Move, {
-                        id: self.mob.instance,
-                        x: newX,
-                        y: newY
-                    })
-                });
-            }
-        }, 5000);
-    }
-
-    loadCallbacks () {
-        const self = this;
-
-        // Combat plugin has its own set of callbacks.
-        if (Mobs.hasCombatPlugin(self.mob.id)) { return; }
-
-        self.mob.onLoad(() => {
-            if (self.mob.miniboss) { self.mob.setMinibossData(); }
-        });
-
-        self.mob.onDeath(() => {
-            if (!self.mob.miniboss || !self.combat) { return; }
-
-            self.combat.forEachAttacker((attacker) => {
-                if (attacker) { attacker.finishAchievement(self.mob.achievementId); }
-            });
-        });
-
-        // TODO - Implement posion on Mobs
-    }
-
-    forceTalk (message) {
-        var self = this;
-
-        if (!self.world) { return; }
+        self.mob.setPosition(newX, newY);
 
         self.world.push(Packets.PushOpcode.Regions, {
-            regionId: self.mob.region,
-            message: new Messages.NPC(Packets.NPCOpcode.Talk, {
-                id: self.mob.instance,
-                text: message,
-                nonNPC: true
-            })
+          regionId: self.mob.region,
+          message: new Messages.Movement(Packets.MovementOpcode.Move, {
+            id: self.mob.instance,
+            x: newX,
+            y: newY
+          })
         });
+      }
+    }, 5000);
+  }
+
+  loadCallbacks() {
+    const self = this;
+
+    // Combat plugin has its own set of callbacks.
+    if (Mobs.hasCombatPlugin(self.mob.id)) {
+      return;
     }
+
+    self.mob.onLoad(() => {
+      if (self.mob.miniboss) {
+        self.mob.setMinibossData();
+      }
+    });
+
+    self.mob.onDeath(() => {
+      if (!self.mob.miniboss || !self.combat) {
+        return;
+      }
+
+      self.combat.forEachAttacker(attacker => {
+        if (attacker) {
+          attacker.finishAchievement(self.mob.achievementId);
+        }
+      });
+    });
+
+    // TODO - Implement posion on Mobs
+  }
+
+  forceTalk(message) {
+    var self = this;
+
+    if (!self.world) {
+      return;
+    }
+
+    self.world.push(Packets.PushOpcode.Regions, {
+      regionId: self.mob.region,
+      message: new Messages.NPC(Packets.NPCOpcode.Talk, {
+        id: self.mob.instance,
+        text: message,
+        nonNPC: true
+      })
+    });
+  }
 }
 
 module.exports = MobHandler;

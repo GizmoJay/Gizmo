@@ -38,7 +38,7 @@ define(() => {
         const item = $(inventoryList[i]).clone();
         const slot = item.find("#bankInventorySlot" + i);
 
-        slot.click((event) => {
+        slot.click(event => {
           this.select(event);
         });
 

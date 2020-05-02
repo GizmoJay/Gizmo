@@ -214,7 +214,7 @@ class Parser {
     188884693, 208545524, 230252838, 254219653, 280681159, 309897028,      - Lvl 124-129
     342153959, 377768495, 417090128, 460504727                             - Lvl 130-134
 
-    **/
+  **/
 
   loadLevels() {
     const self = this;
@@ -238,7 +238,8 @@ class Parser {
         x: value.x,
         y: value.y,
         type: value.type,
-        messages: value.messages
+        messages: value.messages,
+        cursor: value.cursor
       };
 
       objectCounter++;

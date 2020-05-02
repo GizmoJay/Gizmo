@@ -1,199 +1,221 @@
 const World = require("../game/world");
-    const Messages = require("./messages");
-    const Packets = require("./packets");
-    const Player = require("../game/entity/character/player/player");
-    const Utils = require("../util/utils");
-    const _ = require("underscore");
+const Messages = require("./messages");
+const Packets = require("./packets");
+const Player = require("../game/entity/character/player/player");
+const Utils = require("../util/utils");
+const _ = require("underscore");
 
 class Network {
-    constructor (world) {
-        const self = this;
+  constructor(world) {
+    const self = this;
 
-        self.world = world;
-        self.database = world.database;
-        self.socket = world.socket;
-        self.region = world.region;
-        self.map = world.map;
+    self.world = world;
+    self.database = world.database;
+    self.socket = world.socket;
+    self.region = world.region;
+    self.map = world.map;
 
-        self.packets = {};
+    self.packets = {};
 
-        self.differenceThreshold = 4000;
+    self.differenceThreshold = 4000;
 
-        self.load();
-    }
+    self.load();
+  }
 
-    load () {
-        const self = this;
+  load() {
+    const self = this;
 
-        self.world.onPlayerConnection((connection) => {
-            self.handlePlayerConnection(connection);
-        });
+    self.world.onPlayerConnection(connection => {
+      self.handlePlayerConnection(connection);
+    });
 
-        self.world.onPopulationChange(() => {
-            self.handlePopulationChange();
-        });
-    }
+    self.world.onPopulationChange(() => {
+      self.handlePopulationChange();
+    });
+  }
 
-    parsePackets () {
-        const self = this;
+  parsePackets() {
+    const self = this;
 
-        /**
-         * This parses through the packet pool and sends them
-         */
+    /**
+     * This parses through the packet pool and sends them
+     */
 
-        for (const id in self.packets) {
-            if (self.packets[id].length > 0 && self.packets.hasOwnProperty(id)) {
-                const conn = self.socket.getConnection(id);
+    for (const id in self.packets) {
+      if (self.packets[id].length > 0 && self.packets.hasOwnProperty(id)) {
+        const conn = self.socket.getConnection(id);
 
-                if (conn) {
-                    conn.send(self.packets[id]);
-                    self.packets[id] = [];
-                    self.packets[id].id = id;
-                } else { delete self.socket.getConnection(id); }
-            }
+        if (conn) {
+          conn.send(self.packets[id]);
+          self.packets[id] = [];
+          self.packets[id].id = id;
+        } else {
+          delete self.socket.getConnection(id);
         }
+      }
+    }
+  }
+
+  handlePlayerConnection(connection) {
+    const self = this;
+    const clientId = Utils.generateClientId();
+    const player = new Player(self.world, self.database, connection, clientId);
+    const timeDifference =
+      new Date().getTime() - self.getSocketTime(connection);
+
+    if (!config.debug && timeDifference - self.differenceThreshold < 5000) {
+      connection.sendUTF8("toofast");
+      connection.close("Logging in too fast.");
+
+      return;
     }
 
-    handlePlayerConnection (connection) {
-        const self = this;
-            const clientId = Utils.generateClientId();
-            const player = new Player(self.world, self.database, connection, clientId);
-            const timeDifference = new Date().getTime() - self.getSocketTime(connection);
+    self.socket.ips[
+      connection.socket.conn.remoteAddress
+    ] = new Date().getTime();
 
-        if (!config.debug && timeDifference - self.differenceThreshold < 5000) {
-            connection.sendUTF8("toofast");
-            connection.close("Logging in too fast.");
+    self.addToPackets(player);
 
-            return;
-        }
+    self.pushToPlayer(
+      player,
+      new Messages.Handshake({
+        id: clientId,
+        development: config.devClient
+      })
+    );
+  }
 
-        self.socket.ips[connection.socket.conn.remoteAddress] = new Date().getTime();
+  handlePopulationChange() {
+    this.pushBroadcast(new Messages.Population(this.world.getPopulation()));
+  }
 
-        self.addToPackets(player);
+  addToPackets(player) {
+    this.packets[player.instance] = [];
+  }
 
-        self.pushToPlayer(player, new Messages.Handshake({
-            id: clientId,
-            development: config.devClient
-        }));
+  /*****************************************
+   * Broadcasting and Socket Communication *
+   *****************************************/
+
+  /**
+   * Broadcast a message to everyone in the world.
+   */
+
+  pushBroadcast(message) {
+    const self = this;
+
+    _.each(self.packets, packet => {
+      packet.push(message.serialize());
+    });
+  }
+
+  /**
+   * Broadcast a message to everyone with exceptions.
+   */
+
+  pushSelectively(message, ignores) {
+    const self = this;
+
+    _.each(self.packets, packet => {
+      if (ignores.indexOf(packet.id) < 0) {
+        packet.push(message.serialize());
+      }
+    });
+  }
+
+  /**
+   * Push a message to a single player.
+   */
+
+  pushToPlayer(player, message) {
+    if (player && player.instance in this.packets) {
+      this.packets[player.instance].push(message.serialize());
     }
+  }
 
-    handlePopulationChange () {
-        this.pushBroadcast(new Messages.Population(this.world.getPopulation()));
-    }
+  /**
+   * Specify an array of player instances to send message to
+   */
 
-    addToPackets (player) {
-        this.packets[player.instance] = [];
-    }
+  pushToPlayers(players, message) {
+    const self = this;
 
-    /*****************************************
-     * Broadcasting and Socket Communication *
-     *****************************************/
+    _.each(players, playerInstance => {
+      self.pushToPlayer(
+        self.world.getPlayerByInstance(playerInstance),
+        message
+      );
+    });
+  }
 
-    /**
-     * Broadcast a message to everyone in the world.
-     */
+  /**
+   * Send a message to the region the player is currently in.
+   */
 
-    pushBroadcast (message) {
-        const self = this;
+  pushToRegion(regionId, message, ignoreId) {
+    const self = this;
+    const region = self.region.regions[regionId];
 
-        _.each(self.packets, (packet) => {
-            packet.push(message.serialize());
-        });
-    }
+    if (!region) return;
 
-    /**
-     * Broadcast a message to everyone with exceptions.
-     */
+    _.each(region.players, playerInstance => {
+      if (playerInstance !== ignoreId) {
+        self.pushToPlayer(
+          self.world.getEntityByInstance(playerInstance),
+          message
+        );
+      }
+    });
+  }
 
-    pushSelectively (message, ignores) {
-        const self = this;
+  /**
+   * Sends a message to all the surrounding regions of the player.
+   * G  G  G
+   * G  P  G
+   * G  G  G
+   */
 
-        _.each(self.packets, (packet) => {
-            if (ignores.indexOf(packet.id) < 0) { packet.push(message.serialize()); }
-        });
-    }
+  pushToAdjacentRegions(regionId, message, ignoreId) {
+    const self = this;
 
-    /**
-     * Push a message to a single player.
-     */
+    self.map.regions.forEachSurroundingRegion(regionId, id => {
+      self.pushToRegion(id, message, ignoreId);
+    });
+  }
 
-    pushToPlayer (player, message) {
-        if (player && player.instance in this.packets) { this.packets[player.instance].push(message.serialize()); }
-    }
+  /**
+   * Sends a message to an array of player names
+   */
 
-    /**
-     * Specify an array of player instances to send message to
-     */
+  pushToNameArray(names, message) {
+    const self = this;
 
-    pushToPlayers (players, message) {
-        const self = this;
+    _.each(names, name => {
+      const player = self.world.getPlayerByName(name);
 
-        _.each(players, (playerInstance) => {
-            self.pushToPlayer(self.world.getPlayerByInstance(playerInstance), message);
-        });
-    }
+      if (player) {
+        self.pushToPlayer(player, message);
+      }
+    });
+  }
 
-    /**
-     * Send a message to the region the player is currently in.
-     */
+  /**
+   * Sends a message to the region the player just left from
+   */
 
-    pushToRegion (regionId, message, ignoreId) {
-        const self = this;
-            const region = self.region.regions[regionId];
+  pushToOldRegions(player, message) {
+    const self = this;
 
-        if (!region) return;
+    _.each(player.recentRegions, id => {
+      self.pushToRegion(id, message);
+    });
 
-        _.each(region.players, (playerInstance) => {
-            if (playerInstance !== ignoreId) { self.pushToPlayer(self.world.getEntityByInstance(playerInstance), message); }
-        });
-    }
+    player.recentRegions = [];
+  }
 
-    /**
-     * Sends a message to all the surrounding regions of the player.
-     * G  G  G
-     * G  P  G
-     * G  G  G
-     */
-
-    pushToAdjacentRegions (regionId, message, ignoreId) {
-        const self = this;
-
-        self.map.regions.forEachSurroundingRegion(regionId, (id) => {
-            self.pushToRegion(id, message, ignoreId);
-        });
-    }
-
-    /**
-     * Sends a message to an array of player names
-     */
-
-    pushToNameArray (names, message) {
-        const self = this;
-
-        _.each(names, (name) => {
-            const player = self.world.getPlayerByName(name);
-
-            if (player) { self.pushToPlayer(player, message); }
-        });
-    }
-
-    /**
-     * Sends a message to the region the player just left from
-     */
-
-    pushToOldRegions (player, message) {
-        const self = this;
-
-        _.each(player.recentRegions, (id) => {
-            self.pushToRegion(id, message);
-        });
-
-        player.recentRegions = [];
-    }
-
-    getSocketTime (connection) {
-        return this.socket.ips[connection.socket.conn.remoteAddress];
-    }
+  getSocketTime(connection) {
+    return this.socket.ips[connection.socket.conn.remoteAddress];
+  }
 }
 
 module.exports = Network;

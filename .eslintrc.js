@@ -20,7 +20,7 @@ module.exports = {
     sourceType: "module"
   },
   rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
+    // "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     semi: ["warn", "always"],
     quotes: ["warn", "double"],
@@ -72,14 +72,16 @@ module.exports = {
     "no-case-declarations": "off",
 
     // Just styling; unimportant
+    "no-trailing-spaces": "warn",
     "space-before-function-paren": ["warn", "never"],
     indent: [
-      "off",
+      "warn",
       2,
       {
         SwitchCase: 1,
         flatTernaryExpressions: true
       }
     ]
-  }
+  },
+  ignorePatterns: ["dist/", "client-dist", "lib/", "*.min.*"]
 };

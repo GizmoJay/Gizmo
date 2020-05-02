@@ -1,6 +1,6 @@
 /* global log, Packets */
 
-define(["./character/character"], (Character) => {
+define(["./character/character"], Character => {
   return class {
     constructor(entity) {
       this.entity = entity;
@@ -33,7 +33,7 @@ define(["./character/character"], (Character) => {
         this.entity.onStep(() => {
           this.entities.registerDuality(this.entity);
 
-          this.entity.forEachAttacker((attacker) => {
+          this.entity.forEachAttacker(attacker => {
             /**
              * This is the client-sided logic for representing PVP
              * fights. It basically adds another layer of movement

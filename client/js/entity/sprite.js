@@ -1,6 +1,6 @@
 /* global log, _ */
 
-define(["./animation"], (Animation) => {
+define(["./animation"], Animation => {
   return class {
     constructor(sprite, scale) {
       this.sprite = sprite;

@@ -128,47 +128,47 @@ define(() => {
         }
       });
 
-      // Default Server ID
-      if (!window.localStorage.getItem("world")) {
-        window.localStorage.setItem("world", "kaetram_server01");
-      }
+      //  // Default Server ID
+      //  if (!window.localStorage.getItem("world")) {
+      //    window.localStorage.setItem("world", "gizmo_server01");
+      //  }
 
-      $.get("https://hub.kaetram.com/all", (servers) => {
-        let serverIndex;
-        for (let i = 0; i < servers.length; i++) {
-          const server = servers[i];
+      // $.get("https://hub.gizmo.com/all", (servers) => {
+      //   let serverIndex;
+      //   for (let i = 0; i < servers.length; i++) {
+      //     const server = servers[i];
 
-          const row = $(document.createElement("tr"));
-          row.append($(document.createElement("td")).text(server.serverId));
-          row.append(
-            $(document.createElement("td")).text(
-              server.playerCount + "/" + server.maxPlayers
-            )
-          );
-          $("#worlds-list").append(row);
-          row.click(() => {
-            // TODO: This is when a server is clicked with the local `server` having the world data.
-            // log.info(server);
-          });
+      //     const row = $(document.createElement("tr"));
+      //     row.append($(document.createElement("td")).text(server.serverId));
+      //     row.append(
+      //       $(document.createElement("td")).text(
+      //         server.playerCount + "/" + server.maxPlayers
+      //       )
+      //     );
+      //     $("#worlds-list").append(row);
+      //     row.click(() => {
+      //       // TODO: This is when a server is clicked with the local `server` having the world data.
+      //       // log.info(server);
+      //     });
 
-          if (server.serverId === window.localStorage.getItem("world")) {
-            serverIndex = i;
-          }
-        }
-        const currentWorld = servers[serverIndex];
+      //     if (server.serverId === window.localStorage.getItem("world")) {
+      //       serverIndex = i;
+      //     }
+      //   }
+      //   const currentWorld = servers[serverIndex];
 
-        $("#current-world-index").text(serverIndex);
-        $("#current-world-id").text(currentWorld.serverId);
-        $("#current-world-count").text(
-          currentWorld.playerCount + "/" + currentWorld.maxPlayers
-        );
+      //   $("#current-world-index").text(serverIndex);
+      //   $("#current-world-id").text(currentWorld.serverId);
+      //   $("#current-world-count").text(
+      //     currentWorld.playerCount + "/" + currentWorld.maxPlayers
+      //   );
 
-        $("#worlds-switch").click(() => {
-          $("#worlds-popup").toggle();
-        });
-      });
+      //   $("#worlds-switch").click(() => {
+      //     $("#worlds-popup").toggle();
+      //   });
+      // });
 
-      $.getJSON("data/config.json", (json) => {
+      $.getJSON("data/config.json", json => {
         this.config = json;
 
         if (this.readyCallback) {
@@ -176,13 +176,13 @@ define(() => {
         }
       });
 
-      $(document).bind("keydown", (e) => {
+      $(document).bind("keydown", e => {
         if (e.which === Modules.Keys.Enter) {
           return false;
         }
       });
 
-      $(document).keydown((e) => {
+      $(document).keydown(e => {
         const key = e.which || e.keyCode || 0;
 
         if (!this.game) {
@@ -201,7 +201,7 @@ define(() => {
         }
       });
 
-      $(document).keyup((e) => {
+      $(document).keyup(e => {
         const key = e.which;
 
         if (!this.game || !this.game.started) {
@@ -211,7 +211,7 @@ define(() => {
         this.game.input.keyUp(key);
       });
 
-      $(document).mousemove((event) => {
+      $(document).mousemove(event => {
         if (
           !this.game ||
           !this.game.input ||
@@ -225,7 +225,7 @@ define(() => {
         this.game.input.moveCursor();
       });
 
-      $("body").on("contextmenu", "#canvas", (event) => {
+      $("body").on("contextmenu", "#canvas", event => {
         if (this.game && this.game.input) {
           this.game.input.handle(Modules.InputType.RightClick, event);
         }
@@ -233,7 +233,7 @@ define(() => {
         return false;
       });
 
-      this.canvas.click((event) => {
+      this.canvas.click(event => {
         if (!this.game || !this.game.started || event.button !== 0) {
           return;
         }
@@ -448,7 +448,7 @@ define(() => {
       }
 
       field.addClass("field-error").select();
-      field.bind("keypress", (event) => {
+      field.bind("keypress", event => {
         field.removeClass("field-error");
 
         $(".validation-error").remove();
@@ -538,13 +538,13 @@ define(() => {
 
     toggleTyping(state) {
       if (this.loginFields) {
-        _.each(this.loginFields, (field) => {
+        _.each(this.loginFields, field => {
           field.prop("readonly", state);
         });
       }
 
       if (this.registerFields) {
-        _.each(this.registerFields, (field) => {
+        _.each(this.registerFields, field => {
           field.prop("readOnly", state);
         });
       }

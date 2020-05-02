@@ -1,6 +1,6 @@
 importScripts("../../data/maps/map.js", "../lib/underscore.min.js");
 
-onmessage = (event) => {
+onmessage = event => {
   loadCollisionGrid();
 
   postMessage(mapData);
@@ -18,12 +18,12 @@ function loadCollisionGrid() {
     }
   }
 
-  _.each(mapData.collisions, (tileIndex) => {
+  _.each(mapData.collisions, tileIndex => {
     const position = indexToGridPosition(tileIndex + 1);
     mapData.grid[position.y][position.x] = 1;
   });
 
-  _.each(mapData.blocking, (tileIndex) => {
+  _.each(mapData.blocking, tileIndex => {
     const position = indexToGridPosition(tileIndex + 1);
 
     if (mapData.grid[position.y]) {

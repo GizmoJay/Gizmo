@@ -6647,10 +6647,10 @@
     "width": 32,
     "height": 32,
     "animations": {
-        "atk_down": {
-          "length": 10,
-          "row": 0
-        }
+      "atk_down": {
+        "length": 10,
+        "row": 0
+      }
     },
     "offsetX": -8,
     "offsetY": -10
@@ -15672,7 +15672,8 @@
     "offsetX": -17,
     "offsetY": -21
   },
-  {	"id": "sidesword",
+  {
+    "id": "sidesword",
     "width": 48,
     "height": 48,
     "animations": {
@@ -18500,7 +18501,6 @@
     "offsetX": -4,
     "offsetY": -8
   },
-
 
   {
     "id": "item-armorbinding",

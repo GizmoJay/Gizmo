@@ -1,23 +1,23 @@
 /* global module */
 
 const Equipment = require("./equipment");
-    const Items = require("../../../../../util/items");
-    const Modules = require("../../../../../util/modules");
+const Items = require("../../../../../util/items");
+const Modules = require("../../../../../util/modules");
 
 class Pendant extends Equipment {
-    constructor (name, id, count, ability, abilityLevel) {
-        super(name, id, count, ability, abilityLevel);
+  constructor(name, id, count, ability, abilityLevel) {
+    super(name, id, count, ability, abilityLevel);
 
-        this.pendantLevel = Items.getPendantLevel(name);
-    }
+    this.pendantLevel = Items.getPendantLevel(name);
+  }
 
-    getBaseAmplifier () {
-        return 1.00 + (this.pendantLevel / 100);
-    }
+  getBaseAmplifier() {
+    return 1.0 + this.pendantLevel / 100;
+  }
 
-    getType () {
-        return Modules.Equipment.Pendant;
-    }
+  getType() {
+    return Modules.Equipment.Pendant;
+  }
 }
 
 module.exports = Pendant;

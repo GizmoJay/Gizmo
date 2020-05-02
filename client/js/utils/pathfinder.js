@@ -1,6 +1,6 @@
 /* global _, log */
 
-define(["../lib/astar"], (AStar) => {
+define(["../lib/astar"], AStar => {
   return class {
     constructor(width, height) {
       this.width = width;
@@ -69,7 +69,7 @@ define(["../lib/astar"], (AStar) => {
       let y;
       let g;
 
-      _.each(this.ignores, (entity) => {
+      _.each(this.ignores, entity => {
         x = entity.hasPath() ? entity.nextGridX : entity.gridX;
         y = entity.hasPath() ? entity.nextGridY : entity.gridY;
 

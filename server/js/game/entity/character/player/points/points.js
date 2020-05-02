@@ -1,50 +1,56 @@
 /* global module */
 
 class Points {
-    constructor (points, maxPoints) {
-        const self = this;
+  constructor(points, maxPoints) {
+    const self = this;
 
-        if (isNaN(points)) { points = maxPoints; }
-
-        self.points = points;
-        self.maxPoints = maxPoints;
+    if (isNaN(points)) {
+      points = maxPoints;
     }
 
-    heal (amount) {
-        const self = this;
+    self.points = points;
+    self.maxPoints = maxPoints;
+  }
 
-        self.setPoints(self.points + amount);
+  heal(amount) {
+    const self = this;
 
-        if (self.healCallback) { self.healCallback(); }
+    self.setPoints(self.points + amount);
+
+    if (self.healCallback) {
+      self.healCallback();
     }
+  }
 
-    increment (amount) {
-        this.points += amount;
+  increment(amount) {
+    this.points += amount;
+  }
+
+  decrement(amount) {
+    this.points -= amount;
+  }
+
+  setPoints(points) {
+    const self = this;
+
+    self.points = points;
+
+    if (self.points >= self.maxPoints) {
+      self.points = self.maxPoints;
     }
+  }
 
-    decrement (amount) {
-        this.points -= amount;
-    }
+  setMaxPoints(maxPoints) {
+    this.maxPoints = maxPoints;
+  }
 
-    setPoints (points) {
-        const self = this;
+  getData() {
+    return [this.points, this.maxPoints];
+  }
 
-        self.points = points;
-
-        if (self.points >= self.maxPoints) { self.points = self.maxPoints; }
-    }
-
-    setMaxPoints (maxPoints) {
-        this.maxPoints = maxPoints;
-    }
-
-    getData () {
-        return [this.points, this.maxPoints];
-    }
-
-    onHeal (callback) {
-        this.healCallback = callback;
-    }
+  onHeal(callback) {
+    this.healCallback = callback;
+  }
 }
 
 module.exports = Points;

@@ -239,7 +239,7 @@ define(() => {
         return;
       }
 
-      this.fadeOut(this.song, (song) => {
+      this.fadeOut(this.song, song => {
         this.reset(song);
       });
 
@@ -289,7 +289,7 @@ define(() => {
         return null;
       }
 
-      let audible = _.detect(this.audibles[name], (audible) => {
+      let audible = _.detect(this.audibles[name], audible => {
         return audible.ended || audible.paused;
       });
 

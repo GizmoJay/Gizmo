@@ -37,7 +37,7 @@ define(["./packets", "./messages"], (Packets, Messages) => {
     }
 
     connect() {
-      this.getServer((result) => {
+      this.getServer(result => {
         let url;
 
         if (result === "error") {
@@ -92,7 +92,7 @@ define(["./packets", "./messages"], (Packets, Messages) => {
           });
         });
 
-        this.connection.on("message", (message) => {
+        this.connection.on("message", message => {
           const actualMessage = message.message ? message.message : message;
 
           this.receive(actualMessage);

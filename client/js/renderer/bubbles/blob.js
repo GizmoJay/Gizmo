@@ -1,4 +1,4 @@
-define(["../../utils/timer"], (Timer) => {
+define(["../../utils/timer"], Timer => {
   return class {
     constructor(id, element, duration, isObject, info) {
       this.id = id;

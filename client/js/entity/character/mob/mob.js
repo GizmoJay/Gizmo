@@ -1,4 +1,4 @@
-define(["../character"], (Character) => {
+define(["../character"], Character => {
   return class Mob extends Character {
     constructor(id, kind) {
       super(id, kind);

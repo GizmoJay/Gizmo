@@ -1,4 +1,4 @@
-define(["./container/container"], (Container) => {
+define(["./container/container"], Container => {
   return class {
     constructor(game, intrface) {
       this.game = game;
@@ -190,7 +190,7 @@ define(["./container/container"], (Container) => {
         });
 
         // Bind the itemBuy to the local buy function.
-        itemBuy.click((event) => {
+        itemBuy.click(event => {
           this.buy(event);
         });
 
@@ -212,7 +212,7 @@ define(["./container/container"], (Container) => {
 
         slot.attr("id", "shopInventorySlot" + j);
 
-        slot.click((event) => {
+        slot.click(event => {
           this.select(event);
         });
 

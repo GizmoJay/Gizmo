@@ -1,32 +1,32 @@
 /* global module */
 
 const _ = require("underscore");
-    const Area = require("../area");
-    const map = require("../../../data/map/world_server");
+const Area = require("../area");
+const map = require("../../../data/map/world_server");
 
 class CameraAreas {
-    constructor () {
-        const self = this;
+  constructor() {
+    const self = this;
 
-        self.cameraAreas = [];
+    self.cameraAreas = [];
 
-        self.load();
-    }
+    self.load();
+  }
 
-    load () {
-        const self = this;
-            const list = map.cameraAreas;
+  load() {
+    const self = this;
+    const list = map.cameraAreas;
 
-        _.each(list, (o) => {
-            const cameraArea = new Area(o.id, o.x, o.y, o.width, o.height);
+    _.each(list, o => {
+      const cameraArea = new Area(o.id, o.x, o.y, o.width, o.height);
 
-            cameraArea.type = o.type;
+      cameraArea.type = o.type;
 
-            self.cameraAreas.push(cameraArea);
-        });
+      self.cameraAreas.push(cameraArea);
+    });
 
-        log.info("Loaded " + self.cameraAreas.length + " camera areas.");
-    }
+    log.info("Loaded " + self.cameraAreas.length + " camera areas.");
+  }
 }
 
 module.exports = CameraAreas;

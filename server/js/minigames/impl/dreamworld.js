@@ -2,8 +2,6 @@
 
 const Minigame = require("../minigame");
 
-class DreamWorld extends Minigame {
-
-}
+class DreamWorld extends Minigame {}
 
 module.exports = DreamWorld;

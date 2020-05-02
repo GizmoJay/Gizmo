@@ -3,7 +3,7 @@
  */
 
 if (!Function.prototype.bind) {
-  Function.prototype.bind = (oThis) => {
+  Function.prototype.bind = oThis => {
     if (typeof this !== "function") {
       // closest thing possible to the ECMAScript 5
       // internal IsCallable function
@@ -32,7 +32,7 @@ if (!Function.prototype.bind) {
   };
 }
 
-const isInt = (n) => {
+const isInt = n => {
   return n % 1 === 0;
 };
 
@@ -79,7 +79,7 @@ if (!String.prototype.includes) {
 }
 
 if (!Array.isArray) {
-  Array.isArray = (arg) => {
+  Array.isArray = arg => {
     return Object.prototype.toString.call(arg) === "[object Array]";
   };
 }

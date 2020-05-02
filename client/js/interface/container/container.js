@@ -1,4 +1,4 @@
-define(["./slot"], (Slot) => {
+define(["./slot"], Slot => {
   return class {
     constructor(size) {
       this.size = size;

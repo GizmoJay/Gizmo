@@ -1,6 +1,6 @@
 /* global log, _ */
 
-define(["../page"], (Page) => {
+define(["../page"], Page => {
   return class State extends Page {
     constructor(game) {
       super("#statePage");
@@ -109,7 +109,7 @@ define(["../page"], (Page) => {
         this.getImageFormat(this.getScale(), this.player.boots.string)
       );
 
-      this.forEachSlot((slot) => {
+      this.forEachSlot(slot => {
         slot.css("background-size", "600%");
       });
     }
@@ -128,7 +128,7 @@ define(["../page"], (Page) => {
     }
 
     forEachSlot(callback) {
-      _.each(this.slots, (slot) => {
+      _.each(this.slots, slot => {
         callback(slot);
       });
     }

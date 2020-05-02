@@ -1,55 +1,63 @@
 const Combat = require("../../js/game/entity/character/combat/combat");
-    const Hit = require("../../js/game/entity/character/combat/hit");
-    const Modules = require("../../js/util/modules");
+const Hit = require("../../js/game/entity/character/combat/hit");
+const Modules = require("../../js/util/modules");
 
 class Cactus extends Combat {
-    constructor (character) {
-        character.spawnDistance = 10;
-        character.alwaysAggressive = true;
+  constructor(character) {
+    character.spawnDistance = 10;
+    character.alwaysAggressive = true;
 
-        super(character);
+    super(character);
 
-        const self = this;
+    const self = this;
 
-        self.character = character;
+    self.character = character;
 
-        self.character.onDamaged((damage, attacker) => {
-            if (!attacker || !attacker.armour || attacker.isRanged()) { return; }
+    self.character.onDamaged((damage, attacker) => {
+      if (!attacker || !attacker.armour || attacker.isRanged()) {
+        return;
+      }
 
-            self.damageAttacker(damage, attacker);
+      self.damageAttacker(damage, attacker);
 
-            log.debug(`Entity ${self.character.id} damaged ${damage} by ${attacker.instance}.`);
-        });
+      log.debug(
+        `Entity ${self.character.id} damaged ${damage} by ${attacker.instance}.`
+      );
+    });
 
-        self.character.onDeath(() => {
-            self.forEachAttacker((attacker) => {
-                self.damageAttacker(self.character.maxHitPoints, attacker);
-            });
+    self.character.onDeath(() => {
+      self.forEachAttacker(attacker => {
+        self.damageAttacker(self.character.maxHitPoints, attacker);
+      });
 
-            log.debug("Oh noes, le cactus did a die. :(");
-        });
+      log.debug("Oh noes, le cactus did a die. :(");
+    });
+  }
+
+  damageAttacker(damage, attacker) {
+    const self = this;
+
+    if (!attacker || !attacker.armour || attacker.isRanged()) {
+      return;
     }
 
-    damageAttacker (damage, attacker) {
-        const self = this;
+    /**
+     * This is the formula for dealing damage when a player
+     * attacks the cactus. Eventually the damage will cancel out
+     * as the armour gets better.
+     **/
 
-        if (!attacker || !attacker.armour || attacker.isRanged()) { return; }
+    const defense = attacker.armour.getDefense();
+    const calculatedDamage = Math.floor(damage / 2 - defense * 5);
 
-        /**
-         * This is the formula for dealing damage when a player
-         * attacks the cactus. Eventually the damage will cancel out
-         * as the armour gets better.
-         **/
-
-        const defense = attacker.armour.getDefense();
-            const calculatedDamage = Math.floor((damage / 2) - (defense * 5));
-
-        if (calculatedDamage < 1) { return; }
-
-        const hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
-
-        self.hit(self.character, attacker, hitInfo, true);
+    if (calculatedDamage < 1) {
+      return;
     }
+
+    const hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
+
+    self.hit(self.character, attacker, hitInfo, true);
+  }
 }
 
 module.exports = Cactus;

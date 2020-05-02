@@ -507,7 +507,7 @@ define(["../entity", "../../utils/transition", "../animation"], (
     }
 
     forEachAttacker(callback) {
-      _.each(this.attackers, (attacker) => {
+      _.each(this.attackers, attacker => {
         callback(attacker);
       });
     }

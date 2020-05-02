@@ -1,4 +1,4 @@
-define(["./container/container"], (Container) => {
+define(["./container/container"], Container => {
   return class {
     constructor(game, intrface) {
       this.game = game;

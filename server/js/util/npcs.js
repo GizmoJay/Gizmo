@@ -5,28 +5,36 @@ const NPCs = {};
 NPCs.Properties = {};
 NPCs.Ids = {};
 
-NPCs.idToString = (id) => {
-    if (id in NPCs.Ids) { return NPCs.Ids[id].key; }
+NPCs.idToString = id => {
+  if (id in NPCs.Ids) {
+    return NPCs.Ids[id].key;
+  }
 
-    return null;
+  return null;
 };
 
-NPCs.idToName = (id) => {
-    if (id in NPCs.Ids) { return NPCs.Ids[id].name; }
+NPCs.idToName = id => {
+  if (id in NPCs.Ids) {
+    return NPCs.Ids[id].name;
+  }
 
-    return null;
+  return null;
 };
 
-NPCs.getText = (id) => {
-    if (id in NPCs.Ids) { return NPCs.Ids[id].text; }
+NPCs.getText = id => {
+  if (id in NPCs.Ids) {
+    return NPCs.Ids[id].text;
+  }
 
-    return null;
+  return null;
 };
 
-NPCs.getType = (id) => {
-    if (id in NPCs.Ids) { return NPCs.Ids[id].type; }
+NPCs.getType = id => {
+  if (id in NPCs.Ids) {
+    return NPCs.Ids[id].type;
+  }
 
-    return null;
+  return null;
 };
 
 module.exports = NPCs;

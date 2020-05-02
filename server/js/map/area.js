@@ -1,77 +1,94 @@
 /* global module */
 
 class Area {
-    constructor (id, x, y, width, height) {
-        const self = this;
+  constructor(id, x, y, width, height) {
+    const self = this;
 
-        self.id = id;
+    self.id = id;
 
-        self.x = x;
-        self.y = y;
+    self.x = x;
+    self.y = y;
 
-        self.width = width;
-        self.height = height;
+    self.width = width;
+    self.height = height;
 
-        self.entities = [];
-        self.items = [];
+    self.entities = [];
+    self.items = [];
 
-        self.hasRespawned = true;
-        self.chest = null;
+    self.hasRespawned = true;
+    self.chest = null;
 
-        self.maxEntities = 0;
-        self.spawnDelay = 0;
+    self.maxEntities = 0;
+    self.spawnDelay = 0;
+  }
+
+  contains(x, y) {
+    return (
+      x >= this.x &&
+      y >= this.y &&
+      x < this.x + this.width &&
+      y < this.y + this.height
+    );
+  }
+
+  addEntity(entity) {
+    const self = this;
+
+    if (self.entities.indexOf(entity) > 0) {
+      return;
     }
 
-    contains (x, y) {
-        return x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+    self.entities.push(entity);
+    entity.area = self;
+
+    // Grab a spawn delay from an mob to create an offset for the chest.
+    if (!self.spawnDelay) {
+      self.spawnDelay = entity.respawnDelay;
     }
 
-    addEntity (entity) {
-        const self = this;
+    if (self.spawnCallback) {
+      self.spawnCallback();
+    }
+  }
 
-        if (self.entities.indexOf(entity) > 0) { return; }
+  removeEntity(entity) {
+    const self = this;
+    const index = self.entities.indexOf(entity);
 
-        self.entities.push(entity);
-        entity.area = self;
-
-        // Grab a spawn delay from an mob to create an offset for the chest.
-        if (!self.spawnDelay) { self.spawnDelay = entity.respawnDelay; }
-
-        if (self.spawnCallback) { self.spawnCallback(); }
+    if (index > -1) {
+      self.entities.splice(index, 1);
     }
 
-    removeEntity (entity) {
-        const self = this;
-            const index = self.entities.indexOf(entity);
+    if (self.entities.length === 0 && self.emptyCallback) {
+      if (entity.lastAttacker && entity.lastAttacker.type === "player") {
+        self.handleAchievement(entity.lastAttacker);
+      }
 
-        if (index > -1) { self.entities.splice(index, 1); }
+      self.emptyCallback();
+    }
+  }
 
-        if (self.entities.length === 0 && self.emptyCallback) {
-            if (entity.lastAttacker && entity.lastAttacker.type === "player") { self.handleAchievement(entity.lastAttacker); }
+  handleAchievement(entity) {
+    const self = this;
 
-            self.emptyCallback();
-        }
+    if (!self.achievement) {
+      return;
     }
 
-    handleAchievement (entity) {
-        const self = this;
+    entity.finishAchievement(self.achievement);
+  }
 
-        if (!self.achievement) { return; }
+  setMaxEntities(maxEntities) {
+    this.maxEntities = maxEntities;
+  }
 
-        entity.finishAchievement(self.achievement);
-    }
+  onEmpty(callback) {
+    this.emptyCallback = callback;
+  }
 
-    setMaxEntities (maxEntities) {
-        this.maxEntities = maxEntities;
-    }
-
-    onEmpty (callback) {
-        this.emptyCallback = callback;
-    }
-
-    onSpawn (callback) {
-        this.spawnCallback = callback;
-    }
+  onSpawn(callback) {
+    this.spawnCallback = callback;
+  }
 }
 
 module.exports = Area;

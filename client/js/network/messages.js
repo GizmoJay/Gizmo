@@ -68,7 +68,7 @@ define(() => {
     }
 
     handleBulkData(data) {
-      _.each(data, (message) => {
+      _.each(data, message => {
         this.handleData(message);
       });
     }
