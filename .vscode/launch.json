@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Game",
+      "name": "Start Game",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "npm",
