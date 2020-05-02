@@ -5,18 +5,18 @@ const Messages = require("../network/messages");
 const Packets = require("../network/packets");
 const Player = require("../game/entity/character/player/player");
 const fs = require("fs");
-const ClientMap = require("../../data/map/world_client.json");
 const map = "server/data/map/world_client.json";
 const Objects = require("../util/objects");
 
-/**
- * Region Generation.
- * This is used in order to send the client data about the new region
- * it is about to enter. This has to be greatly expanded to generated
- * instanced areas where other entities will not be pushed to surrounding
- * players, even if they share the same coordinates.
- */
 class Region {
+  /**
+   * Region Generation.
+   * This is used in order to send the client data about the new region
+   * it is about to enter. This has to be greatly expanded to generated
+   * instanced areas where other entities will not be pushed to surrounding
+   * players, even if they share the same coordinates.
+   */
+
   constructor(world) {
     const self = this;
 
@@ -31,9 +31,7 @@ class Region {
     self.loaded = false;
 
     self.onAdd((entity, regionId) => {
-      if (!entity || !entity.username) {
-        return;
-      }
+      if (!entity || !entity.username) return;
 
       if (config.debug) {
         log.info(
@@ -42,13 +40,9 @@ class Region {
       }
 
       if (entity instanceof Player) {
-        if (!entity.questsLoaded) {
-          return;
-        }
+        if (!entity.questsLoaded) return;
 
-        if (!entity.achievementsLoaded) {
-          return;
-        }
+        if (!entity.achievementsLoaded) return;
 
         self.sendRegion(entity, regionId);
       }
@@ -60,9 +54,7 @@ class Region {
     });
 
     self.onIncoming((entity, regionId) => {
-      if (!entity || !entity.username) {
-        return;
-      }
+      if (!entity || !entity.username) return;
 
       if (config.debug) {
         log.info(
@@ -118,9 +110,7 @@ class Region {
   addEntityToInstance(entity, player) {
     const self = this;
 
-    if (!entity) {
-      return;
-    }
+    if (!entity) return;
 
     self.add(entity, player.region);
 
@@ -168,23 +158,17 @@ class Region {
     self.mapRegions.forEachSurroundingRegion(player.region, regionId => {
       const instancedRegion = Region.regionIdToInstance(player, regionId);
 
-      if (instancedRegion in self.regions) {
-        delete self.regions[instancedRegion];
-      }
+      if (instancedRegion in self.regions) delete self.regions[instancedRegion];
     });
   }
 
   parseRegions() {
     const self = this;
 
-    if (!self.loaded) {
-      return;
-    }
+    if (!self.loaded) return;
 
     self.mapRegions.forEachRegion(regionId => {
-      if (self.regions[regionId].incoming.length < 1) {
-        return;
-      }
+      if (self.regions[regionId].incoming.length < 1) return;
 
       self.sendSpawns(regionId);
 
@@ -240,14 +224,10 @@ class Region {
   sendSpawns(regionId) {
     const self = this;
 
-    if (!regionId) {
-      return;
-    }
+    if (!regionId) return;
 
     _.each(self.regions[regionId].incoming, entity => {
-      if (!entity || !entity.instance || entity.instanced) {
-        return;
-      }
+      if (!entity || !entity.instance || entity.instanced) return;
 
       self.world.push(Packets.PushOpcode.Regions, {
         regionId: regionId,
@@ -263,9 +243,7 @@ class Region {
 
     if (entity && regionId && regionId in self.regions) {
       self.mapRegions.forEachSurroundingRegion(regionId, id => {
-        if (entity.instanced) {
-          id = Region.regionIdToInstance(entity, id);
-        }
+        if (entity.instanced) id = Region.regionIdToInstance(entity, id);
 
         const region = self.regions[id];
 
@@ -282,9 +260,7 @@ class Region {
       }
     }
 
-    if (self.addCallback) {
-      self.addCallback(entity, regionId);
-    }
+    if (self.addCallback) self.addCallback(entity, regionId);
 
     return newRegions;
   }
@@ -312,9 +288,7 @@ class Region {
       entity.region = null;
     }
 
-    if (self.removeCallback) {
-      self.removeCallback(entity, oldRegions);
-    }
+    if (self.removeCallback) self.removeCallback(entity, oldRegions);
 
     return oldRegions;
   }
@@ -322,9 +296,7 @@ class Region {
   incoming(entity, regionId) {
     const self = this;
 
-    if (!entity || !regionId) {
-      return;
-    }
+    if (!entity || !regionId) return;
 
     const region = self.regions[regionId];
 
@@ -332,18 +304,14 @@ class Region {
       region.incoming.push(entity);
     }
 
-    if (self.incomingCallback) {
-      self.incomingCallback(entity, regionId);
-    }
+    if (self.incomingCallback) self.incomingCallback(entity, regionId);
   }
 
   handle(entity, region) {
     const self = this;
     let regionsChanged = false;
 
-    if (!entity) {
-      return regionsChanged;
-    }
+    if (!entity) return regionsChanged;
 
     let regionId =
       region || self.mapRegions.regionIdFromPosition(entity.x, entity.y);
@@ -372,9 +340,7 @@ class Region {
     const self = this;
     let entities;
 
-    if (!player || !(player.region in self.regions)) {
-      return;
-    }
+    if (!player || !(player.region in self.regions)) return;
 
     entities = _.keys(self.regions[player.region].entities);
 
@@ -420,9 +386,7 @@ class Region {
     const data = [];
     let cursor;
 
-    if (!player) {
-      return data;
-    }
+    if (!player) return data;
 
     self.mapRegions.forEachSurroundingRegion(region, regionId => {
       if (!player.hasLoadedRegion(regionId) || force) {
@@ -446,30 +410,24 @@ class Region {
                     break;
                   }
                 }
-              } else if (self.map.isObject(tileData)) {
-                objectId = tileData[j];
-              }
+              } else if (self.map.isObject(tileData)) objectId = tileData;
             }
 
             const info = {
               index: index
             };
 
-            if (tileData) {
-              info.data = tileData;
-            }
+            if (tileData) info.data = tileData;
 
-            if (isCollision) {
-              info.isCollision = isCollision;
-            }
+            if (isCollision) info.isCollision = isCollision;
 
             if (objectId) {
               info.isObject = !!objectId;
+
+              const cursor = self.getCursor(info.index, objectId);
+
+              if (cursor) info.cursor = cursor;
             }
-
-            const cursor = self.getCursor(info.index, objectId);
-
-            if (cursor) info.cursor = cursor;
 
             data.push(info);
           }

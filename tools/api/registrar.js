@@ -1,16 +1,16 @@
-var cls = require("../../server/js/lib/class");
-var redis = require("redis");
-var request = require("request");
+let cls = require("../../server/js/lib/class");
+let redis = require("redis");
+let request = require("request");
 
 function load() {
-  var registrar = new Registrar();
+  let registrar = new Registrar();
 
   registrar.onReady(function() {});
 }
 
 module.exports = Registrar = cls.Class.extend({
   init: function() {
-    var self = this;
+    let self = this;
 
     self.client = redis.createClient("127.0.0.1", 6379, {
       socket_nodelay: true

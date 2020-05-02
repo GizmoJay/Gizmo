@@ -17,13 +17,9 @@ class Item extends Entity {
     self.abilityLevel = abilityLevel;
     self.tier = 1;
 
-    if (isNaN(ability)) {
-      self.ability = -1;
-    }
+    if (isNaN(ability)) self.ability = -1;
 
-    if (isNaN(abilityLevel)) {
-      self.abilityLevel = -1;
-    }
+    if (isNaN(abilityLevel)) self.abilityLevel = -1;
 
     self.respawnTime = 30000;
     self.despawnDuration = 4000;
@@ -37,31 +33,21 @@ class Item extends Entity {
   destroy() {
     const self = this;
 
-    if (self.blinkTimeout) {
-      clearTimeout(self.blinkTimeout);
-    }
+    if (self.blinkTimeout) clearTimeout(self.blinkTimeout);
 
-    if (self.despawnTimeout) {
-      clearTimeout(self.despawnTimeout);
-    }
+    if (self.despawnTimeout) clearTimeout(self.despawnTimeout);
 
-    if (self.static) {
-      self.respawn();
-    }
+    if (self.static) self.respawn();
   }
 
   despawn() {
     const self = this;
 
     self.blinkTimeout = setTimeout(() => {
-      if (self.blinkCallback) {
-        self.blinkCallback();
-      }
+      if (self.blinkCallback) self.blinkCallback();
 
       self.despawnTimeout = setTimeout(() => {
-        if (self.despawnCallback) {
-          self.despawnCallback();
-        }
+        if (self.despawnCallback) self.despawnCallback();
       }, self.despawnDuration);
     }, self.blinkDelay);
   }
@@ -70,9 +56,7 @@ class Item extends Entity {
     const self = this;
 
     setTimeout(() => {
-      if (self.respawnCallback) {
-        self.respawnCallback();
-      }
+      if (self.respawnCallback) self.respawnCallback();
     }, self.respawnTime);
   }
 

@@ -18,18 +18,14 @@ class Chest extends Entity {
   openChest() {
     const self = this;
 
-    if (self.openCallback) {
-      self.openCallback();
-    }
+    if (self.openCallback) self.openCallback();
   }
 
   respawn() {
     const self = this;
 
     setTimeout(() => {
-      if (self.respawnCallback) {
-        self.respawnCallback();
-      }
+      if (self.respawnCallback) self.respawnCallback();
     }, self.respawnDuration);
   }
 
@@ -52,13 +48,9 @@ class Chest extends Entity {
      * We must ensure an item is always present in order
      * to avoid any unforeseen circumstances.
      */
-    if (!item) {
-      return null;
-    }
+    if (!item) return null;
 
-    if (Utils.randomInt(0, 100) > probability) {
-      return null;
-    }
+    if (Utils.randomInt(0, 100) > probability) return null;
 
     return {
       string: item,

@@ -49,9 +49,7 @@ class Network {
           conn.send(self.packets[id]);
           self.packets[id] = [];
           self.packets[id].id = id;
-        } else {
-          delete self.socket.getConnection(id);
-        }
+        } else delete self.socket.getConnection(id);
       }
     }
   }
@@ -117,9 +115,7 @@ class Network {
     const self = this;
 
     _.each(self.packets, packet => {
-      if (ignores.indexOf(packet.id) < 0) {
-        packet.push(message.serialize());
-      }
+      if (ignores.indexOf(packet.id) < 0) packet.push(message.serialize());
     });
   }
 
@@ -193,9 +189,7 @@ class Network {
     _.each(names, name => {
       const player = self.world.getPlayerByName(name);
 
-      if (player) {
-        self.pushToPlayer(player, message);
-      }
+      if (player) self.pushToPlayer(player, message);
     });
   }
 

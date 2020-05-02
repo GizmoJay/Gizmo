@@ -57,9 +57,7 @@ class Entity {
     self.x = x;
     self.y = y;
 
-    if (self.setPositionCallback) {
-      self.setPositionCallback();
-    }
+    if (self.setPositionCallback) self.setPositionCallback();
   }
 
   updatePosition() {
@@ -133,9 +131,7 @@ class Entity {
     const self = this;
     const index = self.invisiblesIds.indexOf(entityId);
 
-    if (index > -1) {
-      self.invisiblesIds.splice(index, 1);
-    }
+    if (index > -1) self.invisiblesIds.splice(index, 1);
   }
 
   hasInvisible(entity) {
@@ -171,13 +167,9 @@ class Entity {
       y: self.y
     };
 
-    if (self.specialState) {
-      data.nameColour = self.getNameColour();
-    }
+    if (self.specialState) data.nameColour = self.getNameColour();
 
-    if (self.customScale) {
-      data.customScale = self.customScale;
-    }
+    if (self.customScale) data.customScale = self.customScale;
 
     return data;
   }

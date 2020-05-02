@@ -12,9 +12,7 @@ class HitPoints extends Points {
 
     super.setPoints(hitPoints);
 
-    if (self.hitPointsCallback) {
-      self.hitPointsCallback();
-    }
+    if (self.hitPointsCallback) self.hitPointsCallback();
   }
 
   setMaxHitPoints(maxHitPoints) {
@@ -22,9 +20,7 @@ class HitPoints extends Points {
 
     super.setMaxPoints(maxHitPoints);
 
-    if (self.maxHitPointsCallback) {
-      self.maxHitPointsCallback();
-    }
+    if (self.maxHitPointsCallback) self.maxHitPointsCallback();
   }
 
   getHitPoints() {

@@ -1,13 +1,15 @@
-define(["../entity"], Entity => {
-  return class Chest extends Entity {
-    constructor(id, kind) {
-      super(id, kind);
+import Entity from "../entity";
 
-      this.type = "chest";
-    }
+class Chest extends Entity {
+  constructor(id, kind) {
+    super(id, kind);
 
-    idle() {
-      this.setAnimation("idle_down", 150);
-    }
-  };
-});
+    this.type = "chest";
+  }
+
+  idle() {
+    this.setAnimation("idle_down", 150);
+  }
+}
+
+export default Chest;

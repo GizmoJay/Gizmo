@@ -115,9 +115,7 @@ class World {
       self.region.parseRegions();
     }, update);
 
-    if (!config.hubEnabled) {
-      return;
-    }
+    if (!config.hubEnabled) return;
 
     if (!config.apiEnabled) {
       log.warning("Server is in hub-mode but API is not enabled!");
@@ -158,9 +156,7 @@ class World {
   handleDamage(attacker, target, damage) {
     const self = this;
 
-    if (!attacker || !target || isNaN(damage) || target.invincible) {
-      return;
-    }
+    if (!attacker || !target || isNaN(damage) || target.invincible) return;
 
     if (target.type === "player" && target.hitCallback) {
       target.hitCallback(attacker, damage);
@@ -182,13 +178,9 @@ class World {
 
     // If target has died...
     if (target.getHitPoints() < 1) {
-      if (target.type === "mob") {
-        attacker.addExperience(Mobs.getXp(target.id));
-      }
+      if (target.type === "mob") attacker.addExperience(Mobs.getXp(target.id));
 
-      if (attacker.type === "player") {
-        attacker.killCharacter(target);
-      }
+      if (attacker.type === "player") attacker.killCharacter(target);
 
       target.combat.forEachAttacker(attacker => {
         attacker.removeTarget();
@@ -215,21 +207,15 @@ class World {
   handleDeath(character, ignoreDrops, lastAttacker) {
     const self = this;
 
-    if (!character) {
-      return;
-    }
+    if (!character) return;
 
     if (character.type === "mob") {
       const deathX = character.x;
       const deathY = character.y;
 
-      if (lastAttacker) {
-        character.lastAttacker = lastAttacker;
-      }
+      if (lastAttacker) character.lastAttacker = lastAttacker;
 
-      if (character.deathCallback) {
-        character.deathCallback();
-      }
+      if (character.deathCallback) character.deathCallback();
 
       self.removeEntity(character);
 
@@ -242,13 +228,9 @@ class World {
       if (!ignoreDrops) {
         const drop = character.getDrop();
 
-        if (drop) {
-          self.dropItem(drop.id, drop.count, deathX, deathY);
-        }
+        if (drop) self.dropItem(drop.id, drop.count, deathX, deathY);
       }
-    } else if (character.type === "player") {
-      character.die();
-    }
+    } else if (character.type === "player") character.die();
   }
 
   createProjectile(info) {
@@ -256,9 +238,7 @@ class World {
     const attacker = info.shift();
     const target = info.shift();
 
-    if (!attacker || !target) {
-      return null;
-    }
+    if (!attacker || !target) return null;
 
     const startX = attacker.x;
     const startY = attacker.y;
@@ -269,9 +249,7 @@ class World {
     projectile.setStart(startX, startY);
     projectile.setTarget(target);
 
-    if (attacker.type === "player") {
-      hit = attacker.getHit(target);
-    }
+    if (attacker.type === "player") hit = attacker.getHit(target);
 
     projectile.damage = hit
       ? hit.damage
@@ -286,9 +264,7 @@ class World {
   }
 
   getEntityByInstance(instance) {
-    if (instance in this.entities) {
-      return this.entities[instance];
-    }
+    if (instance in this.entities) return this.entities[instance];
   }
 
   spawnEntities() {
@@ -328,21 +304,15 @@ class World {
 
         mob.static = true;
 
-        if (data.roaming) {
-          mob.roaming = true;
-        }
+        if (data.roaming) mob.roaming = true;
 
         if (data.miniboss) {
-          if (data.achievementId) {
-            mob.achievementId = data.achievementId;
-          }
+          if (data.achievementId) mob.achievementId = data.achievementId;
 
           mob.miniboss = data.miniboss;
         }
 
-        if (data.boss) {
-          mob.boss = data.boss;
-        }
+        if (data.boss) mob.boss = data.boss;
 
         if (Mobs.Properties[key].hiddenName) {
           mob.hiddenName = Mobs.Properties[key].hiddenName;
@@ -396,9 +366,7 @@ class World {
     const self = this;
     const mob = new Mob(id, Utils.generateInstance(), x, y);
 
-    if (!Mobs.exists(id)) {
-      return;
-    }
+    if (!Mobs.exists(id)) return;
 
     self.addMob(mob);
 
@@ -433,9 +401,7 @@ class World {
 
       const item = chest.getItem();
 
-      if (!item) {
-        return;
-      }
+      if (!item) return;
 
       self.dropItem(
         Items.stringToId(item.string),
@@ -559,9 +525,7 @@ class World {
 
     self.entities[entity.instance] = entity;
 
-    if (entity.type !== "projectile") {
-      self.region.handle(entity, region);
-    }
+    if (entity.type !== "projectile") self.region.handle(entity, region);
 
     if (entity.x > 0 && entity.y > 0) {
       self.getGrids().addToEntityGrid(entity, entity.x, entity.y);
@@ -618,9 +582,7 @@ class World {
     self.addEntity(player);
     self.players[player.instance] = player;
 
-    if (self.populationCallback) {
-      self.populationCallback();
-    }
+    if (self.populationCallback) self.populationCallback();
   }
 
   addNPC(npc, region) {
@@ -644,9 +606,7 @@ class World {
     mob.addToChestArea(self.getChestAreas());
 
     mob.onHit(attacker => {
-      if (mob.isDead() || mob.combat.started) {
-        return;
-      }
+      if (mob.isDead() || mob.combat.started) return;
 
       mob.combat.begin(attacker);
     });
@@ -655,9 +615,7 @@ class World {
   addItem(item, region) {
     const self = this;
 
-    if (item.static) {
-      item.onRespawn(self.addItem.bind(self, item));
-    }
+    if (item.static) item.onRespawn(self.addItem.bind(self, item));
 
     self.addEntity(item, region);
     self.items[item.instance] = item;
@@ -680,17 +638,11 @@ class World {
   removeEntity(entity) {
     const self = this;
 
-    if (entity.instance in self.entities) {
-      delete self.entities[entity.instance];
-    }
+    if (entity.instance in self.entities) delete self.entities[entity.instance];
 
-    if (entity.instance in self.mobs) {
-      delete self.mobs[entity.instance];
-    }
+    if (entity.instance in self.mobs) delete self.mobs[entity.instance];
 
-    if (entity.instance in self.items) {
-      delete self.items[entity.instance];
-    }
+    if (entity.instance in self.items) delete self.items[entity.instance];
 
     self.getGrids().removeFromEntityGrid(entity, entity.x, entity.y);
 
@@ -715,9 +667,7 @@ class World {
       message: new Messages.Despawn(item.instance)
     });
 
-    if (item.static) {
-      item.respawn();
-    }
+    if (item.static) item.respawn();
   }
 
   removePlayer(player) {
@@ -728,21 +678,15 @@ class World {
       message: new Messages.Despawn(player.instance)
     });
 
-    if (player.ready) {
-      player.save();
-    }
+    if (player.ready) player.save();
 
-    if (self.populationCallback) {
-      self.populationCallback();
-    }
+    if (self.populationCallback) self.populationCallback();
 
     self.removeEntity(player);
 
     self.cleanCombat(player);
 
-    if (player.isGuest) {
-      self.database.delete(player);
-    }
+    if (player.isGuest) self.database.delete(player);
 
     delete self.players[player.instance];
     delete self.network.packets[player.instance];
@@ -767,11 +711,8 @@ class World {
       message: new Messages.Despawn(chest.instance)
     });
 
-    if (chest.static) {
-      chest.respawn();
-    } else {
-      delete self.chests[chest.instance];
-    }
+    if (chest.static) chest.respawn();
+    else delete self.chests[chest.instance];
   }
 
   globalMessage(source, message, colour, isGlobal, withBubble) {
@@ -825,9 +766,7 @@ class World {
   getPlayerByInstance(instance) {
     const self = this;
 
-    if (instance in self.players) {
-      return self.players[instance];
-    }
+    if (instance in self.players) return self.players[instance];
 
     return null;
   }

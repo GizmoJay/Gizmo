@@ -29,20 +29,14 @@ class Enchant {
     const self = this;
     const isItem = item === "item";
 
-    if (isItem && !Items.isEnchantable(item.id)) {
-      return;
-    }
+    if (isItem && !Items.isEnchantable(item.id)) return;
 
     if (type === "item") {
-      if (self.selectedItem) {
-        self.remove("item");
-      }
+      if (self.selectedItem) self.remove("item");
 
       self.selectedItem = item;
     } else if (type === "shards") {
-      if (self.selectedShards) {
-        self.remove("shards");
-      }
+      if (self.selectedShards) self.remove("shards");
 
       self.selectedShards = item;
     }
@@ -69,9 +63,7 @@ class Enchant {
       self.selectedShards = null;
     }
 
-    if (index < 0) {
-      return;
-    }
+    if (index < 0) return;
 
     self.player.send(
       new Messages.Enchant(Packets.EnchantOpcode.Remove, {
@@ -84,15 +76,11 @@ class Enchant {
   convert(shard) {
     const self = this;
 
-    if (!Items.isShard(shard.id) || !self.player.inventory.hasSpace()) {
-      return;
-    }
+    if (!Items.isShard(shard.id) || !self.player.inventory.hasSpace()) return;
 
     const tier = Items.getShardTier(shard.id);
 
-    if (shard.count < 11 && tier > 5) {
-      return;
-    }
+    if (shard.count < 11 && tier > 5) return;
 
     for (let i = 0; i < shard.count; i += 10) {
       self.player.inventory.remove(shard.id, 10, shard.index);
@@ -136,9 +124,7 @@ class Enchant {
 
     const tier = Items.getShardTier(self.selectedShards.id);
 
-    if (tier < 1) {
-      return;
-    }
+    if (tier < 1) return;
 
     if (tier <= self.selectedItem.abilityLevel) {
       self.player.notify(

@@ -58,9 +58,7 @@ class Quests {
       }
     }
 
-    if (self.questsReadyCallback) {
-      self.questsReadyCallback();
-    }
+    if (self.questsReadyCallback) self.questsReadyCallback();
   }
 
   updateAchievements(ids, progress) {
@@ -72,17 +70,13 @@ class Quests {
       }
     }
 
-    if (self.achievementsReadyCallback) {
-      self.achievementsReadyCallback();
-    }
+    if (self.achievementsReadyCallback) self.achievementsReadyCallback();
   }
 
   getQuest(id) {
     const self = this;
 
-    if (id in self.quests) {
-      return self.quests[id];
-    }
+    if (id in self.quests) return self.quests[id];
 
     return null;
   }
@@ -90,9 +84,7 @@ class Quests {
   getAchievement(id) {
     const self = this;
 
-    if (!self.achievements || !self.achievements[id]) {
-      return null;
-    }
+    if (!self.achievements || !self.achievements[id]) return null;
 
     return self.achievements[id];
   }
@@ -103,7 +95,7 @@ class Quests {
     let stages = "";
 
     for (let id = 0; id < self.getQuestSize(); id++) {
-      var quest = self.quests[id];
+      let quest = self.quests[id];
 
       ids += id + " ";
       stages += quest.stage + " ";
@@ -177,9 +169,7 @@ class Quests {
 
     for (const id in self.quests) {
       if (self.quests.hasOwnProperty(id)) {
-        if (self.quests[id].isFinished()) {
-          count++;
-        }
+        if (self.quests[id].isFinished()) count++;
       }
     }
 
@@ -192,9 +182,7 @@ class Quests {
 
     for (const id in self.achievements) {
       if (self.achievements.hasOwnProperty(id)) {
-        if (self.achievements[id].isFinished()) {
-          count++;
-        }
+        if (self.achievements[id].isFinished()) count++;
       }
     }
 
@@ -222,9 +210,7 @@ class Quests {
       if (self.quests.hasOwnProperty(id)) {
         const quest = self.quests[id];
 
-        if (quest.hasNPC(npc.id)) {
-          return quest;
-        }
+        if (quest.hasNPC(npc.id)) return quest;
       }
     }
 
@@ -265,17 +251,13 @@ class Quests {
   isQuestMob(mob) {
     const self = this;
 
-    if (mob.type !== "mob") {
-      return false;
-    }
+    if (mob.type !== "mob") return false;
 
     for (const id in self.quests) {
       if (self.quests.hasOwnProperty(id)) {
         const quest = self.quests[id];
 
-        if (!quest.isFinished() && quest.hasMob(mob.id)) {
-          return true;
-        }
+        if (!quest.isFinished() && quest.hasMob(mob.id)) return true;
       }
     }
 
@@ -285,9 +267,7 @@ class Quests {
   isAchievementMob(mob) {
     const self = this;
 
-    if (mob.type !== "mob") {
-      return false;
-    }
+    if (mob.type !== "mob") return false;
 
     for (const id in self.achievements) {
       if (self.achievements.hasOwnProperty(id)) {
@@ -306,17 +286,13 @@ class Quests {
   isQuestNPC(npc) {
     const self = this;
 
-    if (npc.type !== "npc") {
-      return false;
-    }
+    if (npc.type !== "npc") return false;
 
     for (const id in self.quests) {
       if (self.quests.hasOwnProperty(id)) {
         const quest = self.quests[id];
 
-        if (!quest.isFinished() && quest.hasNPC(npc.id)) {
-          return true;
-        }
+        if (!quest.isFinished() && quest.hasNPC(npc.id)) return true;
       }
     }
 
@@ -326,9 +302,7 @@ class Quests {
   isAchievementNPC(npc) {
     const self = this;
 
-    if (npc.type !== "npc") {
-      return false;
-    }
+    if (npc.type !== "npc") return false;
 
     for (const id in self.achievements) {
       if (self.achievements.hasOwnProperty(id)) {

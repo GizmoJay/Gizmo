@@ -21,9 +21,7 @@ class API {
 
     self.world = world;
 
-    if (!config.apiEnabled) {
-      return;
-    }
+    if (!config.apiEnabled) return;
 
     const app = express();
 
@@ -124,9 +122,7 @@ class API {
     if (username) {
       const player = self.world.getPlayerByName(username);
 
-      if (player) {
-        player.chat(source, text, colour);
-      }
+      if (player) player.chat(source, text, colour);
 
       response.json({ status: "success" });
 
@@ -182,7 +178,7 @@ class API {
           }
         }
       } catch (e) {
-        log.error("Could not connect to Gizmo Hub.", error);
+        log.error("Could not connect to Gizmo Hub.");
         self.hubConnected = false;
       }
     });
@@ -205,13 +201,11 @@ class API {
       try {
         const data = JSON.parse(body);
 
-        if (data.status === "error") {
-          console.log(data);
-        }
+        if (data.status === "error") console.log(data);
 
         // TODO - Do something with this?
       } catch (e) {
-        log.error("Could not send message to hub.", error);
+        log.error("Could not send message to hub.");
       }
     });
   }
@@ -242,7 +236,7 @@ class API {
         // TODO - Add chat colours/format to config.
         source.chat(`[To ${target}]`, text, "aquamarine");
       } catch (e) {
-        log.error("Could not send privateMessage to hub.", error);
+        log.error("Could not send privateMessage to hub.");
       }
     });
   }
@@ -254,9 +248,7 @@ class API {
   getPlayerData(player) {
     const self = this;
 
-    if (!player) {
-      return {};
-    }
+    if (!player) return {};
 
     return {
       serverId: config.serverId,

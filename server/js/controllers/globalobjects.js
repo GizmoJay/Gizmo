@@ -9,11 +9,10 @@ class GlobalObjects {
     self.map = world.map;
   }
 
-  getType(id) {
+  getInfo(id) {
     const self = this;
-    object = Objects.getObject(id);
-    (position = Objects.getPosition(id)),
-    (objectId = self.map.getPositionObject(position.x, position.y));
+    const position = Objects.getPosition(id);
+    const objectId = self.map.getPositionObject(position.x, position.y);
 
     if (objectId in self.map.trees) {
       return {
@@ -22,11 +21,9 @@ class GlobalObjects {
       };
     }
 
-    let object = Objects.getObject(id);
+    const object = Objects.getObject(id);
 
-    if (!object) {
-      return null;
-    }
+    if (!object) return null;
 
     return {
       type: object.type
@@ -42,9 +39,7 @@ class GlobalObjects {
     const self = this;
     const object = Objects.getObject(id);
 
-    if (!object) {
-      return null;
-    }
+    if (!object) return null;
 
     const position = Objects.getPosition(id);
 
@@ -82,11 +77,8 @@ class GlobalObjects {
       message = Utils.parseMessage(message);
     }
 
-    if (player.talkIndex > object.messages.length - 1) {
-      player.talkIndex = 0;
-    } else {
-      player.talkIndex++;
-    }
+    if (player.talkIndex > object.messages.length - 1) player.talkIndex = 0;
+    else player.talkIndex++;
 
     return message;
   }

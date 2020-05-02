@@ -4,9 +4,7 @@ class Points {
   constructor(points, maxPoints) {
     const self = this;
 
-    if (isNaN(points)) {
-      points = maxPoints;
-    }
+    if (isNaN(points)) points = maxPoints;
 
     self.points = points;
     self.maxPoints = maxPoints;
@@ -17,9 +15,7 @@ class Points {
 
     self.setPoints(self.points + amount);
 
-    if (self.healCallback) {
-      self.healCallback();
-    }
+    if (self.healCallback) self.healCallback();
   }
 
   increment(amount) {
@@ -35,9 +31,7 @@ class Points {
 
     self.points = points;
 
-    if (self.points >= self.maxPoints) {
-      self.points = self.maxPoints;
-    }
+    if (self.points >= self.maxPoints) self.points = self.maxPoints;
   }
 
   setMaxPoints(maxPoints) {

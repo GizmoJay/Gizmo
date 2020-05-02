@@ -12,9 +12,7 @@ class Mana extends Points {
 
     self.points = mana;
 
-    if (self.manaCallback) {
-      self.manaCallback();
-    }
+    if (self.manaCallback) self.manaCallback();
   }
 
   setMaxMana(maxMana) {
@@ -22,9 +20,7 @@ class Mana extends Points {
 
     self.maxPoints = maxMana;
 
-    if (self.maxManaCallback) {
-      self.maxManaCallback();
-    }
+    if (self.maxManaCallback) self.maxManaCallback();
   }
 
   getMana() {

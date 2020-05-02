@@ -1,125 +1,126 @@
-define(() => {
-  const storage = window.localStorage;
-  const name = "data";
 
-  return class {
-    constructor(app) {
-      this.app = app;
-      this.data = null;
+const storage = window.localStorage;
+const name = "data";
 
-      this.load();
-    }
+class Storage {
+  constructor(app) {
+    this.app = app;
+    this.data = null;
 
-    load() {
-      if (storage.data) {
-        this.data = JSON.parse(storage.getItem(name));
-      } else {
-        this.data = this.create();
-      }
+    this.load();
+  }
 
-      if (this.data.clientVersion !== this.app.config.version) {
-        this.data = this.create();
-        this.save();
-      }
-    }
-
-    create() {
-      return {
-        new: true,
-        clientVersion: this.app.config.version,
-
-        player: {
-          username: "",
-          password: "",
-          autoLogin: false,
-          rememberMe: false,
-          orientation: Modules.Orientation.Down
-        },
-
-        settings: {
-          music: 100,
-          sfx: 100,
-          brightness: 100,
-          soundEnabled: true,
-          FPSCap: true,
-          centerCamera: true,
-          debug: false,
-          showNames: true,
-          showLevels: true
-        },
-
-        map: {
-          regionData: [],
-          collisions: []
-        }
-      };
-    }
-
-    save() {
-      if (this.data) {
-        storage.setItem(name, JSON.stringify(this.data));
-      }
-    }
-
-    clear() {
-      storage.removeItem(name);
+  load() {
+    if (storage.data) {
+      this.data = JSON.parse(storage.getItem(name));
+    } else {
       this.data = this.create();
     }
 
-    toggleRemember(toggle) {
-      this.data.player.rememberMe = toggle;
+    if (this.data.clientVersion !== this.app.config.version) {
+      this.data = this.create();
       this.save();
     }
+  }
 
-    setOrientation(orientation) {
-      const player = this.getPlayer();
+  create() {
+    return {
+      new: true,
+      clientVersion: this.app.config.version,
 
-      player.orientation = orientation;
+      player: {
+        username: "",
+        password: "",
+        autoLogin: false,
+        rememberMe: false,
+        orientation: Modules.Orientation.Down
+      },
 
-      this.save();
-    }
+      settings: {
+        music: 100,
+        sfx: 100,
+        brightness: 100,
+        soundEnabled: true,
+        FPSCap: true,
+        centerCamera: true,
+        debug: false,
+        showNames: true,
+        showLevels: true
+      },
 
-    setPlayer(option, value) {
-      const pData = this.getPlayer();
-
-      if (pData.hasOwnProperty(option)) {
-        pData[option] = value;
+      map: {
+        regionData: [],
+        collisions: []
       }
+    };
+  }
 
-      this.save();
+  save() {
+    if (this.data) {
+      storage.setItem(name, JSON.stringify(this.data));
+    }
+  }
+
+  clear() {
+    storage.removeItem(name);
+    this.data = this.create();
+  }
+
+  toggleRemember(toggle) {
+    this.data.player.rememberMe = toggle;
+    this.save();
+  }
+
+  setOrientation(orientation) {
+    const player = this.getPlayer();
+
+    player.orientation = orientation;
+
+    this.save();
+  }
+
+  setPlayer(option, value) {
+    const pData = this.getPlayer();
+
+    if (pData.hasOwnProperty(option)) {
+      pData[option] = value;
     }
 
-    setSettings(option, value) {
-      const sData = this.getSettings();
+    this.save();
+  }
 
-      if (sData.hasOwnProperty(option)) {
-        sData[option] = value;
-      }
+  setSettings(option, value) {
+    const sData = this.getSettings();
 
-      this.save();
+    if (sData.hasOwnProperty(option)) {
+      sData[option] = value;
     }
 
-    setRegionData(regionData, collisionData) {
-      this.data.map.regionData = regionData;
-      this.data.map.collisions = collisionData;
+    this.save();
+  }
 
-      this.save();
-    }
+  setRegionData(regionData, collisionData) {
+    this.data.map.regionData = regionData;
+    this.data.map.collisions = collisionData;
 
-    getPlayer() {
-      return this.data.player;
-    }
+    this.save();
+  }
 
-    getSettings() {
-      return this.data ? this.data.settings : null;
-    }
+  getPlayer() {
+    return this.data.player;
+  }
 
-    getRegionData() {
-      return this.data.map.regionData;
-    }
+  getSettings() {
+    return this.data ? this.data.settings : null;
+  }
 
-    getCollisions() {
-      return this.data.map.collisions;
-    }
-  };
-});
+  getRegionData() {
+    return this.data.map.regionData;
+  }
+
+  getCollisions() {
+    return this.data.map.collisions;
+  }
+}
+
+export default Storage;

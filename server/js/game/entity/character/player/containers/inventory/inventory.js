@@ -43,17 +43,13 @@ class Inventory extends Container {
       item.abilityLevel
     );
 
-    if (!slot) {
-      return false;
-    }
+    if (!slot) return false;
 
     self.owner.send(new Messages.Inventory(Packets.InventoryOpcode.Add, slot));
 
     self.owner.save();
 
-    if (item.instance) {
-      self.owner.world.removeItem(item);
-    }
+    if (item.instance) self.owner.world.removeItem(item);
 
     return true;
   }
@@ -61,17 +57,11 @@ class Inventory extends Container {
   remove(id, count, index) {
     const self = this;
 
-    if (!id || !count) {
-      return false;
-    }
+    if (!id || !count) return false;
 
-    if (!index) {
-      index = self.getIndex(id);
-    }
+    if (!index) index = self.getIndex(id);
 
-    if (!super.remove(index, id, count)) {
-      return false;
-    }
+    if (!super.remove(index, id, count)) return false;
 
     self.owner.send(
       new Messages.Inventory(Packets.InventoryOpcode.Remove, {

@@ -1,19 +1,19 @@
-define(() => {
-  return class {
-    constructor(start, duration) {
-      this.time = start;
-      this.duration = duration;
+class Timer {
+  constructor(start, duration) {
+    this.time = start;
+    this.duration = duration;
+  }
+
+  isOver(time) {
+    let over = false;
+
+    if (time - this.time > this.duration) {
+      over = true;
+      this.time = time;
     }
 
-    isOver(time) {
-      let over = false;
+    return over;
+  }
+}
 
-      if (time - this.time > this.duration) {
-        over = true;
-        this.time = time;
-      }
-
-      return over;
-    }
-  };
-});
+export default Timer;

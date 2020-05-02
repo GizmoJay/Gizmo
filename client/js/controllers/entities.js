@@ -1,422 +1,420 @@
-/* global log, _, Modules, Packets */
+import Grids from "../renderer/grids";
+import Chest from "../entity/objects/chest";
+import Character from "../entity/character/character";
+import Player from "../entity/character/player/player";
+import Item from "../entity/objects/item";
+import Sprites from "./sprites";
+import Mob from "../entity/character/mob/mob";
+import NPC from "../entity/character/npc/npc";
+import Projectile from "../entity/objects/projectile";
 
-define([
-  "../renderer/grids",
-  "../entity/objects/chest",
-  "../entity/character/character",
-  "../entity/character/player/player",
-  "../entity/objects/item",
-  "./sprites",
-  "../entity/character/mob/mob",
-  "../entity/character/npc/npc",
-  "../entity/objects/projectile"
-], (Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) => {
-  return class {
-    constructor(game) {
-      this.game = game;
-      this.renderer = game.renderer;
+class Entities {
+  constructor(game) {
+    this.game = game;
+    this.renderer = game.renderer;
 
-      this.grids = null;
-      this.sprites = null;
+    this.grids = null;
+    this.sprites = null;
 
-      this.entities = {};
-      this.decrepit = {};
+    this.entities = {};
+    this.decrepit = {};
+  }
+
+  load() {
+    this.game.app.sendStatus("Loading sprites");
+
+    if (!this.sprites) {
+      this.sprites = new Sprites(this.game.renderer);
+
+      this.sprites.onLoadedSprites(() => {
+        this.game.input.loadCursors();
+      });
     }
 
-    load() {
-      this.game.app.sendStatus("Loading sprites");
+    this.game.app.sendStatus("Loading grids");
 
-      if (!this.sprites) {
-        this.sprites = new Sprites(this.game.renderer);
+    if (!this.grids) {
+      this.grids = new Grids(this.game.map);
+    }
+  }
 
-        this.sprites.onLoadedSprites(() => {
-          this.game.input.loadCursors();
-        });
-      }
+  update() {
+    if (this.sprites) {
+      this.sprites.updateSprites();
+    }
+  }
 
-      this.game.app.sendStatus("Loading grids");
+  create(info) {
+    let entity;
 
-      if (!this.grids) {
-        this.grids = new Grids(this.game.map);
-      }
+    if (this.isPlayer(info.id)) {
+      return;
     }
 
-    update() {
-      if (this.sprites) {
-        this.sprites.updateSprites();
-      }
+    if (info.id in this.entities) {
+      // Don't initialize things twice.
+      return;
     }
 
-    create(info) {
-      let entity;
-
-      if (this.isPlayer(info.id)) {
-        return;
-      }
-
-      if (info.id in this.entities) {
-        // Don't initialize things twice.
-        return;
-      }
-
-      switch (info.type) {
-        case "chest":
-          /**
+    switch (info.type) {
+      case "chest":
+        /**
            * Here we will parse the different types of chests..
            * We can go Dark Souls style and implement mimics
            * the proper way -ahem- Gizmo V1.0
            */
 
-          const chest = new Chest(info.id, info.string);
+        const chest = new Chest(info.id, info.string);
 
-          entity = chest;
+        entity = chest;
 
-          break;
+        break;
 
-        case "npc":
-          const npc = new NPC(info.id, info.string);
+      case "npc":
+        const npc = new NPC(info.id, info.string);
 
-          entity = npc;
+        entity = npc;
 
-          break;
+        break;
 
-        case "item":
-          const item = new Item(
-            info.id,
-            info.string,
-            info.count,
-            info.ability,
-            info.abilityLevel
-          );
+      case "item":
+        const item = new Item(
+          info.id,
+          info.string,
+          info.count,
+          info.ability,
+          info.abilityLevel
+        );
 
-          entity = item;
+        entity = item;
 
-          break;
+        break;
 
-        case "mob":
-          const mob = new Mob(info.id, info.string);
+      case "mob":
+        const mob = new Mob(info.id, info.string);
 
-          mob.setHitPoints(info.hitPoints);
-          mob.setMaxHitPoints(info.maxHitPoints);
+        mob.setHitPoints(info.hitPoints);
+        mob.setMaxHitPoints(info.maxHitPoints);
 
-          mob.attackRange = info.attackRange;
-          mob.level = info.level;
-          mob.hiddenName = info.hiddenName;
-          mob.movementSpeed = info.movementSpeed;
+        mob.attackRange = info.attackRange;
+        mob.level = info.level;
+        mob.hiddenName = info.hiddenName;
+        mob.movementSpeed = info.movementSpeed;
 
-          entity = mob;
+        entity = mob;
 
-          break;
+        break;
 
-        case "projectile":
-          const attacker = this.get(info.characterId);
-          const target = this.get(info.targetId);
+      case "projectile":
+        const attacker = this.get(info.characterId);
+        const target = this.get(info.targetId);
 
-          if (!attacker || !target) {
-            return;
-          }
+        if (!attacker || !target) {
+          return;
+        }
 
-          attacker.lookAt(target);
+        attacker.lookAt(target);
 
-          const projectile = new Projectile(
-            info.id,
-            info.projectileType,
-            attacker
-          );
+        const projectile = new Projectile(
+          info.id,
+          info.projectileType,
+          attacker
+        );
 
-          projectile.name = info.name;
+        projectile.name = info.name;
 
-          projectile.setStart(attacker.x, attacker.y);
-          projectile.setTarget(target);
+        projectile.setStart(attacker.x, attacker.y);
+        projectile.setTarget(target);
 
-          projectile.setSprite(this.getSprite(projectile.name));
-          projectile.setAnimation("travel", projectile.getSpeed());
+        projectile.setSprite(this.getSprite(projectile.name));
+        projectile.setAnimation("travel", projectile.getSpeed());
 
-          projectile.angled = true;
-          projectile.type = info.type;
+        projectile.angled = true;
+        projectile.type = info.type;
 
-          /**
+        /**
            * Move this into the external overall function
            */
 
-          projectile.onImpact(() => {
-            /**
+        projectile.onImpact(() => {
+          /**
              * The data in the projectile is only for rendering purposes
              * there is nothing you can change for the actual damage output here.
              */
 
-            if (
-              this.isPlayer(projectile.owner.id) ||
+          if (
+            this.isPlayer(projectile.owner.id) ||
               this.isPlayer(target.id)
-            ) {
-              this.game.socket.send(Packets.Projectile, [
-                Packets.ProjectileOpcode.Impact,
-                info.id,
-                target.id
-              ]);
-            }
+          ) {
+            this.game.socket.send(Packets.Projectile, [
+              Packets.ProjectileOpcode.Impact,
+              info.id,
+              target.id
+            ]);
+          }
 
-            if (info.hitType === Modules.Hits.Explosive) {
-              target.explosion = true;
-            }
+          if (info.hitType === Modules.Hits.Explosive) {
+            target.explosion = true;
+          }
 
-            this.game.info.create(
-              Modules.Hits.Damage,
-              [info.damage, this.isPlayer(target.id)],
-              target.x,
-              target.y
-            );
+          this.game.info.create(
+            Modules.Hits.Damage,
+            [info.damage, this.isPlayer(target.id)],
+            target.x,
+            target.y
+          );
 
-            target.triggerHealthBar();
+          target.triggerHealthBar();
 
-            this.unregisterPosition(projectile);
-            delete this.entities[projectile.getId()];
-          });
+          this.unregisterPosition(projectile);
+          delete this.entities[projectile.getId()];
+        });
 
-          this.addEntity(projectile);
+        this.addEntity(projectile);
 
-          attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-          attacker.triggerHealthBar();
+        attacker.performAction(attacker.orientation, Modules.Actions.Attack);
+        attacker.triggerHealthBar();
 
-          return;
-
-        case "player":
-          const player = new Player();
-
-          player.setId(info.id);
-          player.setName(info.name);
-          player.setGridPosition(info.x, info.y);
-
-          player.rights = info.rights;
-          player.level = info.level;
-          player.pvp = info.pvp;
-          player.pvpKills = info.pvpKills;
-          player.pvpDeaths = info.pvpDeaths;
-          player.attackRange = info.attackRange;
-          player.orientation = info.orientation ? info.orientation : 0;
-          player.type = info.type;
-          player.movementSpeed = info.movementSpeed;
-
-          const hitPointsData = info.hitPoints;
-          const manaData = info.mana;
-          const equipments = [
-            info.armour,
-            info.weapon,
-            info.pendant,
-            info.ring,
-            info.boots
-          ];
-
-          player.setHitPoints(hitPointsData[0]);
-          player.setMaxHitPoints(hitPointsData[1]);
-
-          player.setMana(manaData[0]);
-          player.setMaxMana(manaData[1]);
-
-          player.setSprite(this.getSprite(info.armour.string));
-          player.idle();
-
-          _.each(equipments, equipment => {
-            player.setEquipment(
-              equipment.type,
-              equipment.name,
-              equipment.string,
-              equipment.count,
-              equipment.ability,
-              equipment.abilityLevel
-            );
-          });
-
-          player.loadHandler(this.game);
-
-          this.addEntity(player);
-
-          return;
-      }
-
-      if (!entity) {
         return;
-      }
 
-      const sprite = this.getSprite(
-        info.type === "item" ? "item-" + info.string : info.string
-      );
+      case "player":
+        const player = new Player();
 
-      entity.setGridPosition(info.x, info.y);
-      entity.setName(info.name);
+        player.setId(info.id);
+        player.setName(info.name);
+        player.setGridPosition(info.x, info.y);
 
-      entity.setSprite(sprite);
+        player.rights = info.rights;
+        player.level = info.level;
+        player.pvp = info.pvp;
+        player.pvpKills = info.pvpKills;
+        player.pvpDeaths = info.pvpDeaths;
+        player.attackRange = info.attackRange;
+        player.orientation = info.orientation ? info.orientation : 0;
+        player.type = info.type;
+        player.movementSpeed = info.movementSpeed;
 
-      entity.setIdleSpeed(sprite.idleSpeed);
+        const hitPointsData = info.hitPoints;
+        const manaData = info.mana;
+        const equipments = [
+          info.armour,
+          info.weapon,
+          info.pendant,
+          info.ring,
+          info.boots
+        ];
 
-      entity.idle();
-      entity.type = info.type;
+        player.setHitPoints(hitPointsData[0]);
+        player.setMaxHitPoints(hitPointsData[1]);
 
-      if (info.nameColour) {
-        entity.nameColour = info.nameColour;
-      }
+        player.setMana(manaData[0]);
+        player.setMaxMana(manaData[1]);
 
-      if (info.customScale) {
-        entity.customScale = info.customScale;
-      }
+        player.setSprite(this.getSprite(info.armour.string));
+        player.idle();
 
-      this.addEntity(entity);
+        _.each(equipments, equipment => {
+          player.setEquipment(
+            equipment.type,
+            equipment.name,
+            equipment.string,
+            equipment.count,
+            equipment.ability,
+            equipment.abilityLevel
+          );
+        });
 
-      if (info.type !== "item" && entity.handler) {
-        entity.handler.setGame(this.game);
-        entity.handler.load();
-      }
+        player.loadHandler(this.game);
 
-      /**
+        this.addEntity(player);
+
+        return;
+    }
+
+    if (!entity) {
+      return;
+    }
+
+    const sprite = this.getSprite(
+      info.type === "item" ? "item-" + info.string : info.string
+    );
+
+    entity.setGridPosition(info.x, info.y);
+    entity.setName(info.name);
+
+    entity.setSprite(sprite);
+
+    entity.setIdleSpeed(sprite.idleSpeed);
+
+    entity.idle();
+    entity.type = info.type;
+
+    if (info.nameColour) {
+      entity.nameColour = info.nameColour;
+    }
+
+    if (info.customScale) {
+      entity.customScale = info.customScale;
+    }
+
+    this.addEntity(entity);
+
+    if (info.type !== "item" && entity.handler) {
+      entity.handler.setGame(this.game);
+      entity.handler.load();
+    }
+
+    /**
        * Get ready for errors!
        */
+  }
+
+  isPlayer(id) {
+    return this.game.player.id === id;
+  }
+
+  get(id) {
+    if (id in this.entities) {
+      return this.entities[id];
     }
 
-    isPlayer(id) {
-      return this.game.player.id === id;
-    }
+    return null;
+  }
 
-    get(id) {
-      if (id in this.entities) {
-        return this.entities[id];
-      }
+  exists(id) {
+    return id in this.entities;
+  }
 
-      return null;
-    }
+  removeEntity(entity) {
+    this.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
+    this.grids.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
 
-    exists(id) {
-      return id in this.entities;
-    }
+    delete this.entities[entity.id];
+  }
 
-    removeEntity(entity) {
-      this.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
-      this.grids.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
+  clean(ids) {
+    ids = ids[0];
 
-      delete this.entities[entity.id];
-    }
-
-    clean(ids) {
-      ids = ids[0];
-
-      _.each(this.entities, entity => {
-        if (ids) {
-          if (
-            ids.indexOf(parseInt(entity.id)) < 0 &&
+    _.each(this.entities, entity => {
+      if (ids) {
+        if (
+          ids.indexOf(parseInt(entity.id)) < 0 &&
             entity.id !== this.game.player.id
-          ) {
-            this.removeEntity(entity);
-          }
-        } else if (entity.id !== this.game.player.id) {
+        ) {
           this.removeEntity(entity);
         }
-      });
-
-      this.grids.resetPathingGrid();
-    }
-
-    clearPlayers(exception) {
-      _.each(this.entities, entity => {
-        if (entity.id !== exception.id && entity.type === "player") {
-          this.removeEntity(entity);
-        }
-      });
-
-      this.grids.resetPathingGrid();
-    }
-
-    addEntity(entity) {
-      if (this.entities[entity.id]) {
-        return;
+      } else if (entity.id !== this.game.player.id) {
+        this.removeEntity(entity);
       }
+    });
 
-      this.entities[entity.id] = entity;
-      this.registerPosition(entity);
+    this.grids.resetPathingGrid();
+  }
 
-      if (
-        !(entity instanceof Item && entity.dropped) &&
+  clearPlayers(exception) {
+    _.each(this.entities, entity => {
+      if (entity.id !== exception.id && entity.type === "player") {
+        this.removeEntity(entity);
+      }
+    });
+
+    this.grids.resetPathingGrid();
+  }
+
+  addEntity(entity) {
+    if (this.entities[entity.id]) {
+      return;
+    }
+
+    this.entities[entity.id] = entity;
+    this.registerPosition(entity);
+
+    if (
+      !(entity instanceof Item && entity.dropped) &&
         !this.renderer.isPortableDevice()
-      ) {
-        entity.fadeIn(this.game.time);
-      }
+    ) {
+      entity.fadeIn(this.game.time);
+    }
+  }
+
+  removeItem(item) {
+    if (!item) {
+      return;
     }
 
-    removeItem(item) {
-      if (!item) {
-        return;
-      }
+    this.grids.removeFromItemGrid(item, item.gridX, item.gridY);
+    this.grids.removeFromRenderingGrid(item, item.gridX, item.gridY);
 
-      this.grids.removeFromItemGrid(item, item.gridX, item.gridY);
-      this.grids.removeFromRenderingGrid(item, item.gridX, item.gridY);
+    delete this.entities[item.id];
+  }
 
-      delete this.entities[item.id];
+  registerPosition(entity) {
+    if (!entity) {
+      return;
     }
 
-    registerPosition(entity) {
-      if (!entity) {
-        return;
-      }
-
-      /* if (entity.type === 'player' || entity.type === 'mob' || entity.type === 'npc' || entity.type === 'chest') {
+    /* if (entity.type === 'player' || entity.type === 'mob' || entity.type === 'npc' || entity.type === 'chest') {
 
                     if (entity.type !== 'player' || entity.nonPathable)
                           this.grids.addToPathingGrid(entity.gridX, entity.gridY);
                 } */
 
-      if (entity.type === "item") {
-        this.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
-      }
-
-      this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
+    if (entity.type === "item") {
+      this.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
     }
 
-    registerDuality(entity) {
-      if (!entity) {
-        return;
-      }
+    this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
+  }
 
-      this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
+  registerDuality(entity) {
+    if (!entity) {
+      return;
+    }
 
-      /* if (entity.nextGridX > -1 && entity.nextGridY > -1) {
+    this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
+
+    /* if (entity.nextGridX > -1 && entity.nextGridY > -1) {
 
                     if (!(entity instanceof Player))
                         this.grids.pathingGrid[entity.nextGridY][entity.nextGridX] = 1;
                 } */
+  }
+
+  unregisterPosition(entity) {
+    if (!entity) {
+      return;
     }
 
-    unregisterPosition(entity) {
-      if (!entity) {
-        return;
-      }
+    this.grids.removeEntity(entity);
+  }
 
-      this.grids.removeEntity(entity);
-    }
+  getSprite(name) {
+    return this.sprites.sprites[name];
+  }
 
-    getSprite(name) {
-      return this.sprites.sprites[name];
-    }
+  getAll() {
+    return this.entities;
+  }
 
-    getAll() {
-      return this.entities;
-    }
+  forEachEntity(callback) {
+    _.each(this.entities, entity => {
+      callback(entity);
+    });
+  }
 
-    forEachEntity(callback) {
-      _.each(this.entities, entity => {
-        callback(entity);
-      });
-    }
-
-    forEachEntityAround(x, y, radius, callback) {
-      for (let i = x - radius, max_i = x + radius; i <= max_i; i++) {
-        for (let j = y - radius, max_j = y + radius; j <= max_j; j++) {
-          if (this.map.isOutOfBounds(i, j)) {
-            continue;
-          }
-
-          _.each(this.grids.renderingGrid[j][i], entity => {
-            callback(entity);
-          });
+  forEachEntityAround(x, y, radius, callback) {
+    for (let i = x - radius, max_i = x + radius; i <= max_i; i++) {
+      for (let j = y - radius, max_j = y + radius; j <= max_j; j++) {
+        if (this.map.isOutOfBounds(i, j)) {
+          continue;
         }
+
+        _.each(this.grids.renderingGrid[j][i], entity => {
+          callback(entity);
+        });
       }
     }
-  };
-});
+  }
+}
+
+export default Entities;

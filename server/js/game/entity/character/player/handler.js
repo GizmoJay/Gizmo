@@ -146,9 +146,7 @@ class Handler {
 
       const text = Npcs.getText(npc.id);
 
-      if (!text) {
-        return;
-      }
+      if (!text) return;
 
       self.player.send(
         new Messages.NPC(Packets.NPCOpcode.Talk, {
@@ -171,11 +169,8 @@ class Handler {
     self.player.onPoison(info => {
       self.player.sync();
 
-      if (info) {
-        self.player.notify("You have been poisoned.");
-      } else {
-        self.player.notify("The poison has worn off.");
-      }
+      if (info) self.player.notify("You have been poisoned.");
+      else self.player.notify("The poison has worn off.");
 
       log.debug(`Player ${self.player.instance} updated poison status.`);
     });
@@ -186,9 +181,7 @@ class Handler {
        * It will not accomplish much, but it is enough for now.
        */
 
-      if (self.player.cheatScore > 10) {
-        self.player.timeout();
-      }
+      if (self.player.cheatScore > 10) self.player.timeout();
 
       log.debug("Cheat score - " + self.player.cheatScore);
     });
@@ -198,17 +191,13 @@ class Handler {
     const self = this;
     const region = self.world.region.regions[self.player.region];
 
-    if (!region) {
-      return;
-    }
+    if (!region) return;
 
     _.each(region.entities, entity => {
       if (entity && entity.type === "mob" && self.canEntitySee(entity)) {
         const aggro = entity.canAggro(self.player);
 
-        if (aggro) {
-          entity.combat.begin(self.player);
-        }
+        if (aggro) entity.combat.begin(self.player);
       }
     });
   }
@@ -220,9 +209,7 @@ class Handler {
     });
     const song = musicArea ? musicArea.id : null;
 
-    if (self.player.currentSong !== song) {
-      self.player.updateMusic(song);
-    }
+    if (self.player.currentSong !== song) self.player.updateMusic(song);
   }
 
   detectPVP(x, y) {
@@ -274,9 +261,7 @@ class Handler {
     const self = this;
     const isColliding = self.map.isColliding(x, y);
 
-    if (!isColliding) {
-      return;
-    }
+    if (!isColliding) return;
 
     self.player.incoming.handleNoClip(x, y);
   }
@@ -284,9 +269,7 @@ class Handler {
   handlePoison() {
     const self = this;
 
-    if (!self.player.poison) {
-      return;
-    }
+    if (!self.player.poison) return;
 
     const info = self.player.poison.split(":");
     const timeDiff = new Date().getTime() - info[0];

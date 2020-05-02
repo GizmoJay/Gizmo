@@ -1,286 +1,284 @@
-/* global log */
+import Inventory from "../interface/inventory";
+import Profile from "../interface/profile/profile";
+import Actions from "../interface/actions";
+import Bank from "../interface/bank";
+import Enchant from "../interface/enchant";
+import Warp from "../interface/warp";
+import Shop from "../interface/shop";
+import Header from "../interface/header";
 
-define([
-  "../interface/inventory",
-  "../interface/profile/profile",
-  "../interface/actions",
-  "../interface/bank",
-  "../interface/enchant",
-  "../interface/warp",
-  "../interface/shop",
-  "../interface/header"
-], (Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) => {
-  return class {
-    constructor(game) {
-      this.game = game;
+class Interface {
+  constructor(game) {
+    this.game = game;
 
-      this.notify = $("#notify");
-      this.confirm = $("#confirm");
-      this.message = $("#message");
-      this.fade = $("#notifyFade");
-      this.done = $("#notifyDone");
+    this.notify = $("#notify");
+    this.confirm = $("#confirm");
+    this.message = $("#message");
+    this.fade = $("#notifyFade");
+    this.done = $("#notifyDone");
 
-      this.inventory = null;
-      this.profile = null;
-      this.actions = null;
-      this.enchant = null;
-      this.shop = null;
-      this.header = null;
+    this.inventory = null;
+    this.profile = null;
+    this.actions = null;
+    this.enchant = null;
+    this.shop = null;
+    this.header = null;
 
-      this.loadNotifications();
-      this.loadActions();
-      this.loadWarp();
-      this.loadShop();
+    this.loadNotifications();
+    this.loadActions();
+    this.loadWarp();
+    this.loadShop();
 
-      this.done.click(() => {
-        this.hideNotify();
-      });
+    this.done.click(() => {
+      this.hideNotify();
+    });
+  }
+
+  resize() {
+    if (this.inventory) {
+      this.inventory.resize();
     }
 
-    resize() {
-      if (this.inventory) {
-        this.inventory.resize();
-      }
-
-      if (this.profile) {
-        this.profile.resize();
-      }
-
-      if (this.bank) {
-        this.bank.resize();
-      }
-
-      if (this.enchant) {
-        this.enchant.resize();
-      }
-
-      if (this.shop && this.shop.isVisible()) {
-        this.shop.resize();
-      }
-
-      if (this.header) {
-        this.header.resize();
-      }
+    if (this.profile) {
+      this.profile.resize();
     }
 
-    loadInventory(size, data) {
-      /**
+    if (this.bank) {
+      this.bank.resize();
+    }
+
+    if (this.enchant) {
+      this.enchant.resize();
+    }
+
+    if (this.shop && this.shop.isVisible()) {
+      this.shop.resize();
+    }
+
+    if (this.header) {
+      this.header.resize();
+    }
+  }
+
+  loadInventory(size, data) {
+    /**
        * This can be called multiple times and can be used
        * to completely refresh the inventory.
        */
 
-      this.inventory = new Inventory(this.game, size);
+    this.inventory = new Inventory(this.game, size);
 
-      this.inventory.load(data);
-    }
+    this.inventory.load(data);
+  }
 
-    loadBank(size, data) {
-      /**
+  loadBank(size, data) {
+    /**
        * Similar structure as the inventory, just that it
        * has two containers. The bank and the inventory.
        */
 
-      if (!this.inventory) {
-        log.error("Inventory not initialized.");
-        return;
-      }
-
-      this.bank = new Bank(this.game, this.inventory.container, size);
-
-      this.bank.load(data);
-
-      this.loadEnchant();
+    if (!this.inventory) {
+      log.error("Inventory not initialized.");
+      return;
     }
 
-    loadProfile() {
-      if (!this.profile) {
-        this.profile = new Profile(this.game);
-      }
+    this.bank = new Bank(this.game, this.inventory.container, size);
+
+    this.bank.load(data);
+
+    this.loadEnchant();
+  }
+
+  loadProfile() {
+    if (!this.profile) {
+      this.profile = new Profile(this.game);
     }
+  }
 
-    loadActions() {
-      if (!this.actions) {
-        this.actions = new Actions(this);
-      }
+  loadActions() {
+    if (!this.actions) {
+      this.actions = new Actions(this);
     }
+  }
 
-    loadEnchant() {
-      if (!this.enchant) {
-        this.enchant = new Enchant(this.game, this);
-      }
+  loadEnchant() {
+    if (!this.enchant) {
+      this.enchant = new Enchant(this.game, this);
     }
+  }
 
-    loadWarp() {
-      if (!this.warp) {
-        this.warp = new Warp(this.game, this);
-      }
+  loadWarp() {
+    if (!this.warp) {
+      this.warp = new Warp(this.game, this);
     }
+  }
 
-    loadShop() {
-      if (!this.shop) {
-        this.shop = new Shop(this.game, this);
-      }
+  loadShop() {
+    if (!this.shop) {
+      this.shop = new Shop(this.game, this);
     }
+  }
 
-    loadHeader() {
-      if (!this.header) {
-        this.header = new Header(this.game, this);
-      }
+  loadHeader() {
+    if (!this.header) {
+      this.header = new Header(this.game, this);
     }
+  }
 
-    loadNotifications() {
-      const ok = $("#ok");
-      const cancel = $("#cancel");
-      const done = $("#done");
+  loadNotifications() {
+    const ok = $("#ok");
+    const cancel = $("#cancel");
+    const done = $("#done");
 
-      /**
+    /**
        * Simple warning dialogue
        */
 
-      ok.click(() => {
-        this.hideNotify();
-      });
+    ok.click(() => {
+      this.hideNotify();
+    });
 
-      /**
+    /**
        * Callbacks responsible for
        * Confirmation dialogues
        */
 
-      cancel.click(() => {
-        this.hideConfirm();
-      });
+    cancel.click(() => {
+      this.hideConfirm();
+    });
 
-      done.click(() => {
-        log.info(this.confirm.className);
+    done.click(() => {
+      log.info(this.confirm.className);
 
-        this.hideConfirm();
-      });
+      this.hideConfirm();
+    });
+  }
+
+  stop() {
+    if (this.inventory) {
+      this.inventory.clear();
     }
 
-    stop() {
-      if (this.inventory) {
-        this.inventory.clear();
-      }
-
-      if (this.actions) {
-        this.actions.clear();
-      }
-
-      if (this.profile) {
-        this.profile.clean();
-      }
-
-      if (this.game.input) {
-        this.game.input.chatHandler.clear();
-      }
-
-      if (this.bank) {
-        this.bank.clear();
-      }
-
-      if (this.enchant) {
-        this.enchant.clear();
-      }
-
-      if (this.warp) {
-        this.warp.clear();
-      }
-
-      if (this.shop) {
-        this.shop.clear();
-      }
+    if (this.actions) {
+      this.actions.clear();
     }
 
-    hideAll() {
-      if (this.inventory && this.inventory.isVisible()) {
-        this.inventory.hide();
-      }
+    if (this.profile) {
+      this.profile.clean();
+    }
 
-      if (this.actions && this.actions.isVisible()) {
-        this.actions.hide();
-      }
+    if (this.game.input) {
+      this.game.input.chatHandler.clear();
+    }
 
-      if (
-        this.profile &&
+    if (this.bank) {
+      this.bank.clear();
+    }
+
+    if (this.enchant) {
+      this.enchant.clear();
+    }
+
+    if (this.warp) {
+      this.warp.clear();
+    }
+
+    if (this.shop) {
+      this.shop.clear();
+    }
+  }
+
+  hideAll() {
+    if (this.inventory && this.inventory.isVisible()) {
+      this.inventory.hide();
+    }
+
+    if (this.actions && this.actions.isVisible()) {
+      this.actions.hide();
+    }
+
+    if (
+      this.profile &&
         (this.profile.isVisible() || this.profile.settings.isVisible())
-      ) {
-        this.profile.hide();
-      }
+    ) {
+      this.profile.hide();
+    }
 
-      if (
-        this.game.input &&
+    if (
+      this.game.input &&
         this.game.input.chatHandler &&
         this.game.input.chatHandler.input.is(":visible")
-      ) {
-        this.game.input.chatHandler.hideInput();
-      }
-
-      if (this.bank && this.bank.isVisible()) {
-        this.bank.hide();
-      }
-
-      if (this.enchant && this.enchant.isVisible()) {
-        this.enchant.hide();
-      }
-
-      if (this.warp && this.warp.isVisible()) {
-        this.warp.hide();
-      }
-
-      if (this.shop && this.shop.isVisible()) {
-        this.shop.hide();
-      }
+    ) {
+      this.game.input.chatHandler.hideInput();
     }
 
-    addInventory(info) {
-      this.bank.addInventory(info);
+    if (this.bank && this.bank.isVisible()) {
+      this.bank.hide();
     }
 
-    removeInventory(info) {
-      this.bank.removeInventory(info);
+    if (this.enchant && this.enchant.isVisible()) {
+      this.enchant.hide();
     }
 
-    displayNotify(message) {
-      if (this.isNotifyVisible()) {
-        return;
-      }
-
-      this.notify.css("display", "block");
-      this.fade.css("display", "block");
-      this.message.css("display", "block");
-
-      this.message.text(message);
+    if (this.warp && this.warp.isVisible()) {
+      this.warp.hide();
     }
 
-    displayConfirm(message) {
-      if (this.isConfirmVisible()) {
-        return;
-      }
+    if (this.shop && this.shop.isVisible()) {
+      this.shop.hide();
+    }
+  }
 
-      this.confirm.css("display", "block");
-      this.confirm.text(message);
+  addInventory(info) {
+    this.bank.addInventory(info);
+  }
+
+  removeInventory(info) {
+    this.bank.removeInventory(info);
+  }
+
+  displayNotify(message) {
+    if (this.isNotifyVisible()) {
+      return;
     }
 
-    hideNotify() {
-      this.fade.css("display", "none");
-      this.notify.css("display", "none");
-      this.message.css("display", "none");
+    this.notify.css("display", "block");
+    this.fade.css("display", "block");
+    this.message.css("display", "block");
+
+    this.message.text(message);
+  }
+
+  displayConfirm(message) {
+    if (this.isConfirmVisible()) {
+      return;
     }
 
-    hideConfirm() {
-      this.confirm.css("display", "none");
-    }
+    this.confirm.css("display", "block");
+    this.confirm.text(message);
+  }
 
-    getQuestPage() {
-      return this.profile.quests;
-    }
+  hideNotify() {
+    this.fade.css("display", "none");
+    this.notify.css("display", "none");
+    this.message.css("display", "none");
+  }
 
-    isNotifyVisible() {
-      return this.notify.css("display") === "block";
-    }
+  hideConfirm() {
+    this.confirm.css("display", "none");
+  }
 
-    isConfirmVisible() {
-      return this.confirm.css("display") === "block";
-    }
-  };
-});
+  getQuestPage() {
+    return this.profile.quests;
+  }
+
+  isNotifyVisible() {
+    return this.notify.css("display") === "block";
+  }
+
+  isConfirmVisible() {
+    return this.confirm.css("display") === "block";
+  }
+}
+
+export default Interface;

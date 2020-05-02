@@ -17,7 +17,6 @@ class Incoming {
     self.player = player;
     self.connection = self.player.connection;
     self.world = self.player.world;
-    self.globalObjects = self.world.globalObjects;
     self.database = self.player.database;
     self.commands = new Commands(self.player);
 
@@ -146,9 +145,7 @@ class Incoming {
     self.player.password = password.substr(0, 32);
     self.player.email = email.substr(0, 128).toLowerCase();
 
-    if (self.introduced) {
-      return;
-    }
+    if (self.introduced) return;
 
     if (self.world.isOnline(self.player.username)) {
       self.connection.sendUTF8("loggedin");
@@ -177,9 +174,7 @@ class Incoming {
         if (result.exists) {
           self.connection.sendUTF8(result.type + "exists");
           self.connection.close(result.type + " is not available.");
-        } else {
-          self.database.register(self.player);
-        }
+        } else self.database.register(self.player);
       });
     } else if (isGuest) {
       self.player.username = "Guest" + Utils.randomInt(0, 2000000);
@@ -190,9 +185,8 @@ class Incoming {
       self.database.login(self.player);
     } else {
       self.database.verify(self.player, result => {
-        if (result.status === "success") {
-          self.database.login(self.player);
-        } else {
+        if (result.status === "success") self.database.login(self.player);
+        else {
           self.connection.sendUTF8("invalidlogin");
           self.connection.close(
             "Wrong password entered for: " + self.player.username
@@ -208,9 +202,7 @@ class Incoming {
     const preloadedData = message.shift();
     const userAgent = message.shift();
 
-    if (!isReady) {
-      return;
-    }
+    if (!isReady) return;
 
     if (self.player.regionsLoaded.length > 0 && !preloadedData) {
       self.player.regionsLoaded = [];
@@ -222,6 +214,7 @@ class Incoming {
     self.world.region.push(self.player);
 
     self.player.sendEquipment();
+
     self.player.loadProfessions();
     self.player.loadInventory();
     self.player.loadQuests();
@@ -252,9 +245,7 @@ class Incoming {
       );
     }
 
-    if (self.player.readyCallback) {
-      self.player.readyCallback();
-    }
+    if (self.player.readyCallback) self.player.readyCallback();
 
     self.player.sync();
   }
@@ -265,16 +256,12 @@ class Incoming {
     _.each(message.shift(), id => {
       const entity = self.world.getEntityByInstance(id);
 
-      if (!entity || entity.dead) {
-        return;
-      }
+      if (!entity || entity.dead) return;
 
       /* We handle player-specific entity statuses here. */
 
       // Entity is an area-based mob
-      if (entity.area) {
-        entity.specialState = "area";
-      }
+      if (entity.area) entity.specialState = "area";
 
       if (self.player.quests.isQuestNPC(entity)) {
         entity.specialState = "questNpc";
@@ -289,9 +276,7 @@ class Incoming {
         entity.customScale = 1.25;
       }
 
-      if (entity.boss) {
-        entity.specialState = "boss";
-      }
+      if (entity.boss) entity.specialState = "boss";
 
       // if (self.player.quests.isAchievementNPC(entity))
       //    entity.specialState = 'achievementNpc';
@@ -303,6 +288,7 @@ class Incoming {
   handleEquipment(message) {
     const self = this;
     const opcode = message.shift();
+
     switch (opcode) {
       case Packets.EquipmentOpcode.Unequip:
         const type = message.shift();
@@ -319,9 +305,7 @@ class Incoming {
 
         switch (type) {
           case "weapon":
-            if (!self.player.hasWeapon()) {
-              return;
-            }
+            if (!self.player.hasWeapon()) return;
 
             self.player.inventory.add(self.player.weapon.getItem());
             self.player.setWeapon(-1, -1, -1, -1);
@@ -339,9 +323,7 @@ class Incoming {
             break;
 
           case "pendant":
-            if (!self.player.hasPendant()) {
-              return;
-            }
+            if (!self.player.hasPendant()) return;
 
             self.player.inventory.add(self.player.pendant.getItem());
             self.player.setPendant(-1, -1, -1, -1);
@@ -349,9 +331,7 @@ class Incoming {
             break;
 
           case "ring":
-            if (!self.player.hasRing()) {
-              return;
-            }
+            if (!self.player.hasRing()) return;
 
             self.player.inventory.add(self.player.ring.getItem());
             self.player.setRing(-1, -1, -1, -1);
@@ -359,9 +339,7 @@ class Incoming {
             break;
 
           case "boots":
-            if (!self.player.hasBoots()) {
-              return;
-            }
+            if (!self.player.hasBoots()) return;
 
             self.player.inventory.add(self.player.boots.getItem());
             self.player.setBoots(-1, -1, -1, -1);
@@ -382,9 +360,7 @@ class Incoming {
     const opcode = message.shift();
     let orientation;
 
-    if (!self.player || self.player.dead) {
-      return;
-    }
+    if (!self.player || self.player.dead) return;
 
     switch (opcode) {
       case Packets.MovementOpcode.Request:
@@ -435,9 +411,7 @@ class Incoming {
         const x = message.shift();
         const y = message.shift();
 
-        if (self.player.stunned || !self.preventNoClip(x, y)) {
-          return;
-        }
+        if (self.player.stunned || !self.preventNoClip(x, y)) return;
 
         self.player.setPosition(x, y);
 
@@ -460,16 +434,12 @@ class Incoming {
 
         orientation = message.shift();
 
-        if (entity && entity.type === "item") {
-          self.player.inventory.add(entity);
-        }
+        if (entity && entity.type === "item") self.player.inventory.add(entity);
 
         if (self.world.map.isDoor(posX, posY) && !hasTarget) {
           const door = self.player.doors.getDoor(posX, posY);
 
-          if (door && self.player.doors.getStatus(door) === "closed") {
-            return;
-          }
+          if (door && self.player.doors.getStatus(door) === "closed") return;
 
           const destination = self.world.map.getDoorDestination(posX, posY);
 
@@ -502,9 +472,7 @@ class Incoming {
 
         oEntity.setPosition(entityX, entityY);
 
-        if (oEntity.hasTarget()) {
-          oEntity.combat.forceAttack();
-        }
+        if (oEntity.hasTarget()) oEntity.combat.forceAttack();
 
         break;
 
@@ -544,9 +512,7 @@ class Incoming {
     const self = this;
     const id = message.shift();
 
-    if (id !== self.player.instance) {
-      return;
-    }
+    if (id !== self.player.instance) return;
 
     self.world.region.push(self.player);
   }
@@ -562,9 +528,7 @@ class Incoming {
       case Packets.TargetOpcode.Talk:
         const entity = self.world.getEntityByInstance(instance);
 
-        if (!entity || !self.player.isAdjacent(entity)) {
-          return;
-        }
+        if (!entity || !self.player.isAdjacent(entity)) return;
 
         self.player.cheatScore = 0;
 
@@ -573,13 +537,9 @@ class Incoming {
           return;
         }
 
-        if (entity.dead) {
-          return;
-        }
+        if (entity.dead) return;
 
-        if (self.player.npcTalkCallback) {
-          self.player.npcTalkCallback(entity);
-        }
+        if (self.player.npcTalkCallback) self.player.npcTalkCallback(entity);
 
         break;
 
@@ -635,17 +595,14 @@ class Incoming {
 
         attacker.setTarget(target);
 
-        if (!attacker.combat.started) {
-          attacker.combat.forceAttack();
-        } else {
+        if (!attacker.combat.started) attacker.combat.forceAttack();
+        else {
           attacker.combat.start();
 
           attacker.combat.attack(target);
         }
 
-        if (target.combat) {
-          target.combat.addAttacker(attacker);
-        }
+        if (target.combat) target.combat.addAttacker(attacker);
 
         break;
     }
@@ -660,9 +617,7 @@ class Incoming {
         const projectile = self.world.getEntityByInstance(message.shift());
         const target = self.world.getEntityByInstance(message.shift());
 
-        if (!target || target.dead || !projectile) {
-          return;
-        }
+        if (!target || target.dead || !projectile) return;
 
         self.world.handleDamage(projectile.owner, target, projectile.damage);
         self.world.removeProjectile(projectile);
@@ -697,9 +652,7 @@ class Incoming {
     const self = this;
     const text = sanitizer.escape(sanitizer.sanitize(message.shift()));
 
-    if (!text || text.length < 1 || !/\S/.test(text)) {
-      return;
-    }
+    if (!text || text.length < 1 || !/\S/.test(text)) return;
 
     if (text.charAt(0) === "/" || text.charAt(0) === ";") {
       self.commands.parse(text);
@@ -751,9 +704,7 @@ class Incoming {
     const self = this;
     const opcode = message.shift();
 
-    if (self.player.rights < 2) {
-      return;
-    }
+    if (self.player.rights < 2) return;
 
     switch (opcode) {
       case Packets.CommandOpcode.CtrlClick:
@@ -777,25 +728,17 @@ class Incoming {
         const item = message.shift();
         let count;
 
-        if (!item) {
-          return;
-        }
+        if (!item) return;
 
-        if (item.count > 1) {
-          count = message.shift();
-        }
+        if (item.count > 1) count = message.shift();
 
         id = Items.stringToId(item.string);
 
         const iSlot = self.player.inventory.slots[item.index];
 
-        if (iSlot.id < 1) {
-          return;
-        }
+        if (iSlot.id < 1) return;
 
-        if (count > iSlot.count) {
-          count = iSlot.count;
-        }
+        if (count > iSlot.count) count = iSlot.count;
 
         (ability = iSlot.ability), (abilityLevel = iSlot.abilityLevel);
 
@@ -820,16 +763,12 @@ class Incoming {
 
         (ability = slot.ability), (abilityLevel = slot.abilityLevel);
 
-        if (!slot || slot.id < 1) {
-          return;
-        }
+        if (!slot || slot.id < 1) return;
 
         id = Items.stringToId(slot.string);
 
         if (slot.equippable) {
-          if (!self.player.canEquip(string)) {
-            return;
-          }
+          if (!self.player.canEquip(string)) return;
 
           self.player.inventory.remove(id, slot.count, slot.index);
 
@@ -857,9 +796,7 @@ class Incoming {
         if (isBank) {
           const bankSlot = self.player.bank.getInfo(index);
 
-          if (bankSlot.id < 1) {
-            return;
-          }
+          if (bankSlot.id < 1) return;
 
           // Infinite stacks move all at once, otherwise move one by one.
           const moveAmount =
@@ -873,9 +810,7 @@ class Incoming {
         } else {
           const inventorySlot = self.player.inventory.slots[index];
 
-          if (inventorySlot.id < 1) {
-            return;
-          }
+          if (inventorySlot.id < 1) return;
 
           if (
             self.player.bank.add(
@@ -901,9 +836,7 @@ class Incoming {
     const self = this;
     const instance = message.shift();
 
-    if (self.player.instance !== instance) {
-      return;
-    }
+    if (self.player.instance !== instance) return;
 
     const spawn = self.player.getSpawn();
 
@@ -928,9 +861,7 @@ class Incoming {
     const opcode = message.shift();
     const oPlayer = self.world.getEntityByInstance(message.shift());
 
-    if (!oPlayer || !opcode) {
-      return;
-    }
+    if (!oPlayer || !opcode) return;
 
     switch (opcode) {
       case Packets.TradeOpcode.Request:
@@ -954,13 +885,9 @@ class Incoming {
         const item = self.player.inventory.slots[index];
         let type = "item";
 
-        if (item.id < 1) {
-          return;
-        }
+        if (item.id < 1) return;
 
-        if (Items.isShard(item.id)) {
-          type = "shards";
-        }
+        if (Items.isShard(item.id)) type = "shards";
 
         self.player.enchant.add(type, item);
 
@@ -1005,9 +932,7 @@ class Incoming {
     const self = this;
     const id = parseInt(message.shift()) - 1;
 
-    if (self.player.warp) {
-      self.player.warp.warp(id);
-    }
+    if (self.player.warp) self.player.warp.warp(id);
   }
 
   handleShop(message) {
@@ -1064,19 +989,13 @@ class Incoming {
 
         const item = self.player.inventory.slots[slotId];
 
-        if (!item || item.id < 1) {
-          return;
-        }
+        if (!item || item.id < 1) return;
 
-        if (self.player.selectedShopItem) {
-          self.world.shops.remove(self.player);
-        }
+        if (self.player.selectedShopItem) self.world.shops.remove(self.player);
 
         const currency = self.world.shops.getCurrency(npcId);
 
-        if (!currency) {
-          return;
-        }
+        if (!currency) return;
 
         self.player.send(
           new Messages.Shop(Packets.ShopOpcode.Select, {
@@ -1122,9 +1041,7 @@ class Incoming {
     const canvasWidth = message.shift();
     const canvasHeight = message.shift();
 
-    if (!canvasWidth || !canvasHeight) {
-      return;
-    }
+    if (!canvasWidth || !canvasHeight) return;
 
     /**
      * The client is by default scaled to 3x the normal
@@ -1142,9 +1059,7 @@ class Incoming {
      * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
      */
 
-    if (attacker.type === "mob" || target.type === "mob") {
-      return true;
-    }
+    if (attacker.type === "mob" || target.type === "mob") return true;
 
     return (
       attacker.type === "player" &&

@@ -15,9 +15,7 @@ class ExportMap {
 
     self.source = process.argv[2];
 
-    if (!self.source) {
-      self.source = "data/map-refactor.json";
-    }
+    if (!self.source) self.source = "data/map-refactor.json";
 
     fs.exists(self.source, exists => {
       if (!exists) {
@@ -35,8 +33,8 @@ class ExportMap {
     const self = this;
     const worldClientJSON = "../../server/data/map/world_client.json";
     const worldServerJSON = "../../server/data/map/world_server.json";
-    const clientMapJSON = "../../client-dist/data/maps/map.json";
-    const clientMapJS = "../../client-dist/data/maps/map.js";
+    const clientMapJSON = "../../client/data/maps/map.json";
+    const clientMapJS = "../../client/data/maps/map.js";
 
     const worldClient = self.parse(data, worldClientJSON, "client");
 
@@ -51,22 +49,15 @@ class ExportMap {
     const self = this;
     const map = processMap(data, { mode: mode });
 
-    if (worldClient) {
-      map.depth = worldClient.depth;
-    }
+    if (worldClient) map.depth = worldClient.depth;
 
     let mapString = JSON.stringify(map);
 
-    if (isJS) {
-      mapString = "let mapData = " + mapString;
-    }
+    if (isJS) mapString = "let mapData = " + mapString;
 
     fs.writeFile(destination, mapString, (error, file) => {
-      if (error) {
-        log.error("An error has occurred while writing map files.");
-      } else {
-        log.notice(`[${mode.format()}] Map saved at: ${destination}`);
-      }
+      if (error) log.error("An error has occurred while writing map files.");
+      else log.notice(`[${mode.format()}] Map saved at: ${destination}`);
     });
 
     return map;
@@ -75,7 +66,7 @@ class ExportMap {
   copyTilesets() {
     const self = this;
     const source = "./data";
-    const destination = "../../client-dist/img/tilesets";
+    const destination = "../../client/img/tilesets";
 
     fs.readdir(source, (error, files) => {
       if (error) {

@@ -1,9 +1,11 @@
-define(["../page"], Page => {
-  return class Ability extends Page {
-    constructor(game) {
-      super("#skillPage");
+import Page from "../page";
 
-      this.game = game;
-    }
-  };
-});
+class Ability extends Page {
+  constructor(game) {
+    super("#skillPage");
+
+    this.game = game;
+  }
+}
+
+export default Ability;

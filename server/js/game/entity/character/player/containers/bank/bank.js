@@ -45,9 +45,7 @@ class Bank extends Container {
   remove(id, count, index) {
     const self = this;
 
-    if (!super.remove(index, id, count)) {
-      return;
-    }
+    if (!super.remove(index, id, count)) return;
 
     self.owner.send(
       new Messages.Bank(Packets.BankOpcode.Remove, {

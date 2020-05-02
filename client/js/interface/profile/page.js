@@ -1,43 +1,41 @@
-/* global log */
+class Page {
+  constructor(element) {
+    this.body = $(element);
 
-define(() => {
-  return class {
-    constructor(element) {
-      this.body = $(element);
+    this.loaded = false;
+  }
 
-      this.loaded = false;
+  show() {
+    this.body.fadeIn("slow");
+  }
+
+  hide() {
+    this.body.fadeOut("slow");
+  }
+
+  isVisible() {
+    return this.body.css("display") === "block";
+  }
+
+  load() {
+    // log.info('Uninitialized.');
+  }
+
+  resize() {
+    // log.info('Uninitialized.');
+  }
+
+  update() {
+    // log.info('Uninitialized.');
+  }
+
+  getImageFormat(scale, name) {
+    if (!name || name === "null") {
+      return "";
     }
 
-    show() {
-      this.body.fadeIn("slow");
-    }
+    return "url(\"img/" + scale + "/item-" + name + ".png\")";
+  }
+}
 
-    hide() {
-      this.body.fadeOut("slow");
-    }
-
-    isVisible() {
-      return this.body.css("display") === "block";
-    }
-
-    load() {
-      // log.info('Uninitialized.');
-    }
-
-    resize() {
-      // log.info('Uninitialized.');
-    }
-
-    update() {
-      // log.info('Uninitialized.');
-    }
-
-    getImageFormat(scale, name) {
-      if (!name || name === "null") {
-        return "";
-      }
-
-      return "url(\"img/" + scale + "/item-" + name + ".png\")";
-    }
-  };
-});
+export default Page;

@@ -807,6 +807,7 @@
     "name": "Red Sickle Bow"
   },
 
+
   "ClothArmor": {
     "id": 114,
     "defense": 1,
@@ -1357,7 +1358,7 @@
     "edible": 1,
     "maxStackSize": 5,
     "plugin": "healthFlask",
-    "customData": { "healAmount": 100 }
+    "customData": {"healAmount": 100}
   },
 
   "ManaFlask": {
@@ -1370,7 +1371,8 @@
     "edible": 1,
     "maxStackSize": 5,
     "plugin": "healthFlask",
-    "customData": { "manaAmount": 35 }
+    "customData": {"manaAmount": 35}
+
   },
 
   "Burger": {
@@ -1383,7 +1385,8 @@
     "edible": 1,
     "maxStackSize": 3,
     "plugin": "healthFlask",
-    "customData": { "healAmount": 200 }
+    "customData": {"healAmount": 200}
+
   },
 
   "BigFlask": {
@@ -1396,7 +1399,7 @@
     "edible": 1,
     "maxStackSize": 2,
     "plugin": "healthFlask",
-    "customData": { "healAmount": 500 }
+    "customData": {"healAmount": 500}
   },
 
   "Chest": {
@@ -1848,4 +1851,5 @@
     "defense": 20,
     "name": "Pickle Armour"
   }
+
 }

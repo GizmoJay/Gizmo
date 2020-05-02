@@ -30,9 +30,7 @@ class TeamWar extends Minigame {
     const self = this;
 
     self.updateInterval = setInterval(() => {
-      if (self.count() < 5 || self.countdown > 0) {
-        return;
-      }
+      if (self.count() < 5 || self.countdown > 0) return;
 
       self.buildTeams();
 
@@ -51,9 +49,7 @@ class TeamWar extends Minigame {
   add(player) {
     const self = this;
 
-    if (self.lobby.indexOf(player) > -1) {
-      return;
-    }
+    if (self.lobby.indexOf(player) > -1) return;
 
     self.lobby.push(player);
 
@@ -64,9 +60,7 @@ class TeamWar extends Minigame {
     const self = this;
     const index = self.lobby.indexOf(player);
 
-    if (index < 0) {
-      return;
-    }
+    if (index < 0) return;
 
     self.lobby.splice(index, 1);
   }
@@ -85,9 +79,7 @@ class TeamWar extends Minigame {
 
     if (random === 1) {
       (self.redTeam = tmp.splice(0, half)), (self.blueTeam = tmp);
-    } else {
-      (self.blueTeam = tmp.splice(0, half)), (self.redTeam = tmp);
-    }
+    } else (self.blueTeam = tmp.splice(0, half)), (self.redTeam = tmp);
   }
 
   count() {
@@ -97,9 +89,7 @@ class TeamWar extends Minigame {
   synchronize() {
     const self = this;
 
-    if (self.started) {
-      return;
-    }
+    if (self.started) return;
 
     _.each(self.lobby, player => {
       self.sendCountdown(player);
@@ -136,17 +126,11 @@ class TeamWar extends Minigame {
   getTeam(player) {
     const self = this;
 
-    if (self.redTeam.indexOf(player) > -1) {
-      return "red";
-    }
+    if (self.redTeam.indexOf(player) > -1) return "red";
 
-    if (self.blueTeam.indexOf(player) > -1) {
-      return "blue";
-    }
+    if (self.blueTeam.indexOf(player) > -1) return "blue";
 
-    if (self.lobby.indexOf(player) > -1) {
-      return "lobby";
-    }
+    if (self.lobby.indexOf(player) > -1) return "lobby";
 
     return null;
   }
@@ -180,9 +164,7 @@ class TeamWar extends Minigame {
     // Player can only be in team `red`, `blue`, or `lobby`.
     state.team = self.getTeam(player);
 
-    if (!state.team) {
-      return null;
-    }
+    if (!state.team) return null;
 
     return state;
   }

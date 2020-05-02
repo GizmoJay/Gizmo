@@ -23,9 +23,7 @@ class Abilities {
   addShortcut(ability) {
     const self = this;
 
-    if (self.shortcutSize >= 5) {
-      return;
-    }
+    if (self.shortcutSize >= 5) return;
 
     self.shortcuts.push(ability.name);
   }
@@ -41,16 +39,12 @@ class Abilities {
   }
 
   removeShortcut(index) {
-    if (index > -1) {
-      this.shortcuts.splice(index, 1);
-    }
+    if (index > -1) this.shortcuts.splice(index, 1);
   }
 
   hasAbility(ability) {
     _.each(this.abilities, uAbility => {
-      if (uAbility.name === ability.name) {
-        return true;
-      }
+      if (uAbility.name === ability.name) return true;
     });
 
     return false;

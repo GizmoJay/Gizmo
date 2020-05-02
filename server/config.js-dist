@@ -1,54 +1,112 @@
-let Config = {};
+const Config = {
+  /**
+   * Connectivity/Hosting Configuration
+   */
+  name: "Gizmo",
+  host: "0.0.0.0",
+  /**
+   * Server port, make sure this matches the client's
+   */
+  port: 8080,
+  /**
+   * Whether to use `https` module or `http`
+   */
+  ssl: false,
+  /**
+   * Will be used for local debugging.
+   */
+  devClient: false,
 
-// Connectivity/Hosting Configuration
-Config.name = 'Gizmo';
-Config.host = '0.0.0.0';
-Config.port = 8080; // Server port, make sure this matches the client's
-Config.ssl = false; // Whether to use `https` module or `http`
-Config.devClient = false; // Will be used for local debugging.
+  /**
+   * API Configuration
+   */
+  serverId: "gizmo_server01",
+  accessToken: "",
+  apiEnabled: false,
+  apiPort: 9002,
 
-// API Configuration
-Config.serverId = 'gizmo_server01';
-Config.accessToken = '';
-Config.apiEnabled = false;
-Config.apiPort = 9002;
+  /**
+   * TODO: Hub Configuration
+   */
+  hubEnabled: false,
+  hubHost: "127.0.0.1",
+  hubPort: "9526",
+  /**
+   * Ping every 30 seconds (30000 milliseconds)
+   */
+  hubPing: 30000,
+  /**
+   * Make sure it matches with the Hub
+   */
+  hubAccessToken: "",
 
-// Hub Configuration
-Config.hubEnabled = false;
-Config.hubHost = '127.0.0.1';
-Config.hubPort = '9526';
-Config.hubPing = 30000; // Ping every 30 seconds
-Config.hubAccessToken = ''; // Make sure it matches with the hub.
+  // Database Configuration
+  /**
+   * Used for multiple database support
+   */
+  database: "mongodb",
+  /**
+   * Skip database checking upon login
+   */
+  offlineMode: false,
 
-Config.remoteServerHost = null; // The host sent to the hub, if null, hub will try to find the IP.
-// Not recommended to have as null for production environments.
+  mongoHost: "127.0.0.1",
+  mongoPort: "27017",
+  mongoUser: "admin",
+  mongoPassword: "password",
+  mongoDatabase: "database",
+  /**
+   * Use authentication for mongodb connections?
+   */
+  mongoAuth: false,
 
-// Database Configuration
-Config.database = 'mongodb'; // Used for multiple database support
-Config.offlineMode = false; // Skip database checking upon login
+  // World Configurations
+  /**
+   * Players have to finish the tutorial before proceeding.
+   */
+  tutorialEnabled: false,
+  /**
+   * !! Allows login with any credentials !!
+   */
+  overrideAuth: false,
+  development: false,
+  /**
+   * Maximum number of players allowed on the server
+   */
+  maxPlayers: 200,
+  /**
+   * 20 updates (ticks) per second
+   */
+  updateTime: 20,
+  /**
+   * Game version
+   */
+  gver: 1,
 
-Config.mongoHost = '127.0.0.1';
-Config.mongoPort = '27017';
-Config.mongoUser = 'admin';
-Config.mongoPassword = 'password';
-Config.mongoDatabase = 'database';
-Config.mongoAuth = false; // Use authentication for mongodb connections?
+  /**
+   * @example
+   * i.e. ['user1', 'user2', 'user3'] (case-insensitive)
+   */
+  administrators: [],
+  moderators: [],
+  manager: [],
+  scripting: [],
+  levels: [],
+  graphics: [],
+  animations: [],
+  sfx: [],
 
-// World Configurations
-Config.tutorialEnabled = false; // Players have to finish the tutorial before proceeding.
-Config.overrideAuth = false; // !! Allows login with any credentials !!
-Config.development = false;
-Config.maxPlayers = 200; // Maximum number of players allowed on the server.
-Config.updateTime = 20; // 20 updates (ticks) per second.
-Config.gver = 1; // Game version
-
-Config.administrators = []; // i.e. ['user1', 'user2', 'user3'] (case-insensitive)
-Config.moderators = [];
-
-// Debugging
-Config.debug = false;
-Config.debugLevel = 'all';
-Config.fsDebugging = false; // filestream debugging -> Write to a filestream instead of stdout.
-Config.allowConnectionsToggle = false; // Used closing/opening connections
+  // Debugging
+  debug: false,
+  debugLevel: "all",
+  /**
+   * filestream debugging -> Write to a filestream instead of stdout.
+   */
+  fsDebugging: false,
+  /**
+   * Used closing/opening connections
+   */
+  allowConnectionsToggle: false
+};
 
 module.exports = Config;

@@ -1,4 +1,4 @@
-importScripts("../../data/maps/map.js", "../lib/underscore.min.js");
+importScripts("../../data/maps/map.js", "../lib/underscore.js");
 
 onmessage = event => {
   loadCollisionGrid();

@@ -24,12 +24,10 @@ class WebSocket extends Socket {
     const app = connect();
     app.use(serve("client-dist", { index: ["index.html"] }), null);
 
-    const readyWebSocket = function(port) {
+    const readyWebSocket = (port) => {
       log.info("Server is now listening on: " + port);
 
-      if (self.webSocketReadyCallback) {
-        self.webSocketReadyCallback();
-      }
+      if (self.webSocketReadyCallback) self.webSocketReadyCallback();
     };
 
     const server = config.ssl ? https : http;
@@ -60,9 +58,7 @@ class WebSocket extends Socket {
           );
         }
 
-        if (self.connectionCallback) {
-          self.connectionCallback(client);
-        }
+        if (self.connectionCallback) self.connectionCallback(client);
 
         self.addConnection(client);
       });

@@ -66,9 +66,7 @@ Utils.validPacket = packet => {
   const filtered = [];
 
   for (let i = 0; i < keys.length; i++) {
-    if (!keys[i].endsWith("Opcode")) {
-      filtered.push(keys[i]);
-    }
+    if (!keys[i].endsWith("Opcode")) filtered.push(keys[i]);
   }
 
   return packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1;
@@ -108,9 +106,7 @@ Utils.parseMessage = message => {
 
     const codeCount = messageBlocks.length / 2 - 1;
 
-    for (let i = 0; i < codeCount; i++) {
-      messageBlocks.push("</span>");
-    }
+    for (let i = 0; i < codeCount; i++) messageBlocks.push("</span>");
 
     return messageBlocks.join("");
   } catch (e) {

@@ -1,52 +1,53 @@
-define(() => {
-  /**
-   * The children of these classes are responsible for
-   * clear and concise ways of organizing stats of weapons
-   * in the client side. This does not dictate the damage,
-   * defense or bonus stats, it's just for looks.
-   */
 
-  return class {
-    constructor(name, string, count, ability, abilityLevel, power) {
-      this.name = name;
-      this.string = string;
-      this.count = count;
-      this.ability = ability;
-      this.abilityLevel = abilityLevel;
-      this.power = power || 0;
-    }
+/**
+ * The children of these classes are responsible for
+ * clear and concise ways of organizing stats of weapons
+ * in the client side. This does not dictate the damage,
+ * defense or bonus stats, it's just for looks.
+ */
 
-    exists() {
-      return this.name !== null && this.name !== "null";
-    }
+class Equipment {
+  constructor(name, string, count, ability, abilityLevel, power) {
+    this.name = name;
+    this.string = string;
+    this.count = count;
+    this.ability = ability;
+    this.abilityLevel = abilityLevel;
+    this.power = power || 0;
+  }
 
-    getName() {
-      return this.name;
-    }
+  exists() {
+    return this.name !== null && this.name !== "null";
+  }
 
-    getString() {
-      return this.string;
-    }
+  getName() {
+    return this.name;
+  }
 
-    getCount() {
-      return this.count;
-    }
+  getString() {
+    return this.string;
+  }
 
-    getAbility() {
-      return this.ability;
-    }
+  getCount() {
+    return this.count;
+  }
 
-    getAbilityLevel() {
-      return this.abilityLevel;
-    }
+  getAbility() {
+    return this.ability;
+  }
 
-    update(name, string, count, ability, abilityLevel, power) {
-      this.name = name;
-      this.string = string;
-      this.count = count;
-      this.ability = ability;
-      this.abilityLevel = abilityLevel;
-      this.power = power;
-    }
-  };
-});
+  getAbilityLevel() {
+    return this.abilityLevel;
+  }
+
+  update(name, string, count, ability, abilityLevel, power) {
+    this.name = name;
+    this.string = string;
+    this.count = count;
+    this.ability = ability;
+    this.abilityLevel = abilityLevel;
+    this.power = power;
+  }
+}
+
+export default Equipment;

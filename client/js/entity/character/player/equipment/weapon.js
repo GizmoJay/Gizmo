@@ -1,27 +1,29 @@
-define(["./equipment"], Equipment => {
-  return class Weapon extends Equipment {
-    constructor(name, string, count, ability, abilityLevel, power) {
-      super(name, string, count, ability, abilityLevel, power);
+import Equipment from "./equipment";
 
-      this.level = -1;
-      this.damage = -1;
-      this.ranged = string && string.includes("bow");
-    }
+class Weapon extends Equipment {
+  constructor(name, string, count, ability, abilityLevel, power) {
+    super(name, string, count, ability, abilityLevel, power);
 
-    setDamage(damage) {
-      this.damage = damage;
-    }
+    this.level = -1;
+    this.damage = -1;
+    this.ranged = string && string.includes("bow");
+  }
 
-    setLevel(level) {
-      this.level = level;
-    }
+  setDamage(damage) {
+    this.damage = damage;
+  }
 
-    getDamage() {
-      return this.damage;
-    }
+  setLevel(level) {
+    this.level = level;
+  }
 
-    getLevel() {
-      return this.level;
-    }
-  };
-});
+  getDamage() {
+    return this.damage;
+  }
+
+  getLevel() {
+    return this.level;
+  }
+}
+
+export default Weapon;

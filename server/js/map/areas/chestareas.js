@@ -26,9 +26,7 @@ class ChestAreas {
       chestArea.cX = parseInt(m.tx);
       chestArea.cY = parseInt(m.ty);
 
-      if (m.tachievement) {
-        chestArea.achievement = parseInt(m.tachievement);
-      }
+      if (m.tachievement) chestArea.achievement = parseInt(m.tachievement);
 
       self.chestAreas.push(chestArea);
 
@@ -63,9 +61,7 @@ class ChestAreas {
   removeChest(chestArea) {
     const self = this;
 
-    if (!chestArea.chest) {
-      return;
-    }
+    if (!chestArea.chest) return;
 
     self.world.removeChest(chestArea.chest);
 

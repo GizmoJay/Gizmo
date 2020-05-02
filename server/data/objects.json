@@ -21,10 +21,7 @@
 
   "743-15": {
     "type": "sign",
-    "messages": [
-      "Here lies the soul of a brave warrior.",
-      "Rest in peace @player@"
-    ]
+    "messages": ["Here lies the soul of a brave warrior.", "Rest in peace @player@"]
   },
 
   "740-15": {

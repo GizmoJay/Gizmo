@@ -23,13 +23,9 @@ class HealthFlask {
   onUse(character) {
     const self = this;
 
-    if (self.healAmount) {
-      character.healHitPoints(self.healAmount);
-    }
+    if (self.healAmount) character.healHitPoints(self.healAmount);
 
-    if (self.manaAmount) {
-      character.healManaPoints(self.manaAmount);
-    }
+    if (self.manaAmount) character.healManaPoints(self.manaAmount);
   }
 }
 

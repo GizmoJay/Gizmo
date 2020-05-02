@@ -1,256 +1,256 @@
-/* global Modules, log, _ */
+import EntityHandler from "./entityhandler";
 
-define(["./entityhandler"], EntityHandler => {
-  return class {
-    constructor(id, kind) {
-      this.id = id;
-      this.kind = kind;
+class Entity {
+  constructor(id, kind) {
+    this.id = id;
+    this.kind = kind;
 
-      this.x = 0;
-      this.y = 0;
-      this.gridX = 0;
-      this.gridY = 0;
+    this.x = 0;
+    this.y = 0;
+    this.gridX = 0;
+    this.gridY = 0;
 
-      this.name = "";
+    this.name = "";
 
-      this.sprite = null;
-      this.spriteFlipX = false;
-      this.spriteFlipY = false;
+    this.sprite = null;
+    this.spriteFlipX = false;
+    this.spriteFlipY = false;
 
-      this.animations = null;
-      this.currentAnimation = null;
-      this.idleSpeed = 450;
+    this.animations = null;
+    this.currentAnimation = null;
+    this.idleSpeed = 450;
 
-      this.shadowOffsetY = 0;
-      this.hidden = false;
+    this.shadowOffsetY = 0;
+    this.hidden = false;
 
-      this.spriteLoaded = false;
-      this.visible = true;
-      this.fading = false;
-      this.handler = new EntityHandler(this);
+    this.spriteLoaded = false;
+    this.visible = true;
+    this.fading = false;
+    this.handler = new EntityHandler(this);
 
-      this.angled = false;
-      this.angle = 0;
+    this.angled = false;
+    this.angle = 0;
 
-      this.critical = false;
-      this.stunned = false;
-      this.terror = false;
+    this.critical = false;
+    this.stunned = false;
+    this.terror = false;
 
-      this.nonPathable = false;
-      this.hasCounter = false;
+    this.nonPathable = false;
+    this.hasCounter = false;
 
-      this.countdownTime = 0;
-      this.counter = 0;
+    this.countdownTime = 0;
+    this.counter = 0;
 
-      this.renderingData = {
-        scale: -1,
-        angle: 0
-      };
+    this.renderingData = {
+      scale: -1,
+      angle: 0
+    };
 
-      this.loadDirty();
-    }
+    this.loadDirty();
+  }
 
-    /**
+  /**
      * This is important for when the client is
      * on a mobile screen. So the sprite has to be
      * handled differently.
      */
 
-    loadDirty() {
-      this.dirty = true;
+  loadDirty() {
+    this.dirty = true;
 
-      if (this.dirtyCallback) {
-        this.dirtyCallback();
+    if (this.dirtyCallback) {
+      this.dirtyCallback();
+    }
+  }
+
+  fadeIn(time) {
+    this.fading = true;
+    this.fadingTime = time;
+  }
+
+  blink(speed) {
+    this.blinking = setInterval(() => {
+      this.toggleVisibility();
+    }, speed);
+  }
+
+  stopBlinking() {
+    if (this.blinking) {
+      clearInterval(this.blinking);
+    }
+
+    this.setVisible(true);
+  }
+
+  setName(name) {
+    this.name = name;
+  }
+
+  setSprite(sprite) {
+    if (!sprite || (this.sprite && this.sprite.name === sprite.name)) {
+      return;
+    }
+
+    if (this.type === "player") {
+      sprite.loadHurt = true;
+    }
+
+    if (!sprite.loaded) {
+      sprite.load();
+    }
+
+    sprite.name = sprite.id;
+
+    this.sprite = sprite;
+
+    this.normalSprite = this.sprite;
+    this.animations = sprite.createAnimations();
+
+    sprite.onLoad(() => {
+      if (sprite.loadHurt) {
+        this.hurtSprite = sprite.hurtSprite;
       }
+    });
+
+    this.spriteLoaded = true;
+
+    if (this.readyCallback) {
+      this.readyCallback();
     }
+  }
 
-    fadeIn(time) {
-      this.fading = true;
-      this.fadingTime = time;
-    }
+  setPosition(x, y) {
+    this.x = x;
+    this.y = y;
+  }
 
-    blink(speed) {
-      this.blinking = setInterval(() => {
-        this.toggleVisibility();
-      }, speed);
-    }
+  setGridPosition(x, y) {
+    this.gridX = x;
+    this.gridY = y;
 
-    stopBlinking() {
-      if (this.blinking) {
-        clearInterval(this.blinking);
-      }
+    this.setPosition(x * 16, y * 16);
+  }
 
-      this.setVisible(true);
-    }
-
-    setName(name) {
-      this.name = name;
-    }
-
-    setSprite(sprite) {
-      if (!sprite || (this.sprite && this.sprite.name === sprite.name)) {
-        return;
-      }
-
-      if (this.type === "player") {
-        sprite.loadHurt = true;
-      }
-
-      if (!sprite.loaded) {
-        sprite.load();
-      }
-
-      sprite.name = sprite.id;
-
-      this.sprite = sprite;
-
-      this.normalSprite = this.sprite;
-      this.animations = sprite.createAnimations();
-
-      sprite.onLoad(() => {
-        if (sprite.loadHurt) {
-          this.hurtSprite = sprite.hurtSprite;
-        }
-      });
-
-      this.spriteLoaded = true;
-
-      if (this.readyCallback) {
-        this.readyCallback();
-      }
-    }
-
-    setPosition(x, y) {
-      this.x = x;
-      this.y = y;
-    }
-
-    setGridPosition(x, y) {
-      this.gridX = x;
-      this.gridY = y;
-
-      this.setPosition(x * 16, y * 16);
-    }
-
-    setAnimation(name, speed, count, onEndCount) {
-      if (
-        !this.spriteLoaded ||
+  setAnimation(name, speed, count, onEndCount) {
+    if (
+      !this.spriteLoaded ||
         (this.currentAnimation && this.currentAnimation.name === name)
-      ) {
-        return;
-      }
+    ) {
+      return;
+    }
 
-      const anim = this.getAnimationByName(name);
+    const anim = this.getAnimationByName(name);
 
-      if (!anim) {
-        return;
-      }
+    if (!anim) {
+      return;
+    }
 
-      this.currentAnimation = anim;
+    this.currentAnimation = anim;
 
-      if (name.substr(0, 3) === "atk") {
-        this.currentAnimation.reset();
-      }
+    if (name.substr(0, 3) === "atk") {
+      this.currentAnimation.reset();
+    }
 
-      this.currentAnimation.setSpeed(speed);
+    this.currentAnimation.setSpeed(speed);
 
-      this.currentAnimation.setCount(
-        count || 0,
-        onEndCount ||
+    this.currentAnimation.setCount(
+      count || 0,
+      onEndCount ||
           (() => {
             this.idle();
           })
-      );
-    }
+    );
+  }
 
-    setCountdown(count) {
-      this.counter = count;
+  setCountdown(count) {
+    this.counter = count;
 
-      this.countdownTime = new Date().getTime();
+    this.countdownTime = new Date().getTime();
 
-      this.hasCounter = true;
-    }
+    this.hasCounter = true;
+  }
 
-    setVisible(visible) {
-      this.visible = visible;
-    }
+  setVisible(visible) {
+    this.visible = visible;
+  }
 
-    setIdleSpeed(idleSpeed) {
-      this.idleSpeed = idleSpeed;
-    }
+  setIdleSpeed(idleSpeed) {
+    this.idleSpeed = idleSpeed;
+  }
 
-    hasWeapon() {
-      return false;
-    }
+  hasWeapon() {
+    return false;
+  }
 
-    getDistance(entity) {
-      const x = Math.abs(this.gridX - entity.gridX);
-      const y = Math.abs(this.gridY - entity.gridY);
+  getDistance(entity) {
+    const x = Math.abs(this.gridX - entity.gridX);
+    const y = Math.abs(this.gridY - entity.gridY);
 
-      return x > y ? x : y;
-    }
+    return x > y ? x : y;
+  }
 
-    getCoordDistance(toX, toY) {
-      const x = Math.abs(this.gridX - toX);
-      const y = Math.abs(this.gridY - toY);
+  getCoordDistance(toX, toY) {
+    const x = Math.abs(this.gridX - toX);
+    const y = Math.abs(this.gridY - toY);
 
-      return x > y ? x : y;
-    }
+    return x > y ? x : y;
+  }
 
-    inAttackRadius(entity) {
-      return (
-        entity &&
+  inAttackRadius(entity) {
+    return (
+      entity &&
         this.getDistance(entity) < 2 &&
         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-      );
-    }
+    );
+  }
 
-    inExtraAttackRadius(entity) {
-      return (
-        entity &&
+  inExtraAttackRadius(entity) {
+    return (
+      entity &&
         this.getDistance(entity) < 3 &&
         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-      );
+    );
+  }
+
+  getAnimationByName(name) {
+    if (name in this.animations) {
+      return this.animations[name];
     }
 
-    getAnimationByName(name) {
-      if (name in this.animations) {
-        return this.animations[name];
-      }
+    return null;
+  }
 
-      return null;
-    }
+  getSprite() {
+    return this.sprite.name;
+  }
 
-    getSprite() {
-      return this.sprite.name;
-    }
+  toggleVisibility() {
+    this.setVisible(!this.visible);
+  }
 
-    toggleVisibility() {
-      this.setVisible(!this.visible);
-    }
+  isVisible() {
+    return this.visible;
+  }
 
-    isVisible() {
-      return this.visible;
-    }
+  drawNames() {
+    return true;
+  }
 
-    drawNames() {
-      return true;
-    }
+  hasShadow() {
+    return false;
+  }
 
-    hasShadow() {
-      return false;
-    }
+  hasPath() {
+    return false;
+  }
 
-    hasPath() {
-      return false;
-    }
+  onReady(callback) {
+    this.readyCallback = callback;
+  }
 
-    onReady(callback) {
-      this.readyCallback = callback;
-    }
+  onDirty(callback) {
+    this.dirtyCallback = callback;
+  }
+}
 
-    onDirty(callback) {
-      this.dirtyCallback = callback;
-    }
-  };
-});
+export default Entity;

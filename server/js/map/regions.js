@@ -34,9 +34,7 @@ class Regions {
 
       if (regionId in self.linkedRegions) {
         self.linkedRegions[regionId].push(linkedRegionPosition);
-      } else {
-        self.linkedRegions[regionId] = [linkedRegionPosition];
-      }
+      } else self.linkedRegions[regionId] = [linkedRegionPosition];
     });
   }
 
@@ -75,9 +73,7 @@ class Regions {
         j <= 1;
         j++ // x
       ) {
-        if (i > -2 || i < 2) {
-          list.push({ x: x + j, y: y + i });
-        }
+        if (i > -2 || i < 2) list.push({ x: x + j, y: y + i });
       }
     }
 
@@ -113,9 +109,7 @@ class Regions {
      * the moment.
      */
 
-    if (surroundingRegions.length !== 9) {
-      return;
-    }
+    if (surroundingRegions.length !== 9) return;
 
     /**
      * 11-0 12-0 13-0
@@ -127,9 +121,7 @@ class Regions {
     const adjacentRegions = [];
 
     _.each(surroundingRegions, region => {
-      if (region.x !== centreRegion.x && region.y !== centreRegion.y) {
-        return;
-      }
+      if (region.x !== centreRegion.x && region.y !== centreRegion.y) return;
 
       adjacentRegions.push(region);
     });
@@ -143,18 +135,14 @@ class Regions {
     const self = this;
 
     for (let x = 0; x < self.regionWidth; x++) {
-      for (let y = 0; y < self.regionHeight; y++) {
-        callback(x + "-" + y);
-      }
+      for (let y = 0; y < self.regionHeight; y++) callback(x + "-" + y);
     }
   }
 
   forEachSurroundingRegion(regionId, callback, offset) {
     const self = this;
 
-    if (!regionId) {
-      return;
-    }
+    if (!regionId) return;
 
     _.each(self.getSurroundingRegions(regionId, offset), region => {
       callback(region.x + "-" + region.y);
@@ -164,9 +152,7 @@ class Regions {
   forEachAdjacentRegion(regionId, callback, offset) {
     const self = this;
 
-    if (!regionId) {
-      return;
-    }
+    if (!regionId) return;
 
     _.each(self.getAdjacentRegions(regionId, offset), region => {
       callback(region.x + "-" + region.y);

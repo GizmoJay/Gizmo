@@ -22,9 +22,7 @@ class Log {
   info(message) {
     const self = this;
 
-    if (self.isLoggable("info")) {
-      return;
-    }
+    if (self.isLoggable("info")) return;
 
     self.send(null, `[${new Date()}] INFO ${message}`);
   }
@@ -32,9 +30,7 @@ class Log {
   debug(message) {
     const self = this;
 
-    if (!self.debugging) {
-      return;
-    }
+    if (!self.debugging) return;
 
     self.send("\x1b[36m%s\x1b[0m", `[${new Date()}] DEBUG ${message}`);
   }
@@ -42,9 +38,7 @@ class Log {
   warning(message) {
     const self = this;
 
-    if (self.isLoggable("warning")) {
-      return;
-    }
+    if (self.isLoggable("warning")) return;
 
     self.send("\x1b[33m%s\x1b[0m", `[${new Date()}] WARNING ${message}`);
   }
@@ -52,9 +46,7 @@ class Log {
   error(message) {
     const self = this;
 
-    if (self.isLoggable("error")) {
-      return;
-    }
+    if (self.isLoggable("error")) return;
 
     self.send("\x1b[31m%s\x1b[0m", `[${new Date()}] ERROR ${message}`);
   }
@@ -62,9 +54,7 @@ class Log {
   notice(message) {
     const self = this;
 
-    if (self.isLoggable("notice")) {
-      return;
-    }
+    if (self.isLoggable("notice")) return;
 
     self.send("\x1b[32m%s\x1b[0m", `[${new Date()}] NOTICE ${message}`);
   }
@@ -78,17 +68,11 @@ class Log {
   send(colour, message, trace) {
     const self = this;
 
-    if (self.stream) {
-      self.stream.write(message + "\n");
-    }
+    if (self.stream) self.stream.write(message + "\n");
 
-    if (!colour) {
-      console.log(message);
-    } else if (trace) {
-      console.trace(colour, message);
-    } else {
-      console.log(colour, message);
-    }
+    if (!colour) console.log(message);
+    else if (trace) console.trace(colour, message);
+    else console.log(colour, message);
   }
 
   isLoggable(type) {

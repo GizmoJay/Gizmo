@@ -14,9 +14,7 @@ class Mob extends Character {
 
     const self = this;
 
-    if (!Mobs.exists(id)) {
-      return;
-    }
+    if (!Mobs.exists(id)) return;
 
     self.world = world;
 
@@ -55,9 +53,7 @@ class Mob extends Character {
 
     self.handler = new MobHandler(self, self.world);
 
-    if (self.loadCallback) {
-      self.loadCallback();
-    }
+    if (self.loadCallback) self.loadCallback();
   }
 
   refresh() {
@@ -66,25 +62,19 @@ class Mob extends Character {
     self.hitPoints = self.data.hitPoints;
     self.maxHitPoints = self.data.hitPoints;
 
-    if (self.refreshCallback) {
-      self.refreshCallback();
-    }
+    if (self.refreshCallback) self.refreshCallback();
   }
 
   getDrop() {
     const self = this;
 
-    if (!self.drops) {
-      return null;
-    }
+    if (!self.drops) return null;
 
     const random = Utils.randomInt(0, Constants.DROP_PROBABILITY);
     const dropObjects = Object.keys(self.drops);
     const item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
 
-    if (random > self.drops[item]) {
-      return null;
-    }
+    if (random > self.drops[item]) return null;
 
     const count =
       item === "gold" ? Utils.randomInt(self.level, self.level * 5) : 1;
@@ -104,21 +94,15 @@ class Mob extends Character {
   canAggro(player) {
     const self = this;
 
-    if (self.hasTarget()) {
-      return false;
-    }
+    if (self.hasTarget()) return false;
 
-    if (!self.aggressive) {
-      return false;
-    }
+    if (!self.aggressive) return false;
 
     if (Math.floor(self.level * 1.5) < player.level && !self.alwaysAggressive) {
       return false;
     }
 
-    if (!player.hasAggressionTimer()) {
-      return false;
-    }
+    if (!player.hasAggressionTimer()) return false;
 
     return self.isNear(player, self.aggroRange);
   }
@@ -131,9 +115,7 @@ class Mob extends Character {
     self.resetPosition();
     self.respawn();
 
-    if (self.area) {
-      self.area.removeEntity(self);
-    }
+    if (self.area) self.area.removeEntity(self);
   }
 
   return() {
@@ -166,9 +148,7 @@ class Mob extends Character {
       return area.contains(self.x, self.y);
     });
 
-    if (area) {
-      area.addEntity(self);
-    }
+    if (area) area.addEntity(self);
   }
 
   respawn() {
@@ -180,14 +160,10 @@ class Mob extends Character {
      * so the resawning script is handled elsewhere.
      */
 
-    if (!self.static || self.respawnDelay === -1) {
-      return;
-    }
+    if (!self.static || self.respawnDelay === -1) return;
 
     setTimeout(() => {
-      if (self.respawnCallback) {
-        self.respawnCallback();
-      }
+      if (self.respawnCallback) self.respawnCallback();
     }, self.respawnDelay);
   }
 

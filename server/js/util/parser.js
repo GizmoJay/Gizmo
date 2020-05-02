@@ -1,6 +1,5 @@
 /* global module */
 
-const path = require("path");
 const _ = require("underscore");
 const NPCData = require("../../data/npcs");
 const ItemData = require("../../data/items");
@@ -37,7 +36,7 @@ class Parser {
 
     self.onReady(() => {
       Mobs.Plugins = require("../util/plugins")(
-        path.join(__dirname, "/../../data/combat/")
+        __dirname + "/../../data/combat/"
       );
 
       log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
@@ -214,7 +213,7 @@ class Parser {
     188884693, 208545524, 230252838, 254219653, 280681159, 309897028,      - Lvl 124-129
     342153959, 377768495, 417090128, 460504727                             - Lvl 130-134
 
-  **/
+    **/
 
   loadLevels() {
     const self = this;
@@ -247,9 +246,7 @@ class Parser {
 
     log.info("Finished loading " + objectCounter + " global objects.");
 
-    if (self.readyCallback) {
-      self.readyCallback();
-    }
+    if (self.readyCallback) self.readyCallback();
   }
 
   onReady(callback) {

@@ -25,9 +25,7 @@ class Achievement {
   step() {
     const self = this;
 
-    if (self.isThreshold()) {
-      return;
-    }
+    if (self.isThreshold()) return;
 
     self.progress++;
 
@@ -47,9 +45,8 @@ class Achievement {
   converse(npc) {
     const self = this;
 
-    if (self.isThreshold() || self.hasItem()) {
-      self.finish(npc);
-    } else {
+    if (self.isThreshold() || self.hasItem()) self.finish(npc);
+    else {
       self.player.send(
         new Messages.NPC(Packets.NPCOpcode.Talk, {
           id: npc.instance,
@@ -57,9 +54,7 @@ class Achievement {
         })
       );
 
-      if (!self.isStarted() && self.player.talkIndex === 0) {
-        self.step();
-      }
+      if (!self.isStarted() && self.player.talkIndex === 0) self.step();
     }
   }
 
@@ -100,9 +95,7 @@ class Achievement {
       })
     );
 
-    if (npc && self.player.npcTalkCallback) {
-      self.player.npcTalkCallback(npc);
-    }
+    if (npc && self.player.npcTalkCallback) self.player.npcTalkCallback(npc);
   }
 
   update() {

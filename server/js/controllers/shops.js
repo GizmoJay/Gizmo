@@ -72,9 +72,7 @@ class Shops {
       return;
     }
 
-    if (count > stock) {
-      count = stock;
-    }
+    if (count > stock) count = stock;
 
     player.inventory.remove(currency, cost);
     player.inventory.add({
@@ -123,9 +121,7 @@ class Shops {
     const self = this;
     const selectedItem = player.selectedShopItem;
 
-    if (!selectedItem) {
-      return;
-    }
+    if (!selectedItem) return;
 
     player.send(
       new Messages.Shop(Packets.ShopOpcode.Remove, {
@@ -151,9 +147,7 @@ class Shops {
   getCurrency(npcId) {
     const shop = ShopData.Ids[npcId];
 
-    if (!shop) {
-      return null;
-    }
+    if (!shop) return null;
 
     return shop.currency;
   }
@@ -161,15 +155,11 @@ class Shops {
   getSellPrice(npcId, itemId, count = 1) {
     const shop = ShopData.Ids[npcId];
 
-    if (!shop) {
-      return 1;
-    }
+    if (!shop) return 1;
 
     const buyId = shop.items.indexOf(itemId);
 
-    if (buyId < 0) {
-      return 1;
-    }
+    if (buyId < 0) return 1;
 
     return Math.floor(ShopData.getCost(npcId, buyId, count) / 2);
   }
@@ -178,9 +168,7 @@ class Shops {
     const self = this;
     const shop = ShopData.Ids[npcId];
 
-    if (!shop || !_.isArray(shop.items)) {
-      return;
-    }
+    if (!shop || !_.isArray(shop.items)) return;
 
     const strings = [];
     const names = [];

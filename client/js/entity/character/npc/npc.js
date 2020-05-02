@@ -1,9 +1,11 @@
-define(["../character"], Character => {
-  return class NPC extends Character {
-    constructor(id, kind) {
-      super(id, kind);
+import Character from "../character";
 
-      this.type = "npc";
-    }
-  };
-});
+class NPC extends Character {
+  constructor(id, kind) {
+    super(id, kind);
+
+    this.type = "npc";
+  }
+}
+
+export default NPC;

@@ -60,9 +60,7 @@ class Projectile extends Entity {
      * an owner and a target are available.
      */
 
-    if (!self.owner || !self.target) {
-      return;
-    }
+    if (!self.owner || !self.target) return;
 
     return {
       id: self.instance,

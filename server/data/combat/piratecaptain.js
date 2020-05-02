@@ -27,31 +27,26 @@ class PirateCaptain extends Combat {
   }
 
   load() {
-    var self = this;
-    var south = { x: 251, y: 574 };
-    var west = { x: 243, y: 569 };
-    var east = { x: 258, y: 568 };
-    var north = { x: 251, y: 563 };
+    let self = this;
+    let south = { x: 251, y: 574 };
+    let west = { x: 243, y: 569 };
+    let east = { x: 258, y: 568 };
+    let north = { x: 251, y: 563 };
 
     self.teleportLocations.push(north, south, west, east);
   }
 
   hit(character, target, hitInfo) {
-    var self = this;
-    if (self.canTeleport()) {
-      self.teleport();
-    } else {
-      super.hit(character, target, hitInfo);
-    }
+    let self = this;
+    if (self.canTeleport()) self.teleport();
+    else super.hit(character, target, hitInfo);
   }
 
   teleport() {
-    var self = this;
-    var position = self.getRandomPosition();
+    let self = this;
+    let position = self.getRandomPosition();
 
-    if (!position) {
-      return;
-    }
+    if (!position) return;
 
     self.stop();
 
@@ -76,19 +71,15 @@ class PirateCaptain extends Combat {
       attacker.removeTarget();
     });
 
-    if (self.character.hasTarget()) {
-      self.begin(self.character.target);
-    }
+    if (self.character.hasTarget()) self.begin(self.character.target);
   }
 
   getRandomPosition() {
-    var self = this;
-    var random = Utils.randomInt(0, self.teleportLocations.length - 1);
-    var position = self.teleportLocations[random];
+    let self = this;
+    let random = Utils.randomInt(0, self.teleportLocations.length - 1);
+    let position = self.teleportLocations[random];
 
-    if (!position || random === self.lastTeleportIndex) {
-      return null;
-    }
+    if (!position || random === self.lastTeleportIndex) return null;
 
     return {
       x: position.x,

@@ -1,24 +1,26 @@
-define(["../entity"], Entity => {
-  return class Item extends Entity {
-    constructor(id, kind, count, ability, abilityLevel) {
-      super(id, kind);
+import Entity from "../entity";
 
-      this.count = count;
-      this.ability = ability;
-      this.abilityLevel = abilityLevel;
+class Item extends Entity {
+  constructor(id, kind, count, ability, abilityLevel) {
+    super(id, kind);
 
-      this.dropped = false;
-      this.stackable = false;
+    this.count = count;
+    this.ability = ability;
+    this.abilityLevel = abilityLevel;
 
-      this.type = "item";
-    }
+    this.dropped = false;
+    this.stackable = false;
 
-    idle() {
-      this.setAnimation("idle", 150);
-    }
+    this.type = "item";
+  }
 
-    hasShadow() {
-      return true;
-    }
-  };
-});
+  idle() {
+    this.setAnimation("idle", 150);
+  }
+
+  hasShadow() {
+    return true;
+  }
+}
+
+export default Item;

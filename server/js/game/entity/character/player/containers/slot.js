@@ -70,9 +70,7 @@ class Slot {
   verify() {
     const self = this;
 
-    if (isNaN(self.count) || self.count < 1) {
-      self.count = 1;
-    }
+    if (isNaN(self.count) || self.count < 1) self.count = 1;
   }
 
   getData() {

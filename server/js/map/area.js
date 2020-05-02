@@ -34,30 +34,22 @@ class Area {
   addEntity(entity) {
     const self = this;
 
-    if (self.entities.indexOf(entity) > 0) {
-      return;
-    }
+    if (self.entities.indexOf(entity) > 0) return;
 
     self.entities.push(entity);
     entity.area = self;
 
     // Grab a spawn delay from an mob to create an offset for the chest.
-    if (!self.spawnDelay) {
-      self.spawnDelay = entity.respawnDelay;
-    }
+    if (!self.spawnDelay) self.spawnDelay = entity.respawnDelay;
 
-    if (self.spawnCallback) {
-      self.spawnCallback();
-    }
+    if (self.spawnCallback) self.spawnCallback();
   }
 
   removeEntity(entity) {
     const self = this;
     const index = self.entities.indexOf(entity);
 
-    if (index > -1) {
-      self.entities.splice(index, 1);
-    }
+    if (index > -1) self.entities.splice(index, 1);
 
     if (self.entities.length === 0 && self.emptyCallback) {
       if (entity.lastAttacker && entity.lastAttacker.type === "player") {
@@ -71,9 +63,7 @@ class Area {
   handleAchievement(entity) {
     const self = this;
 
-    if (!self.achievement) {
-      return;
-    }
+    if (!self.achievement) return;
 
     entity.finishAchievement(self.achievement);
   }

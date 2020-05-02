@@ -1,9 +1,10 @@
-define(["../page"], Page => {
-  return class Guild extends Page {
-    constructor(game) {
-      super("#guildPage");
+import Page from "../page";
 
-      this.game = game;
-    }
-  };
-});
+class Guild extends Page {
+  constructor(game) {
+    super("#guildPage");
+
+    this.game = game;
+  }
+}
+export default Guild;

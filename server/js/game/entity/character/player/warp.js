@@ -25,9 +25,7 @@ class Warp {
 
     const data = Modules.Warps[id];
 
-    if (!data) {
-      return;
-    }
+    if (!data) return;
 
     const name = data[0];
     const x = data[3] ? data[1] + Utils.randomInt(0, 1) : data[1];
@@ -59,9 +57,7 @@ class Warp {
     if (isNaN(lastWarp)) {
       self.lastWarp = 0;
       self.player.save();
-    } else {
-      self.lastWarp = lastWarp;
-    }
+    } else self.lastWarp = lastWarp;
   }
 
   isCooldown() {
@@ -76,9 +72,7 @@ class Warp {
     const self = this;
     const difference = this.warpTimeout - self.getDifference();
 
-    if (!difference) {
-      return "5 minutes";
-    }
+    if (!difference) return "5 minutes";
 
     return difference > 60000
       ? Math.ceil(difference / 60000) + " minutes"

@@ -14,9 +14,7 @@ class Cactus extends Combat {
     self.character = character;
 
     self.character.onDamaged((damage, attacker) => {
-      if (!attacker || !attacker.armour || attacker.isRanged()) {
-        return;
-      }
+      if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
       self.damageAttacker(damage, attacker);
 
@@ -37,9 +35,7 @@ class Cactus extends Combat {
   damageAttacker(damage, attacker) {
     const self = this;
 
-    if (!attacker || !attacker.armour || attacker.isRanged()) {
-      return;
-    }
+    if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
     /**
      * This is the formula for dealing damage when a player
@@ -50,9 +46,7 @@ class Cactus extends Combat {
     const defense = attacker.armour.getDefense();
     const calculatedDamage = Math.floor(damage / 2 - defense * 5);
 
-    if (calculatedDamage < 1) {
-      return;
-    }
+    if (calculatedDamage < 1) return;
 
     const hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 

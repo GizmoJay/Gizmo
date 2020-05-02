@@ -1,28 +1,30 @@
-define(["../character"], Character => {
-  return class Mob extends Character {
-    constructor(id, kind) {
-      super(id, kind);
+import Character from "../character";
 
-      this.name = name;
+class Mob extends Character {
+  constructor(id, kind) {
+    super(id, kind);
 
-      this.hitPoints = -1;
-      this.maxHitPoints = -1;
+    this.name = name;
 
-      this.hiddenName = false;
+    this.hitPoints = -1;
+    this.maxHitPoints = -1;
 
-      this.type = "mob";
-    }
+    this.hiddenName = false;
 
-    setName(name) {
-      this.name = name;
-    }
+    this.type = "mob";
+  }
 
-    hasShadow() {
-      return !this.hiddenName;
-    }
+  setName(name) {
+    this.name = name;
+  }
 
-    drawNames() {
-      return !this.hiddenName;
-    }
-  };
-});
+  hasShadow() {
+    return !this.hiddenName;
+  }
+
+  drawNames() {
+    return !this.hiddenName;
+  }
+}
+
+export default Mob;

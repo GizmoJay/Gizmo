@@ -19,18 +19,14 @@ class Grids {
     for (let i = 0; i < self.map.height; i++) {
       self.entityGrid[i] = [];
 
-      for (let j = 0; j < self.map.width; j++) {
-        self.entityGrid[i][j] = {};
-      }
+      for (let j = 0; j < self.map.width; j++) self.entityGrid[i][j] = {};
     }
   }
 
   updateEntityPosition(entity) {
     const self = this;
 
-    if (entity && entity.oldX === entity.x && entity.oldY === entity.y) {
-      return;
-    }
+    if (entity && entity.oldX === entity.x && entity.oldY === entity.y) return;
 
     self.removeFromEntityGrid(entity, entity.oldX, entity.oldY);
     self.addToEntityGrid(entity, entity.x, entity.y);
@@ -73,9 +69,7 @@ class Grids {
     const self = this;
     const entities = [];
 
-    if (!self.checkBounds(entity.x, entity.y, radius)) {
-      return;
-    }
+    if (!self.checkBounds(entity.x, entity.y, radius)) return;
 
     for (let i = -radius; i < radius + 1; i++) {
       for (let j = -radius; j < radius + 1; j++) {

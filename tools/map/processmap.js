@@ -75,31 +75,21 @@ module.exports = function parse(json, options) {
   map.tilesize = self.json.tilewidth;
 
   const handleProperty = function(property, value, id) {
-    if (property === "c" || property === "o") {
-      collisions[id] = true;
-    }
+    if (property === "c" || property === "o") collisions[id] = true;
 
     if (mode === "client" || mode === "info") {
-      if (property === "v") {
-        map.high.push(id);
-      }
+      if (property === "v") map.high.push(id);
 
-      if (property === "l") {
-        map.lights.push(id);
-      }
+      if (property === "l") map.lights.push(id);
 
       if (property === "length") {
-        if (!map.animated[id]) {
-          map.animated[id] = {};
-        }
+        if (!map.animated[id]) map.animated[id] = {};
 
         map.animated[id].l = value;
       }
 
       if (property === "delay") {
-        if (!map.animated[id]) {
-          map.animated[id] = {};
-        }
+        if (!map.animated[id]) map.animated[id] = {};
 
         map.animated[id].d = value;
       }
@@ -357,17 +347,13 @@ module.exports = function parse(json, options) {
 
   if (mode === "client") {
     for (let i = 0, max = map.data.length; i < max; i++) {
-      if (!map.data[i]) {
-        map.data[i] = 0;
-      }
+      if (!map.data[i]) map.data[i] = 0;
     }
 
     map.depth = calculateDepth(map);
   }
 
-  if (mode === "info") {
-    map.collisions = [];
-  }
+  if (mode === "info") map.collisions = [];
 
   return map;
 };
@@ -376,13 +362,9 @@ const calculateDepth = function(map) {
   let depth = 1;
 
   _.each(map.data, info => {
-    if (!_.isArray(info)) {
-      return;
-    }
+    if (!_.isArray(info)) return;
 
-    if (info.length > depth) {
-      depth = info.length;
-    }
+    if (info.length > depth) depth = info.length;
   });
 
   return depth;
@@ -408,9 +390,7 @@ const parseLayer = function(layer) {
     for (let i = 0; i < tiles.length; i++) {
       const gid = tiles[i] - mobsFirstGid + 1;
 
-      if (gid && gid > 0) {
-        map.staticEntities[i] = entities[gid];
-      }
+      if (gid && gid > 0) map.staticEntities[i] = entities[gid];
     }
   }
 
@@ -420,9 +400,7 @@ const parseLayer = function(layer) {
     for (let j = 0; j < tiles.length; j++) {
       const bGid = tiles[j];
 
-      if (bGid && bGid > 0) {
-        map.collisions.push(j);
-      }
+      if (bGid && bGid > 0) map.collisions.push(j);
     }
   } else if (name.startsWith("plateau") && mode === "server") {
     for (let j = 0; j < tiles.length; j++) {
@@ -434,9 +412,7 @@ const parseLayer = function(layer) {
         continue;
       }
 
-      if (pGid && pGid > 0) {
-        map.plateau[j] = level;
-      }
+      if (pGid && pGid > 0) map.plateau[j] = level;
     }
   } else if (
     type === "tilelayer" &&
@@ -449,19 +425,13 @@ const parseLayer = function(layer) {
 
       if (mode === "client") {
         if (tGid > 0) {
-          if (map.data[k] === undefined) {
-            map.data[k] = tGid;
-          } else if (map.data[k] instanceof Array) {
-            map.data[k].unshift(tGid);
-          } else {
-            map.data[k] = [tGid, map.data[k]];
-          }
+          if (map.data[k] === undefined) map.data[k] = tGid;
+          else if (map.data[k] instanceof Array) map.data[k].unshift(tGid);
+          else map.data[k] = [tGid, map.data[k]];
         }
       }
 
-      if (tGid in collisions) {
-        map.collisions.push(k);
-      }
+      if (tGid in collisions) map.collisions.push(k);
     }
   }
 };

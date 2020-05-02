@@ -1,96 +1,94 @@
-/* global log */
+class Grids {
+  constructor(map) {
+    this.map = map;
 
-define(() => {
-  return class {
-    constructor(map) {
-      this.map = map;
+    this.renderingGrid = [];
+    this.pathingGrid = [];
+    this.itemGrid = [];
 
-      this.renderingGrid = [];
-      this.pathingGrid = [];
-      this.itemGrid = [];
+    this.load();
+  }
 
-      this.load();
-    }
+  load() {
+    for (let i = 0; i < this.map.height; i++) {
+      this.renderingGrid[i] = [];
+      this.pathingGrid[i] = [];
+      this.itemGrid[i] = [];
 
-    load() {
-      for (let i = 0; i < this.map.height; i++) {
-        this.renderingGrid[i] = [];
-        this.pathingGrid[i] = [];
-        this.itemGrid[i] = [];
-
-        for (let j = 0; j < this.map.width; j++) {
-          this.renderingGrid[i][j] = {};
-          this.pathingGrid[i][j] = this.map.grid[i][j];
-          this.itemGrid[i][j] = {};
-        }
-      }
-
-      if (this.map.game.isDebug()) {
-        log.info("Finished generating grids.");
+      for (let j = 0; j < this.map.width; j++) {
+        this.renderingGrid[i][j] = {};
+        this.pathingGrid[i][j] = this.map.grid[i][j];
+        this.itemGrid[i][j] = {};
       }
     }
 
-    resetPathingGrid() {
-      this.pathingGrid = [];
+    if (this.map.game.isDebug()) {
+      log.info("Finished generating grids.");
+    }
+  }
 
-      for (let i = 0; i < this.map.height; i++) {
-        this.pathingGrid[i] = [];
+  resetPathingGrid() {
+    this.pathingGrid = [];
 
-        for (let j = 0; j < this.map.width; j++) {
-          this.pathingGrid[i][j] = this.map.grid[i][j];
-        }
+    for (let i = 0; i < this.map.height; i++) {
+      this.pathingGrid[i] = [];
+
+      for (let j = 0; j < this.map.width; j++) {
+        this.pathingGrid[i][j] = this.map.grid[i][j];
       }
     }
+  }
 
-    addToRenderingGrid(entity, x, y) {
-      if (!this.map.isOutOfBounds(x, y)) {
-        this.renderingGrid[y][x][entity.id] = entity;
-      }
+  addToRenderingGrid(entity, x, y) {
+    if (!this.map.isOutOfBounds(x, y)) {
+      this.renderingGrid[y][x][entity.id] = entity;
     }
+  }
 
-    addToPathingGrid(x, y) {
-      this.pathingGrid[y][x] = 1;
+  addToPathingGrid(x, y) {
+    this.pathingGrid[y][x] = 1;
+  }
+
+  addToItemGrid(item, x, y) {
+    if (item && this.itemGrid[y][x]) {
+      this.itemGrid[y][x][item.id] = item;
     }
+  }
 
-    addToItemGrid(item, x, y) {
-      if (item && this.itemGrid[y][x]) {
-        this.itemGrid[y][x][item.id] = item;
-      }
-    }
-
-    removeFromRenderingGrid(entity, x, y) {
-      if (
-        entity &&
+  removeFromRenderingGrid(entity, x, y) {
+    if (
+      entity &&
         this.renderingGrid[y][x] &&
         entity.id in this.renderingGrid[y][x]
-      ) {
-        delete this.renderingGrid[y][x][entity.id];
+    ) {
+      delete this.renderingGrid[y][x][entity.id];
+    }
+  }
+
+  removeFromPathingGrid(x, y) {
+    this.pathingGrid[y][x] = 0;
+  }
+
+  removeFromMapGrid(x, y) {
+    this.map.grid[y][x] = 0;
+  }
+
+  removeFromItemGrid(item, x, y) {
+    if (item && this.itemGrid[y][x][item.id]) {
+      delete this.itemGrid[y][x][item.id];
+    }
+  }
+
+  removeEntity(entity) {
+    if (entity) {
+      this.removeFromPathingGrid(entity.gridX, entity.gridY);
+      this.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
+
+      if (entity.nextGridX > -1 && entity.nextGridY > -1) {
+        this.removeFromPathingGrid(entity.nextGridX, entity.nextGridY);
       }
     }
+  }
+}
 
-    removeFromPathingGrid(x, y) {
-      this.pathingGrid[y][x] = 0;
-    }
-
-    removeFromMapGrid(x, y) {
-      this.map.grid[y][x] = 0;
-    }
-
-    removeFromItemGrid(item, x, y) {
-      if (item && this.itemGrid[y][x][item.id]) {
-        delete this.itemGrid[y][x][item.id];
-      }
-    }
-
-    removeEntity(entity) {
-      if (entity) {
-        this.removeFromPathingGrid(entity.gridX, entity.gridY);
-        this.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
-
-        if (entity.nextGridX > -1 && entity.nextGridY > -1) {
-          this.removeFromPathingGrid(entity.nextGridX, entity.nextGridY);
-        }
-      }
-    }
-  };
-});
+export default Grids;

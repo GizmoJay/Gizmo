@@ -71,9 +71,8 @@ class MongoDB {
       dataCursor.toArray().then(playerData => {
         equipmentCursor.toArray().then(equipmentData => {
           regionsCursor.toArray().then(regionData => {
-            if (playerData.length === 0) {
-              self.register(player);
-            } else {
+            if (playerData.length === 0) self.register(player);
+            else {
               const playerInfo = playerData[0];
               const equipmentInfo = equipmentData[0];
               const regions = regionData[0];
@@ -104,19 +103,15 @@ class MongoDB {
         .find({ username: player.username });
 
       dataCursor.toArray().then(data => {
-        if (data.length === 0) {
-          callback({ status: "error" });
-        } else {
+        if (data.length === 0) callback({ status: "error" });
+        else {
           const info = data[0];
 
           bcrypt.compare(player.password, info.password, (error, result) => {
             if (error) throw error;
 
-            if (result) {
-              callback({ status: "success" });
-            } else {
-              callback({ status: "error" });
-            }
+            if (result) callback({ status: "success" });
+            else callback({ status: "error" });
           });
         }
       });
@@ -158,15 +153,10 @@ class MongoDB {
       emailCursor.toArray().then(emailArray => {
         if (emailArray.length === 0) {
           usernameCursor.toArray().then(usernameArray => {
-            if (usernameArray.length === 0) {
-              callback({ exists: false });
-            } else {
-              callback({ exists: true, type: "user" });
-            }
+            if (usernameArray.length === 0) callback({ exists: false });
+            else callback({ exists: true, type: "user" });
           });
-        } else {
-          callback({ exists: true, type: "email" });
-        }
+        } else callback({ exists: true, type: "email" });
       });
     });
   }
@@ -239,13 +229,9 @@ class MongoDB {
               upsert: true
             },
             (error, result) => {
-              if (error) {
-                throw error;
-              }
+              if (error) throw error;
 
-              if (result) {
-                callback("Successfully updated positions.");
-              }
+              if (result) callback("Successfully updated positions.");
             }
           );
         });

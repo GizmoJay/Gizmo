@@ -1,140 +1,140 @@
-/* global log, _ */
+import Page from "../page";
 
-define(["../page"], Page => {
-  return class State extends Page {
-    constructor(game) {
-      super("#statePage");
+class State extends Page {
+  constructor(game) {
+    super("#statePage");
 
-      this.game = game;
-      this.player = game.player;
+    this.game = game;
+    this.player = game.player;
 
-      this.name = $("#profileName");
-      this.level = $("#profileLevel");
-      this.experience = $("#profileExperience");
+    this.name = $("#profileName");
+    this.level = $("#profileLevel");
+    this.experience = $("#profileExperience");
 
-      this.weaponSlot = $("#weaponSlot");
-      this.armourSlot = $("#armourSlot");
-      this.pendantSlot = $("#pendantSlot");
-      this.ringSlot = $("#ringSlot");
-      this.bootsSlot = $("#bootsSlot");
+    this.weaponSlot = $("#weaponSlot");
+    this.armourSlot = $("#armourSlot");
+    this.pendantSlot = $("#pendantSlot");
+    this.ringSlot = $("#ringSlot");
+    this.bootsSlot = $("#bootsSlot");
 
-      this.weaponSlotInfo = $("#weaponSlotInfo");
-      this.armourSlotInfo = $("#armourSlotInfo");
+    this.weaponSlotInfo = $("#weaponSlotInfo");
+    this.armourSlotInfo = $("#armourSlotInfo");
 
-      this.slots = [
-        this.weaponSlot,
-        this.armourSlot,
-        this.pendantSlot,
-        this.ringSlot,
-        this.bootsSlot
-      ];
+    this.slots = [
+      this.weaponSlot,
+      this.armourSlot,
+      this.pendantSlot,
+      this.ringSlot,
+      this.bootsSlot
+    ];
 
-      this.loaded = false;
+    this.loaded = false;
 
-      this.load();
+    this.load();
+  }
+
+  resize() {
+    this.loadSlots();
+  }
+
+  load() {
+    if (!this.game.player.armour) {
+      return;
     }
 
-    resize() {
-      this.loadSlots();
-    }
+    this.name.text(this.player.username);
+    this.level.text(this.player.level);
+    this.experience.text(this.player.experience);
 
-    load() {
-      if (!this.game.player.armour) {
-        return;
-      }
+    this.loadSlots();
 
-      this.name.text(this.player.username);
-      this.level.text(this.player.level);
-      this.experience.text(this.player.experience);
+    this.loaded = true;
 
-      this.loadSlots();
+    this.weaponSlot.click(() => {
+      this.game.socket.send(Packets.Equipment, [
+        Packets.EquipmentOpcode.Unequip,
+        "weapon"
+      ]);
+    });
 
-      this.loaded = true;
+    this.armourSlot.click(() => {
+      this.game.socket.send(Packets.Equipment, [
+        Packets.EquipmentOpcode.Unequip,
+        "armour"
+      ]);
+    });
 
-      this.weaponSlot.click(() => {
-        this.game.socket.send(Packets.Equipment, [
-          Packets.EquipmentOpcode.Unequip,
-          "weapon"
-        ]);
-      });
+    this.pendantSlot.click(() => {
+      this.game.socket.send(Packets.Equipment, [
+        Packets.EquipmentOpcode.Unequip,
+        "pendant"
+      ]);
+    });
 
-      this.armourSlot.click(() => {
-        this.game.socket.send(Packets.Equipment, [
-          Packets.EquipmentOpcode.Unequip,
-          "armour"
-        ]);
-      });
+    this.ringSlot.click(() => {
+      this.game.socket.send(Packets.Equipment, [
+        Packets.EquipmentOpcode.Unequip,
+        "ring"
+      ]);
+    });
 
-      this.pendantSlot.click(() => {
-        this.game.socket.send(Packets.Equipment, [
-          Packets.EquipmentOpcode.Unequip,
-          "pendant"
-        ]);
-      });
+    this.bootsSlot.click(() => {
+      this.game.socket.send(Packets.Equipment, [
+        Packets.EquipmentOpcode.Unequip,
+        "boots"
+      ]);
+    });
+  }
 
-      this.ringSlot.click(() => {
-        this.game.socket.send(Packets.Equipment, [
-          Packets.EquipmentOpcode.Unequip,
-          "ring"
-        ]);
-      });
+  loadSlots() {
+    this.weaponSlot.css(
+      "background-image",
+      this.getImageFormat(this.getScale(), this.player.weapon.string)
+    );
+    this.armourSlot.css(
+      "background-image",
+      this.getImageFormat(this.getScale(), this.player.armour.string)
+    );
+    this.pendantSlot.css(
+      "background-image",
+      this.getImageFormat(this.getScale(), this.player.pendant.string)
+    );
+    this.ringSlot.css(
+      "background-image",
+      this.getImageFormat(this.getScale(), this.player.ring.string)
+    );
+    this.bootsSlot.css(
+      "background-image",
+      this.getImageFormat(this.getScale(), this.player.boots.string)
+    );
 
-      this.bootsSlot.click(() => {
-        this.game.socket.send(Packets.Equipment, [
-          Packets.EquipmentOpcode.Unequip,
-          "boots"
-        ]);
-      });
-    }
+    this.forEachSlot(slot => {
+      slot.css("background-size", "600%");
+    });
+  }
 
-    loadSlots() {
-      this.weaponSlot.css(
-        "background-image",
-        this.getImageFormat(this.getScale(), this.player.weapon.string)
-      );
-      this.armourSlot.css(
-        "background-image",
-        this.getImageFormat(this.getScale(), this.player.armour.string)
-      );
-      this.pendantSlot.css(
-        "background-image",
-        this.getImageFormat(this.getScale(), this.player.pendant.string)
-      );
-      this.ringSlot.css(
-        "background-image",
-        this.getImageFormat(this.getScale(), this.player.ring.string)
-      );
-      this.bootsSlot.css(
-        "background-image",
-        this.getImageFormat(this.getScale(), this.player.boots.string)
-      );
+  update() {
+    const weaponPower = this.player.weapon.power;
+    const armourPower = this.player.armour.power;
 
-      this.forEachSlot(slot => {
-        slot.css("background-size", "600%");
-      });
-    }
+    this.level.text(this.player.level);
+    this.experience.text(this.player.experience);
 
-    update() {
-      const weaponPower = this.player.weapon.power;
-      const armourPower = this.player.armour.power;
+    this.weaponSlotInfo.text(weaponPower ? "+" + weaponPower : "");
+    this.armourSlotInfo.text(armourPower ? "+" + armourPower : "");
 
-      this.level.text(this.player.level);
-      this.experience.text(this.player.experience);
+    this.loadSlots();
+  }
 
-      this.weaponSlotInfo.text(weaponPower ? "+" + weaponPower : "");
-      this.armourSlotInfo.text(armourPower ? "+" + armourPower : "");
+  forEachSlot(callback) {
+    _.each(this.slots, slot => {
+      callback(slot);
+    });
+  }
 
-      this.loadSlots();
-    }
+  getScale() {
+    return this.game.renderer.getScale();
+  }
+}
 
-    forEachSlot(callback) {
-      _.each(this.slots, slot => {
-        callback(slot);
-      });
-    }
-
-    getScale() {
-      return this.game.renderer.getScale();
-    }
-  };
-});
+export default State;

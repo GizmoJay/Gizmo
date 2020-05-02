@@ -13,13 +13,9 @@ class Snek extends Combat {
     self.character = character;
 
     self.character.onDamage((target, hitInfo) => {
-      if (!target || target.type !== "player") {
-        return;
-      }
+      if (!target || target.type !== "player") return;
 
-      if (self.canPoison()) {
-        target.setPoison(self.getPoisonData());
-      }
+      if (self.canPoison()) target.setPoison(self.getPoisonData());
 
       log.info(
         `Entity ${self.character.id} hit ${target.instance} - damage ${hitInfo.damage}.`

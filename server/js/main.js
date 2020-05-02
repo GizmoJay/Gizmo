@@ -24,14 +24,12 @@ class Main {
        * the websocket.
        */
 
-      const onWorldLoad = function() {
+      const onWorldLoad = () => {
         log.notice("World has successfully been created.");
 
-        if (!config.allowConnectionsToggle) {
-          self.world.allowConnections = true;
-        }
+        if (!config.allowConnectionsToggle) self.world.allowConnections = true;
 
-        var host = config.host === "0.0.0.0" ? "localhost" : config.host;
+        let host = config.host === "0.0.0.0" ? "localhost" : config.host;
         log.notice("Connect locally via http://" + host + ":" + config.port);
       };
 
@@ -49,9 +47,7 @@ class Main {
 
           connection.sendUTF8("full");
           connection.close();
-        } else {
-          self.world.playerConnectCallback(connection);
-        }
+        } else self.world.playerConnectCallback(connection);
       } else {
         connection.sendUTF8("disallowed");
         connection.close();
@@ -69,16 +65,12 @@ class Main {
       const message = data.toString().replace(/(\r\n|\n|\r)/gm, "");
       const type = message.charAt(0);
 
-      if (type !== "/") {
-        return;
-      }
+      if (type !== "/") return;
 
       const blocks = message.substring(1).split(" ");
       const command = blocks.shift();
 
-      if (!command) {
-        return;
-      }
+      if (!command) return;
 
       let username, player;
 
@@ -149,9 +141,7 @@ class Main {
 
           if (self.world.allowConnections) {
             log.info("Server is now allowing connections.");
-          } else {
-            log.info("The server is not allowing connections.");
-          }
+          } else log.info("The server is not allowing connections.");
 
           break;
 
@@ -163,9 +153,7 @@ class Main {
 
           player = self.world.getPlayerByName(username);
 
-          if (!player) {
-            return;
-          }
+          if (!player) return;
 
           player.inventory.add({
             id: itemId,
@@ -188,21 +176,7 @@ class Main {
   }
 }
 
-if (typeof String.prototype.startsWith !== "function") {
-  String.prototype.startsWith = function(str) {
-    return str.length > 0 && this.substring(0, str.length) === str;
-  };
-}
-
-if (typeof String.prototype.endsWith !== "function") {
-  String.prototype.endsWith = function(str) {
-    return (
-      str.length > 0 &&
-      this.substring(this.length - str.length, this.length) === str
-    );
-  };
-}
-
 module.exports = Main;
 
+// eslint-disable-next-line no-new
 new Main();

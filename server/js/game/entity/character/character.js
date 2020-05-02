@@ -56,9 +56,7 @@ class Character extends Entity {
 
     if (Mobs.hasCombatPlugin(self.id)) {
       self.combat = new (Mobs.isNewCombatPlugin(self.id))(self);
-    } else {
-      self.combat = new Combat(self);
-    }
+    } else self.combat = new Combat(self);
   }
 
   setMinibossData() {
@@ -66,9 +64,7 @@ class Character extends Entity {
 
     /* We only update the mob data once to prevent any issues. */
 
-    if (self.updated) {
-      return;
-    }
+    if (self.updated) return;
 
     self.level += Math.floor(self.level / 2);
     self.maxHitPoints += Math.floor(self.maxHitPoints / 2);
@@ -83,17 +79,11 @@ class Character extends Entity {
     const self = this;
 
     self.healingInterval = setInterval(() => {
-      if (self.dead) {
-        return;
-      }
+      if (self.dead) return;
 
-      if (self.combat.started) {
-        return;
-      }
+      if (self.combat.started) return;
 
-      if (self.poison) {
-        return;
-      }
+      if (self.poison) return;
 
       self.heal(1);
     }, self.healingRate);
@@ -111,17 +101,13 @@ class Character extends Entity {
 
     self.stunned = stun;
 
-    if (self.stunCallback) {
-      self.stunCallback(stun);
-    }
+    if (self.stunCallback) self.stunCallback(stun);
   }
 
   hit(attacker) {
     const self = this;
 
-    if (self.hitCallback) {
-      self.hitCallback(attacker);
-    }
+    if (self.hitCallback) self.hitCallback(attacker);
   }
 
   heal(amount) {
@@ -129,9 +115,7 @@ class Character extends Entity {
 
     self.setHitPoints(self.hitPoints + amount);
 
-    if (self.hitPoints >= self.maxHitPoints) {
-      self.hitPoints = self.maxHitPoints;
-    }
+    if (self.hitPoints >= self.maxHitPoints) self.hitPoints = self.maxHitPoints;
   }
 
   addExperience() {
@@ -147,9 +131,7 @@ class Character extends Entity {
 
     self.hitPoints -= damage;
 
-    if (self.damagedCallback) {
-      self.damagedCallback(damage, attacker);
-    }
+    if (self.damagedCallback) self.damagedCallback(damage, attacker);
   }
 
   isDead() {
@@ -176,9 +158,7 @@ class Character extends Entity {
 
     super.setPosition(x, y);
 
-    if (self.movementCallback) {
-      self.movementCallback(x, y);
-    }
+    if (self.movementCallback) self.movementCallback(x, y);
   }
 
   setTarget(target) {
@@ -186,9 +166,7 @@ class Character extends Entity {
 
     self.target = target;
 
-    if (self.targetCallback) {
-      self.targetCallback(target);
-    }
+    if (self.targetCallback) self.targetCallback(target);
   }
 
   setPotentialTarget(potentialTarget) {
@@ -200,9 +178,7 @@ class Character extends Entity {
 
     self.hitPoints = hitPoints;
 
-    if (self.hitPointsCallback) {
-      self.hitPointsCallback();
-    }
+    if (self.hitPointsCallback) self.hitPointsCallback();
   }
 
   setPoison(poison) {
@@ -210,9 +186,7 @@ class Character extends Entity {
 
     self.poison = poison;
 
-    if (self.poisonCallback) {
-      self.poisonCallback(poison);
-    }
+    if (self.poisonCallback) self.poisonCallback(poison);
   }
 
   getProjectile() {
@@ -243,9 +217,7 @@ class Character extends Entity {
   removeTarget() {
     const self = this;
 
-    if (self.removeTargetCallback) {
-      self.removeTargetCallback();
-    }
+    if (self.removeTargetCallback) self.removeTargetCallback();
 
     self.clearTarget();
   }

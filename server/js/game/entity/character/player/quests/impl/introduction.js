@@ -30,9 +30,7 @@ class Introduction extends Quest {
     self.updatePointers();
     self.toggleChat();
 
-    if (self.stage > 9998) {
-      return;
-    }
+    if (self.stage > 9998) return;
 
     self.loadCallbacks();
   }
@@ -52,9 +50,7 @@ class Introduction extends Quest {
         })
       );
 
-      if (self.player.talkIndex === 0) {
-        self.progress("talk");
-      }
+      if (self.player.talkIndex === 0) self.progress("talk");
     });
 
     self.player.onReady(() => {
@@ -76,27 +72,19 @@ class Introduction extends Quest {
     });
 
     self.player.onInventory(isOpen => {
-      if (isOpen && self.stage === 1) {
-        self.progress("click");
-      }
+      if (isOpen && self.stage === 1) self.progress("click");
     });
 
     self.player.onProfile(isOpen => {
-      if (isOpen && self.stage === 3) {
-        self.progress("click");
-      }
+      if (isOpen && self.stage === 3) self.progress("click");
     });
 
     self.player.onWarp(isOpen => {
-      if (isOpen && self.stage === 5) {
-        self.progress("click");
-      }
+      if (isOpen && self.stage === 5) self.progress("click");
     });
 
     self.player.onKill(character => {
-      if (self.data.kill[self.stage] === character.id) {
-        self.progress("kill");
-      }
+      if (self.data.kill[self.stage] === character.id) self.progress("kill");
     });
   }
 
@@ -104,9 +92,7 @@ class Introduction extends Quest {
     const self = this;
     const task = self.data.task[self.stage];
 
-    if (!task || task !== type) {
-      return;
-    }
+    if (!task || task !== type) return;
 
     if (self.stage === self.data.stages) {
       self.finish();
@@ -150,9 +136,7 @@ class Introduction extends Quest {
       })
     );
 
-    if (self.getTask() === "door") {
-      self.player.updateRegion();
-    }
+    if (self.getTask() === "door") self.player.updateRegion();
   }
 
   isFinished() {
@@ -199,9 +183,7 @@ class Introduction extends Quest {
     const self = this;
     const doorData = self.data.doors[self.stage];
 
-    if (!doorData) {
-      return;
-    }
+    if (!doorData) return;
 
     return doorData[0] === destX && doorData[1] === destY;
   }
@@ -209,9 +191,7 @@ class Introduction extends Quest {
   getSpawn() {
     const self = this;
 
-    if (self.stage > 7) {
-      return { x: 331, y: 12 };
-    }
+    if (self.stage > 7) return { x: 331, y: 12 };
 
     return { x: 375, y: 41 };
   }

@@ -40,16 +40,12 @@ class Trade {
   finalize() {
     const self = this;
 
-    if (!self.player.inventory.containsSpaces(self.oPlayerItems.length)) {
-      return;
-    }
+    if (!self.player.inventory.containsSpaces(self.oPlayerItems.length)) return;
 
     for (const i in self.oPlayerItems) {
       const item = self.oPlayerItems[i];
 
-      if (!item || item.id === -1) {
-        continue;
-      }
+      if (!item || item.id === -1) continue;
 
       self.oPlayer.inventory.remove(item.id, item.count, item.index);
       self.player.inventory.add(item);
@@ -60,9 +56,7 @@ class Trade {
     const self = this;
     const item = self.player.inventory.slots[slot];
 
-    if (!item || item.id === -1 || self.playerItems.indexOf(item) < 0) {
-      return;
-    }
+    if (!item || item.id === -1 || self.playerItems.indexOf(item) < 0) return;
 
     self.playerItems.push(item);
   }
@@ -72,9 +66,7 @@ class Trade {
 
     self.requestee = oPlayer;
 
-    if (oPlayer.trade.getRequestee() === self.player.instance) {
-      self.start();
-    }
+    if (oPlayer.trade.getRequestee() === self.player.instance) self.start();
   }
 
   accept() {
@@ -91,9 +83,7 @@ class Trade {
   getRequestee() {
     const self = this;
 
-    if (!self.requestee) {
-      return null;
-    }
+    if (!self.requestee) return null;
 
     return self.requestee.instance;
   }

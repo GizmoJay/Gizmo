@@ -1,208 +1,210 @@
-define(["../page"], Page => {
-  return class Quest extends Page {
-    constructor() {
-      super("#questPage");
+import Page from "../page";
 
-      this.achievements = $("#achievementList");
-      this.quests = $("#questList");
+class Quest extends Page {
+  constructor() {
+    super("#questPage");
 
-      this.achievementsCount = $("#achievementCount");
-      this.questCount = $("#questCount");
+    this.achievements = $("#achievementList");
+    this.quests = $("#questList");
 
-      this.achievementsList = this.achievements.find("ul");
-      this.questList = this.quests.find("ul");
+    this.achievementsCount = $("#achievementCount");
+    this.questCount = $("#questCount");
 
-      this.finishedAchievements = 0;
-      this.finishedQuests = 0;
+    this.achievementsList = this.achievements.find("ul");
+    this.questList = this.quests.find("ul");
 
-      this.achievementsLength = 0;
-      this.questsLength = 0;
-    }
+    this.finishedAchievements = 0;
+    this.finishedQuests = 0;
 
-    loadAchievements(achievements) {
-      this.achievementsLength = achievements.length;
+    this.achievementsLength = 0;
+    this.questsLength = 0;
+  }
 
-      _.each(achievements, achievement => {
-        const item = this.getItem(false, achievement.id);
-        const name = this.getName(false, achievement.id);
+  loadAchievements(achievements) {
+    this.achievementsLength = achievements.length;
 
-        name.text("????????");
+    _.each(achievements, achievement => {
+      const item = this.getItem(false, achievement.id);
+      const name = this.getName(false, achievement.id);
 
-        name.css("background", "rgba(255, 10, 10, 0.3)");
+      name.text("????????");
 
-        if (achievement.progress > 0 && achievement.progress < 9999) {
-          name.css("background", "rgba(255, 255, 10, 0.4)");
+      name.css("background", "rgba(255, 10, 10, 0.3)");
 
-          name.text(
-            achievement.name +
+      if (achievement.progress > 0 && achievement.progress < 9999) {
+        name.css("background", "rgba(255, 255, 10, 0.4)");
+
+        name.text(
+          achievement.name +
               (achievement.count > 2
                 ? " " +
                   (achievement.progress - 1) +
                   "/" +
                   (achievement.count - 1)
                 : "")
-          );
-        } else if (achievement.progress > 9998) {
-          name.text(achievement.name);
-          name.css("background", "rgba(10, 255, 10, 0.3)");
-        }
-
-        if (achievement.finished) {
-          this.finishedAchievements++;
-        }
-
-        item.append(name);
-
-        const listItem = $("<li></li>");
-
-        listItem.append(item);
-
-        this.achievementsList.append(listItem);
-      });
-
-      this.updateCount();
-    }
-
-    loadQuests(quests) {
-      this.questsLength = quests.length;
-
-      _.each(quests, quest => {
-        const item = this.getItem(true, quest.id);
-        const name = this.getName(true, quest.id);
-
-        name.text(quest.name);
-
-        name.css("background", "rgba(255, 10, 10, 0.3)");
-
-        if (quest.stage > 0 && quest.stage < 9999) {
-          name.css("background", "rgba(255, 255, 10, 0.4)");
-        } else if (quest.stage > 9998) {
-          name.css("background", "rgba(10, 255, 10, 0.3)");
-        }
-
-        if (quest.finished) {
-          this.finishedQuests++;
-        }
-
-        item.append(name);
-
-        const listItem = $("<li></li>");
-
-        listItem.append(item);
-
-        this.questList.append(listItem);
-      });
-
-      this.updateCount();
-    }
-
-    progress(info) {
-      const item = info.isQuest
-        ? this.getQuest(info.id)
-        : this.getAchievement(info.id);
-
-      if (!item) {
-        return;
-      }
-
-      const name = item.find(
-        "" + (info.isQuest ? "#quest" : "#achievement") + info.id + "name"
-      );
-
-      if (!name) {
-        return;
-      }
-
-      if (!info.isQuest && info.count > 2) {
-        name.text(
-          info.name + " " + (info.progress - 1) + "/" + (info.count - 1)
         );
-      } else {
-        name.text(info.name);
+      } else if (achievement.progress > 9998) {
+        name.text(achievement.name);
+        name.css("background", "rgba(10, 255, 10, 0.3)");
       }
 
-      name.css("background", "rgba(255, 255, 10, 0.4)");
-
-      this.updateCount();
-    }
-
-    finish(info) {
-      const item = info.isQuest
-        ? this.getQuest(info.id)
-        : this.getAchievement(info.id);
-
-      if (!item) {
-        return;
-      }
-
-      const name = item.find(
-        "" + (info.isQuest ? "#quest" : "#achievement") + info.id + "name"
-      );
-
-      if (!name) {
-        return;
-      }
-
-      if (!info.isQuest) {
-        name.text(info.name);
+      if (achievement.finished) {
         this.finishedAchievements++;
       }
 
-      name.css("background", "rgba(10, 255, 10, 0.3)");
+      item.append(name);
 
-      if (info.isQuest) {
+      const listItem = $("<li></li>");
+
+      listItem.append(item);
+
+      this.achievementsList.append(listItem);
+    });
+
+    this.updateCount();
+  }
+
+  loadQuests(quests) {
+    this.questsLength = quests.length;
+
+    _.each(quests, quest => {
+      const item = this.getItem(true, quest.id);
+      const name = this.getName(true, quest.id);
+
+      name.text(quest.name);
+
+      name.css("background", "rgba(255, 10, 10, 0.3)");
+
+      if (quest.stage > 0 && quest.stage < 9999) {
+        name.css("background", "rgba(255, 255, 10, 0.4)");
+      } else if (quest.stage > 9998) {
+        name.css("background", "rgba(10, 255, 10, 0.3)");
+      }
+
+      if (quest.finished) {
         this.finishedQuests++;
       }
 
-      this.updateCount();
+      item.append(name);
+
+      const listItem = $("<li></li>");
+
+      listItem.append(item);
+
+      this.questList.append(listItem);
+    });
+
+    this.updateCount();
+  }
+
+  progress(info) {
+    const item = info.isQuest
+      ? this.getQuest(info.id)
+      : this.getAchievement(info.id);
+
+    if (!item) {
+      return;
     }
 
-    updateCount() {
-      if (this.finishedAchievement !== 0 && this.achievementsLength !== 0) {
-        this.achievementsCount.html(
-          this.finishedAchievements + "/" + this.achievementsLength
-        );
-      }
+    const name = item.find(
+      "" + (info.isQuest ? "#quest" : "#achievement") + info.id + "name"
+    );
 
-      if (this.finishedQuests !== 0 && this.questsLength !== 0) {
-        this.questCount.html(this.finishedQuests + "/" + this.questsLength);
-      }
+    if (!name) {
+      return;
     }
 
-    clear() {
-      this.achievementsList.empty();
-      this.questList.empty();
+    if (!info.isQuest && info.count > 2) {
+      name.text(
+        info.name + " " + (info.progress - 1) + "/" + (info.count - 1)
+      );
+    } else {
+      name.text(info.name);
     }
 
-    getQuest(id) {
-      return $(this.questList.find("li")[id]).find("#quest" + id);
+    name.css("background", "rgba(255, 255, 10, 0.4)");
+
+    this.updateCount();
+  }
+
+  finish(info) {
+    const item = info.isQuest
+      ? this.getQuest(info.id)
+      : this.getAchievement(info.id);
+
+    if (!item) {
+      return;
     }
 
-    getAchievement(id) {
-      return $(this.achievementsList.find("li")[id]).find("#achievement" + id);
+    const name = item.find(
+      "" + (info.isQuest ? "#quest" : "#achievement") + info.id + "name"
+    );
+
+    if (!name) {
+      return;
     }
 
-    /**
+    if (!info.isQuest) {
+      name.text(info.name);
+      this.finishedAchievements++;
+    }
+
+    name.css("background", "rgba(10, 255, 10, 0.3)");
+
+    if (info.isQuest) {
+      this.finishedQuests++;
+    }
+
+    this.updateCount();
+  }
+
+  updateCount() {
+    if (this.finishedAchievement !== 0 && this.achievementsLength !== 0) {
+      this.achievementsCount.html(
+        this.finishedAchievements + "/" + this.achievementsLength
+      );
+    }
+
+    if (this.finishedQuests !== 0 && this.questsLength !== 0) {
+      this.questCount.html(this.finishedQuests + "/" + this.questsLength);
+    }
+  }
+
+  clear() {
+    this.achievementsList.empty();
+    this.questList.empty();
+  }
+
+  getQuest(id) {
+    return $(this.questList.find("li")[id]).find("#quest" + id);
+  }
+
+  getAchievement(id) {
+    return $(this.achievementsList.find("li")[id]).find("#achievement" + id);
+  }
+
+  /**
      * Might as well properly organize them based
      * on their type of item and id (index).
      */
 
-    getItem(isQuest, id) {
-      return $(
-        "<div id=\"" +
+  getItem(isQuest, id) {
+    return $(
+      "<div id=\"" +
           (isQuest ? "quest" : "achievement") +
           id +
           "\" class=\"questItem\"></div>"
-      );
-    }
+    );
+  }
 
-    getName(isQuest, id) {
-      return $(
-        "<div id=\"" +
+  getName(isQuest, id) {
+    return $(
+      "<div id=\"" +
           (isQuest ? "quest" : "achievement") +
           id +
           "name\" class=\"questName\"></div>"
-      );
-    }
-  };
-});
+    );
+  }
+}
+
+export default Quest;

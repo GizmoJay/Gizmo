@@ -1,101 +1,103 @@
-define(["../entity"], Entity => {
-  return class Projectile extends Entity {
-    constructor(id, kind, owner) {
-      super(id, kind);
+import Entity from "../entity";
 
-      this.owner = owner;
+class Projectile extends Entity {
+  constructor(id, kind, owner) {
+    super(id, kind);
 
-      this.name = "";
+    this.owner = owner;
 
-      this.startX = -1;
-      this.startY = -1;
+    this.name = "";
 
-      this.destX = -1;
-      this.destY = -1;
+    this.startX = -1;
+    this.startY = -1;
 
-      this.special = -1;
+    this.destX = -1;
+    this.destY = -1;
 
-      this.static = false;
-      this.dynamic = false;
+    this.special = -1;
 
-      this.speed = 150;
+    this.static = false;
+    this.dynamic = false;
 
-      this.angle = 0;
+    this.speed = 150;
 
-      this.lighting = null;
+    this.angle = 0;
+
+    this.lighting = null;
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  impact() {
+    if (this.impactCallback) {
+      this.impactCallback();
+    }
+  }
+
+  setStart(x, y) {
+    this.setGridPosition(Math.floor(x / 16), Math.floor(y / 16));
+
+    this.startX = x;
+    this.startY = y;
+  }
+
+  setDestination(x, y) {
+    this.static = true;
+
+    this.destX = x;
+    this.destY = y;
+
+    this.updateAngle();
+  }
+
+  setTarget(target) {
+    if (!target) {
+      return;
     }
 
-    getId() {
-      return this.id;
+    this.dynamic = true;
+
+    this.destX = target.x;
+    this.destY = target.y;
+
+    this.updateAngle();
+
+    if (target.type !== "mob") {
+      return;
     }
 
-    impact() {
-      if (this.impactCallback) {
-        this.impactCallback();
-      }
-    }
-
-    setStart(x, y) {
-      this.setGridPosition(Math.floor(x / 16), Math.floor(y / 16));
-
-      this.startX = x;
-      this.startY = y;
-    }
-
-    setDestination(x, y) {
-      this.static = true;
-
-      this.destX = x;
-      this.destY = y;
-
-      this.updateAngle();
-    }
-
-    setTarget(target) {
-      if (!target) {
-        return;
-      }
-
-      this.dynamic = true;
-
+    target.onMove(() => {
       this.destX = target.x;
       this.destY = target.y;
 
       this.updateAngle();
+    });
+  }
 
-      if (target.type !== "mob") {
-        return;
-      }
+  getSpeed() {
+    return 1;
+  }
 
-      target.onMove(() => {
-        this.destX = target.x;
-        this.destY = target.y;
+  updateTarget(x, y) {
+    this.destX = x;
+    this.destY = y;
+  }
 
-        this.updateAngle();
-      });
-    }
+  hasPath() {
+    return false;
+  }
 
-    getSpeed() {
-      return 1;
-    }
-
-    updateTarget(x, y) {
-      this.destX = x;
-      this.destY = y;
-    }
-
-    hasPath() {
-      return false;
-    }
-
-    updateAngle() {
-      this.angle =
+  updateAngle() {
+    this.angle =
         Math.atan2(this.destY - this.y, this.destX - this.x) * (180 / Math.PI) -
         90;
-    }
+  }
 
-    onImpact(callback) {
-      this.impactCallback = callback;
-    }
-  };
-});
+  onImpact(callback) {
+    this.impactCallback = callback;
+  }
+}
+
+export default Projectile;

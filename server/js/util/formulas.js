@@ -16,9 +16,7 @@ Formulas.getDamage = (attacker, target, special) => {
 };
 
 Formulas.getMaxDamage = (attacker, target, special) => {
-  if (!attacker || !target) {
-    return;
-  }
+  if (!attacker || !target) return;
 
   let damageDealt;
   let damageAbsorbed;
@@ -54,13 +52,9 @@ Formulas.getMaxDamage = (attacker, target, special) => {
    * Apply ranged damage deficit
    */
 
-  if (usingRange) {
-    damageDealt /= 1.275;
-  }
+  if (usingRange) damageDealt /= 1.275;
 
-  if (special) {
-    damageDealt *= 1.0575;
-  }
+  if (special) damageDealt *= 1.0575;
 
   /**
    * Apply special amulets
@@ -70,9 +64,7 @@ Formulas.getMaxDamage = (attacker, target, special) => {
     damageAmplifier *= pendant.getBaseAmplifier();
   }
 
-  if (ring && ring.ringLevel > 0) {
-    damageAmplifier *= ring.getBaseAmplifier();
-  }
+  if (ring && ring.ringLevel > 0) damageAmplifier *= ring.getBaseAmplifier();
 
   if (boots && boots.bootsLevel > 0) {
     damageAmplifier *= boots.getBaseAmplifier();
@@ -82,25 +74,17 @@ Formulas.getMaxDamage = (attacker, target, special) => {
    * Just so amplifiers don't get out of hand.
    */
 
-  if (damageAmplifier > 1.6) {
-    damageAmplifier = 1.6;
-  }
+  if (damageAmplifier > 1.6) damageAmplifier = 1.6;
 
   damageDealt *= damageAmplifier;
 
   damageAbsorbed = target.level + targetArmour / 2;
 
-  if (targetPendant) {
-    absorptionAmplifier *= targetPendant.getBaseAmplifier();
-  }
+  if (targetPendant) absorptionAmplifier *= targetPendant.getBaseAmplifier();
 
-  if (targetRing) {
-    absorptionAmplifier *= targetRing.getBaseAmplifier();
-  }
+  if (targetRing) absorptionAmplifier *= targetRing.getBaseAmplifier();
 
-  if (targetBoots) {
-    absorptionAmplifier *= targetBoots.getBaseAmplifier();
-  }
+  if (targetBoots) absorptionAmplifier *= targetBoots.getBaseAmplifier();
 
   damageAbsorbed *= absorptionAmplifier;
 
@@ -108,17 +92,13 @@ Formulas.getMaxDamage = (attacker, target, special) => {
 
   damage = Math.ceil(damage);
 
-  if (isNaN(damage) || !damage || damage < 0) {
-    damage = 0;
-  }
+  if (isNaN(damage) || !damage || damage < 0) damage = 0;
 
   return damage;
 };
 
 Formulas.getCritical = (attacker, target) => {
-  if (!attacker || !target) {
-    return;
-  }
+  if (!attacker || !target) return;
 
   /**
    * The critical is the player's max hit plus *= critical multiplier of the weapon
@@ -131,9 +111,7 @@ Formulas.getCritical = (attacker, target) => {
 };
 
 Formulas.getWeaponBreak = (attacker, target) => {
-  if (!attacker || !target) {
-    return;
-  }
+  if (!attacker || !target) return;
 
   const targetArmour = target.getArmourLevel();
 
@@ -156,47 +134,33 @@ Formulas.getAoEDamage = (attacker, target) => {
 };
 
 Formulas.nextExp = experience => {
-  if (experience < 0) {
-    return -1;
-  }
+  if (experience < 0) return -1;
 
   for (let i = 1; i < Formulas.LevelExp.length; i++) {
-    if (experience < Formulas.LevelExp[i]) {
-      return Formulas.LevelExp[i];
-    }
+    if (experience < Formulas.LevelExp[i]) return Formulas.LevelExp[i];
   }
 };
 
 Formulas.prevExp = experience => {
-  if (experience < 0) {
-    return -1;
-  }
+  if (experience < 0) return -1;
 
   for (let i = Constants.MAX_LEVEL; i > 0; i--) {
-    if (experience > Formulas.LevelExp[i]) {
-      return Formulas.LevelExp[i];
-    }
+    if (experience > Formulas.LevelExp[i]) return Formulas.LevelExp[i];
   }
 };
 
 Formulas.expToLevel = experience => {
-  if (experience < 0) {
-    return -1;
-  }
+  if (experience < 0) return -1;
 
   for (let i = 1; i < Formulas.LevelExp.length; i++) {
-    if (experience < Formulas.LevelExp[i]) {
-      return i;
-    }
+    if (experience < Formulas.LevelExp[i]) return i;
   }
 
   return Constants.MAX_LEVEL;
 };
 
 Formulas.getRewardExperience = player => {
-  if (!player) {
-    return;
-  }
+  if (!player) return;
 
   return (5 + player.level) * player.level;
 };

@@ -1,8 +1,3 @@
-define([
-  "./underscore.min",
-  "./stacktrace",
-  "./class",
-  "../utils/util"
-], function () {
+if (window !== "undefined") define(() => {
   require(["../main"]);
 });

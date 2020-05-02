@@ -1,6 +1,7 @@
 /* global module */
 
 const Quest = require("../quest");
+const Packets = require("../../../../../network/packets");
 
 class Thelie extends Quest {
   constructor(player, data) {

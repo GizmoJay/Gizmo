@@ -15,9 +15,7 @@ class Container {
 
     self.slots = [];
 
-    for (let i = 0; i < self.size; i++) {
-      self.slots.push(new Slot(i));
-    }
+    for (let i = 0; i < self.size; i++) self.slots.push(new Slot(i));
   }
 
   load(ids, counts, abilities, abilityLevels) {
@@ -40,9 +38,7 @@ class Container {
     const self = this;
     const data = [];
 
-    for (let i = 0; i < self.size; i++) {
-      data.push(-1);
-    }
+    for (let i = 0; i < self.size; i++) data.push(-1);
 
     self.load(data, data, data, data);
   }
@@ -58,9 +54,7 @@ class Container {
 
     // log.info('Max stack size = ' + maxStackSize);
 
-    if (!id || count < 0 || count > maxStackSize) {
-      return null;
-    }
+    if (!id || count < 0 || count > maxStackSize) return null;
 
     if (!Items.isStackable(id)) {
       if (self.hasSpace()) {
@@ -120,13 +114,9 @@ class Container {
   canHold(id, count) {
     const self = this;
 
-    if (!Items.isStackable(id)) {
-      return self.hasSpace();
-    }
+    if (!Items.isStackable(id)) return self.hasSpace();
 
-    if (self.hasSpace()) {
-      return true;
-    }
+    if (self.hasSpace()) return true;
 
     const maxStackSize = Items.maxStackSize(id);
 
@@ -134,9 +124,7 @@ class Container {
       return true;
     }
 
-    if (maxStackSize !== -1 && count > maxStackSize) {
-      return false;
-    }
+    if (maxStackSize !== -1 && count > maxStackSize) return false;
 
     let remainingSpace = 0;
 
@@ -157,19 +145,12 @@ class Container {
     const self = this;
     const slot = self.slots[index];
 
-    if (!slot) {
-      return false;
-    }
+    if (!slot) return false;
 
     if (Items.isStackable(id)) {
-      if (count >= slot.count) {
-        slot.empty();
-      } else {
-        slot.decrement(count);
-      }
-    } else {
-      slot.empty();
-    }
+      if (count >= slot.count) slot.empty();
+      else slot.decrement(count);
+    } else slot.empty();
 
     return true;
   }
@@ -178,9 +159,7 @@ class Container {
     const self = this;
 
     for (let i = 0; i < self.slots.length; i++) {
-      if (self.slots[i].id === id) {
-        return self.slots[i];
-      }
+      if (self.slots[i].id === id) return self.slots[i];
     }
 
     return null;
@@ -189,16 +168,12 @@ class Container {
   contains(id, count) {
     const self = this;
 
-    if (!count || count === "undefined") {
-      count = 1;
-    }
+    if (!count || count === "undefined") count = 1;
 
     for (const index in self.slots) {
       const slot = self.slots[index];
 
-      if (slot.id === id) {
-        return slot.count >= count;
-      }
+      if (slot.id === id) return slot.count >= count;
     }
 
     return false;
@@ -209,9 +184,7 @@ class Container {
     const emptySpaces = [];
 
     for (let i = 0; i < self.slots.length; i++) {
-      if (self.slots[i].id === -1) {
-        emptySpaces.push(self.slots[i]);
-      }
+      if (self.slots[i].id === -1) emptySpaces.push(self.slots[i]);
     }
 
     return emptySpaces.length === count;
@@ -225,9 +198,7 @@ class Container {
     const self = this;
 
     for (let i = 0; i < self.slots.length; i++) {
-      if (self.slots[i].id === -1) {
-        return i;
-      }
+      if (self.slots[i].id === -1) return i;
     }
 
     return -1;
@@ -242,9 +213,7 @@ class Container {
      */
 
     for (let i = 0; i < self.slots.length; i++) {
-      if (self.slots[i].id === id) {
-        return i;
-      }
+      if (self.slots[i].id === id) return i;
     }
 
     return -1;
@@ -254,18 +223,14 @@ class Container {
     const self = this;
 
     _.each(self.slots, slot => {
-      if (isNaN(slot.id)) {
-        slot.empty();
-      }
+      if (isNaN(slot.id)) slot.empty();
     });
   }
 
   forEachSlot(callback) {
     const self = this;
 
-    for (let i = 0; i < self.slots.length; i++) {
-      callback(self.slots[i]);
-    }
+    for (let i = 0; i < self.slots.length; i++) callback(self.slots[i]);
   }
 
   getArray() {

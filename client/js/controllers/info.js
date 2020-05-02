@@ -1,154 +1,152 @@
-/* global _, Modules */
+import Queue from "../utils/queue";
+import Splat from "../renderer/infos/splat";
+import Countdown from "../renderer/infos/countdown";
 
-define([
-  "../utils/queue",
-  "../renderer/infos/splat",
-  "../renderer/infos/countdown"
-], (Queue, Splat, Countdown) => {
-  return class {
-    constructor(game) {
-      this.game = game;
+class Info {
+  constructor(game) {
+    this.game = game;
 
-      this.infos = {};
-      this.destroyQueue = new Queue();
-    }
+    this.infos = {};
+    this.destroyQueue = new Queue();
+  }
 
-    create(type, data, x, y) {
-      switch (type) {
-        case Modules.Hits.Damage:
-        case Modules.Hits.Stun:
-        case Modules.Hits.Critical:
-          let damage = data.shift();
-          const isTarget = data.shift();
-          const dId = this.generateId(this.game.time, damage, x, y);
+  create(type, data, x, y) {
+    switch (type) {
+      case Modules.Hits.Damage:
+      case Modules.Hits.Stun:
+      case Modules.Hits.Critical:
+        let damage = data.shift();
+        const isTarget = data.shift();
+        const dId = this.generateId(this.game.time, damage, x, y);
 
-          if (damage < 1 || !isInt(damage)) {
-            damage = "MISS";
-          }
+        if (damage < 1 || !isInt(damage)) {
+          damage = "MISS";
+        }
 
-          const hitSplat = new Splat(dId, type, damage, x, y, false);
-          const dColour = isTarget
-            ? Modules.DamageColours.received
-            : Modules.DamageColours.inflicted;
+        const hitSplat = new Splat(dId, type, damage, x, y, false);
+        const dColour = isTarget
+          ? Modules.DamageColours.received
+          : Modules.DamageColours.inflicted;
 
-          hitSplat.setColours(dColour.fill, dColour.stroke);
+        hitSplat.setColours(dColour.fill, dColour.stroke);
 
-          this.addInfo(hitSplat);
+        this.addInfo(hitSplat);
 
-          break;
+        break;
 
-        case Modules.Hits.Heal:
-        case Modules.Hits.Mana:
-        case Modules.Hits.Experience:
-        case Modules.Hits.Poison:
-          const amount = data.shift();
-          const id = this.generateId(this.game.time, amount, x, y);
-          let text = "+";
-          let colour;
+      case Modules.Hits.Heal:
+      case Modules.Hits.Mana:
+      case Modules.Hits.Experience:
+      case Modules.Hits.Poison:
+        const amount = data.shift();
+        const id = this.generateId(this.game.time, amount, x, y);
+        let text = "+";
+        let colour;
 
-          if (amount < 1 || !isInt(amount)) {
-            return;
-          }
+        if (amount < 1 || !isInt(amount)) {
+          return;
+        }
 
-          if (type !== Modules.Hits.Experience) {
-            text = "++";
-          }
+        if (type !== Modules.Hits.Experience) {
+          text = "++";
+        }
 
-          if (type === Modules.Hits.Poison) {
-            text = "--";
-          }
+        if (type === Modules.Hits.Poison) {
+          text = "--";
+        }
 
-          const splat = new Splat(id, type, text + amount, x, y, false);
+        const splat = new Splat(id, type, text + amount, x, y, false);
 
-          if (type === Modules.Hits.Heal) {
-            colour = Modules.DamageColours.healed;
-          } else if (type === Modules.Hits.Mana) {
-            colour = Modules.DamageColours.mana;
-          } else if (type === Modules.Hits.Experience) {
-            colour = Modules.DamageColours.exp;
-          } else if (type === Modules.Hits.Poison) {
-            colour = Modules.DamageColours.poison;
-          }
+        if (type === Modules.Hits.Heal) {
+          colour = Modules.DamageColours.healed;
+        } else if (type === Modules.Hits.Mana) {
+          colour = Modules.DamageColours.mana;
+        } else if (type === Modules.Hits.Experience) {
+          colour = Modules.DamageColours.exp;
+        } else if (type === Modules.Hits.Poison) {
+          colour = Modules.DamageColours.poison;
+        }
 
-          splat.setColours(colour.fill, colour.stroke);
+        splat.setColours(colour.fill, colour.stroke);
 
-          this.addInfo(splat);
+        this.addInfo(splat);
 
-          break;
+        break;
 
-        case Modules.Hits.LevelUp:
-          const lId = this.generateId(this.game.time, "-1", x, y);
-          const levelSplat = new Splat(lId, type, "Level Up!", x, y, false);
-          const lColour = Modules.DamageColours.exp;
+      case Modules.Hits.LevelUp:
+        const lId = this.generateId(this.game.time, "-1", x, y);
+        const levelSplat = new Splat(lId, type, "Level Up!", x, y, false);
+        const lColour = Modules.DamageColours.exp;
 
-          levelSplat.setColours(lColour.fill, lColour.stroke);
+        levelSplat.setColours(lColour.fill, lColour.stroke);
 
-          this.addInfo(levelSplat);
+        this.addInfo(levelSplat);
 
-          break;
+        break;
 
-        case Modules.Info.Countdown:
-          /**
+      case Modules.Info.Countdown:
+        /**
            * We only allow the creation of one countdown timer.
            */
 
-          if (countdownExists) {
-            return;
-          }
+        if (countdownExists) {
+          return;
+        }
 
-          const time = data.shift();
-          const countdown = new Countdown("countdown", time);
+        const time = data.shift();
+        const countdown = new Countdown("countdown", time);
 
-          this.addInfo(countdown);
+        this.addInfo(countdown);
 
-          break;
-      }
+        break;
     }
+  }
 
-    getCount() {
-      return Object.keys(this.infos).length;
-    }
+  getCount() {
+    return Object.keys(this.infos).length;
+  }
 
-    getCountdown() {
-      return this.infos.countdown;
-    }
+  getCountdown() {
+    return this.infos.countdown;
+  }
 
-    addInfo(info) {
-      this.infos[info.id] = info;
+  addInfo(info) {
+    this.infos[info.id] = info;
 
-      info.onDestroy(id => {
-        this.destroyQueue.add(id);
-      });
-    }
+    info.onDestroy(id => {
+      this.destroyQueue.add(id);
+    });
+  }
 
-    update(time) {
-      this.forEachInfo(info => {
-        info.update(time);
-      });
+  update(time) {
+    this.forEachInfo(info => {
+      info.update(time);
+    });
 
-      this.destroyQueue.forEachQueue(id => {
-        delete this.infos[id];
-      });
+    this.destroyQueue.forEachQueue(id => {
+      delete this.infos[id];
+    });
 
-      this.destroyQueue.reset();
-    }
+    this.destroyQueue.reset();
+  }
 
-    countdownExists() {
-      return "countdown" in this.infos;
-    }
+  countdownExists() {
+    return "countdown" in this.infos;
+  }
 
-    clearCountdown() {
-      delete this.infos.countdown;
-    }
+  clearCountdown() {
+    delete this.infos.countdown;
+  }
 
-    forEachInfo(callback) {
-      _.each(this.infos, info => {
-        callback(info);
-      });
-    }
+  forEachInfo(callback) {
+    _.each(this.infos, info => {
+      callback(info);
+    });
+  }
 
-    generateId(time, info, x, y) {
-      return time + "" + Math.abs(info) + "" + x + "" + y;
-    }
-  };
-});
+  generateId(time, info, x, y) {
+    return time + "" + Math.abs(info) + "" + x + "" + y;
+  }
+}
+
+export default Info;

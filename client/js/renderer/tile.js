@@ -1,46 +1,46 @@
-define(() => {
-  return class {
-    constructor(id, index, map) {
-      this.id = id;
-      this.index = index;
-      this.map = map;
+class Tile {
+  constructor(id, index, map) {
+    this.id = id;
+    this.index = index;
+    this.map = map;
 
-      this.animationInfo = map.getTileAnimation(id);
+    this.animationInfo = map.getTileAnimation(id);
 
-      this.animationIndex = 0;
-      this.lastTime = 0;
+    this.animationIndex = 0;
+    this.lastTime = 0;
 
-      this.canDraw = true;
-    }
+    this.canDraw = true;
+  }
 
-    setPosition(position) {
-      this.x = position.x;
-      this.y = position.y;
-    }
+  setPosition(position) {
+    this.x = position.x;
+    this.y = position.y;
+  }
 
-    update() {
-      this.id = this.animationInfo[this.animationIndex].tileid;
-      this.canDraw = true;
-    }
+  update() {
+    this.id = this.animationInfo[this.animationIndex].tileid;
+    this.canDraw = true;
+  }
 
-    animate(time) {
-      if (
-        time - this.lastTime >
+  animate(time) {
+    if (
+      time - this.lastTime >
         this.animationInfo[this.animationIndex].duration
-      ) {
-        this.update();
-        this.lastTime = time;
+    ) {
+      this.update();
+      this.lastTime = time;
 
-        if (this.animationIndex >= this.animationInfo.length - 1) {
-          this.animationIndex = 0;
-        } else {
-          this.animationIndex++;
-        }
+      if (this.animationIndex >= this.animationInfo.length - 1) {
+        this.animationIndex = 0;
+      } else {
+        this.animationIndex++;
       }
     }
+  }
 
-    getPosition() {
-      return this.x && this.y ? [this.x, this.y] : [0, 0];
-    }
-  };
-});
+  getPosition() {
+    return this.x && this.y ? [this.x, this.y] : [0, 0];
+  }
+}
+
+export default Tile;

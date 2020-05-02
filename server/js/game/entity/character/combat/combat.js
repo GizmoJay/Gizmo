@@ -54,9 +54,7 @@ class Combat {
       if (hitInfo.type === Modules.Hits.Stun) {
         target.setStun(true);
 
-        if (target.stunTimeout) {
-          clearTimeout(target.stunTimeout);
-        }
+        if (target.stunTimeout) clearTimeout(target.stunTimeout);
 
         target.stunTimeout = setTimeout(() => {
           target.setStun(false);
@@ -81,13 +79,9 @@ class Combat {
   start() {
     const self = this;
 
-    if (self.started) {
-      return;
-    }
+    if (self.started) return;
 
-    if (self.character.type === "player") {
-      log.debug("Starting player attack.");
-    }
+    if (self.character.type === "player") log.debug("Starting player attack.");
 
     self.lastAction = new Date().getTime();
 
@@ -109,13 +103,9 @@ class Combat {
   stop() {
     const self = this;
 
-    if (!self.started) {
-      return;
-    }
+    if (!self.started) return;
 
-    if (self.character.type === "player") {
-      log.debug("Stopping player attack.");
-    }
+    if (self.character.type === "player") log.debug("Stopping player attack.");
 
     clearInterval(self.attackLoop);
     clearInterval(self.followLoop);
@@ -131,9 +121,7 @@ class Combat {
   parseAttack() {
     const self = this;
 
-    if (!self.world || !self.queue || self.character.stunned) {
-      return;
-    }
+    if (!self.world || !self.queue || self.character.stunned) return;
 
     if (self.character.hasTarget() && self.inProximity()) {
       if (self.character.target && !self.character.target.isDead()) {
@@ -147,22 +135,16 @@ class Combat {
       self.sync();
 
       self.lastAction = self.getTime();
-    } else {
-      self.queue.clear();
-    }
+    } else self.queue.clear();
   }
 
   parseFollow() {
     const self = this;
 
-    if (self.character.frozen || self.character.stunned) {
-      return;
-    }
+    if (self.character.frozen || self.character.stunned) return;
 
     if (self.isMob()) {
-      if (!self.character.isRanged()) {
-        self.sendFollow();
-      }
+      if (!self.character.isRanged()) self.sendFollow();
 
       if (self.isAttacked() || self.character.hasTarget()) {
         self.lastAction = self.getTime();
@@ -177,20 +159,14 @@ class Combat {
       if (self.character.hasTarget() && !self.inProximity()) {
         const attacker = self.getClosestAttacker();
 
-        if (attacker) {
-          self.follow(self.character, attacker);
-        }
+        if (attacker) self.follow(self.character, attacker);
       }
     }
 
     if (self.isPlayer()) {
-      if (!self.character.hasTarget()) {
-        return;
-      }
+      if (!self.character.hasTarget()) return;
 
-      if (self.character.target.type !== "player") {
-        return;
-      }
+      if (self.character.target.type !== "player") return;
 
       if (!self.inProximity()) {
         self.follow(self.character, self.character.target);
@@ -212,18 +188,15 @@ class Combat {
     const self = this;
     let hit;
 
-    if (self.isPlayer()) {
-      hit = self.character.getHit(target);
-    } else {
+    if (self.isPlayer()) hit = self.character.getHit(target);
+    else {
       hit = new Hit(
         Modules.Hits.Damage,
         Formulas.getDamage(self.character, target)
       );
     }
 
-    if (!hit) {
-      return;
-    }
+    if (!hit) return;
 
     self.queue.add(hit);
   }
@@ -231,9 +204,7 @@ class Combat {
   sync() {
     const self = this;
 
-    if (self.character.type !== "mob") {
-      return;
-    }
+    if (self.character.type !== "mob") return;
 
     self.world.push(Packets.PushOpcode.Regions, {
       regionId: self.character.region,
@@ -253,9 +224,7 @@ class Combat {
      * TODO - Find a way to implement special effects without hardcoding them.
      */
 
-    if (!self.world) {
-      return;
-    }
+    if (!self.world) return;
 
     const entities = self.world
       .getGrids()
@@ -277,9 +246,7 @@ class Combat {
   forceAttack() {
     const self = this;
 
-    if (!self.character.target || !self.inProximity()) {
-      return;
-    }
+    if (!self.character.target || !self.inProximity()) return;
 
     // self.stop();
     self.start();
@@ -291,17 +258,13 @@ class Combat {
   attackCount(count, target) {
     const self = this;
 
-    for (let i = 0; i < count; i++) {
-      self.attack(target);
-    }
+    for (let i = 0; i < count; i++) self.attack(target);
   }
 
   addAttacker(character) {
     const self = this;
 
-    if (self.hasAttacker(character)) {
-      return;
-    }
+    if (self.hasAttacker(character)) return;
 
     self.attackers[character.instance] = character;
   }
@@ -309,21 +272,15 @@ class Combat {
   removeAttacker(character) {
     const self = this;
 
-    if (self.hasAttacker(character)) {
-      delete self.attackers[character.instance];
-    }
+    if (self.hasAttacker(character)) delete self.attackers[character.instance];
 
-    if (!self.isAttacked()) {
-      self.sendToSpawn();
-    }
+    if (!self.isAttacked()) self.sendToSpawn();
   }
 
   sendToSpawn() {
     const self = this;
 
-    if (!self.isMob()) {
-      return;
-    }
+    if (!self.isMob()) return;
 
     self.character.return();
 
@@ -342,9 +299,7 @@ class Combat {
   hasAttacker(character) {
     const self = this;
 
-    if (!self.isAttacked()) {
-      return;
-    }
+    if (!self.isAttacked()) return;
 
     return character.instance in self.attackers;
   }
@@ -352,9 +307,7 @@ class Combat {
   onSameTile() {
     const self = this;
 
-    if (!self.character.target || self.character.type !== "mob") {
-      return;
-    }
+    if (!self.character.target || self.character.type !== "mob") return;
 
     return (
       self.character.x === self.character.target.x &&
@@ -375,15 +328,10 @@ class Combat {
 
     const random = Utils.randomInt(0, 3);
 
-    if (random === 0) {
-      position.x++;
-    } else if (random === 1) {
-      position.y--;
-    } else if (random === 2) {
-      position.x--;
-    } else if (random === 3) {
-      position.y++;
-    }
+    if (random === 0) position.x++;
+    else if (random === 1) position.y--;
+    else if (random === 2) position.x--;
+    else if (random === 3) position.y++;
 
     return position;
   }
@@ -401,16 +349,12 @@ class Combat {
   inProximity() {
     const self = this;
 
-    if (!self.character.target) {
-      return;
-    }
+    if (!self.character.target) return;
 
     const targetDistance = self.character.getDistance(self.character.target);
     const range = self.character.attackRange;
 
-    if (self.character.isRanged()) {
-      return targetDistance <= range;
-    }
+    if (self.character.isRanged()) return targetDistance <= range;
 
     return self.character.isNonDiagonal(self.character.target);
   }
@@ -423,9 +367,7 @@ class Combat {
     self.forEachAttacker(attacker => {
       const distance = self.character.getDistance(attacker);
 
-      if (distance < lowestDistance) {
-        closest = attacker;
-      }
+      if (distance < lowestDistance) closest = attacker;
     });
 
     return closest;
@@ -434,9 +376,7 @@ class Combat {
   setWorld(world) {
     const self = this;
 
-    if (!self.world) {
-      self.world = world;
-    }
+    if (!self.world) self.world = world;
   }
 
   forget() {
@@ -445,9 +385,7 @@ class Combat {
     self.attackers = {};
     self.character.removeTarget();
 
-    if (self.forgetCallback) {
-      self.forgetCallback();
-    }
+    if (self.forgetCallback) self.forgetCallback();
   }
 
   move(character, x, y) {
@@ -457,9 +395,7 @@ class Combat {
      * The server and mob types can parse the mob movement
      */
 
-    if (character.type !== "mob") {
-      return;
-    }
+    if (character.type !== "mob") return;
 
     character.setPosition(x, y);
   }
@@ -468,9 +404,7 @@ class Combat {
     const self = this;
     const time = self.getTime();
 
-    if (!self.canHit()) {
-      return;
-    }
+    if (!self.canHit()) return;
 
     if (character.isRanged() || hitInfo.isRanged) {
       const projectile = self.world.createProjectile(
@@ -498,9 +432,7 @@ class Combat {
       self.world.handleDamage(character, target, hitInfo.damage);
     }
 
-    if (character.damageCallback) {
-      character.damageCallback(target, hitInfo);
-    }
+    if (character.damageCallback) character.damageCallback(target, hitInfo);
 
     self.lastHit = self.getTime();
   }
@@ -530,9 +462,7 @@ class Combat {
   sendFollow() {
     const self = this;
 
-    if (!self.character.hasTarget() || self.character.target.isDead()) {
-      return;
-    }
+    if (!self.character.hasTarget() || self.character.target.isDead()) return;
 
     // let ignores = [self.character.instance, self.character.target.instance];
 
@@ -558,9 +488,7 @@ class Combat {
   targetOutOfBounds() {
     const self = this;
 
-    if (!self.character.hasTarget() || !self.isMob()) {
-      return;
-    }
+    if (!self.character.hasTarget() || !self.isMob()) return;
 
     const spawnPoint = self.character.spawnLocation;
     const target = self.character.target;

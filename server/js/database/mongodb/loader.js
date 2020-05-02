@@ -29,9 +29,7 @@ class Loader {
             info.abilities.split(" "),
             info.abilityLevels.split(" ")
           );
-        } else {
-          callback(null, null, null, null);
-        }
+        } else callback(null, null, null, null);
       });
     });
   }
@@ -84,9 +82,7 @@ class Loader {
           }
 
           callback(info.ids.split(" "), info.stages.split(" "));
-        } else {
-          callback(null, null);
-        }
+        } else callback(null, null);
       });
     });
   }

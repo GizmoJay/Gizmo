@@ -6,6 +6,7 @@ class Professions {
     const self = this;
 
     self.player = player;
+    self.world = player.world;
 
     self.professions = {};
 
@@ -23,12 +24,14 @@ class Professions {
 
     _.each(pList, profession => {
       try {
+        if (profession === "Fishing") return; // FIXME
         const ProfessionClass = require(`./impl/${profession}`);
         const id = Modules.Professions[profession];
 
-        self.professions[id] = new ProfessionClass(id);
+        self.professions[id] = new ProfessionClass(id, self.player);
       } catch (e) {
         log.debug(`Could not load ${profession} profession.`);
+        log.error(e);
       }
     });
   }

@@ -1,9 +1,9 @@
-define(() => {
-  return class {
-    // constructor(game) {}
+class TeamWar {
+  // constructor(game) {}
 
-    handle(info) {
-      log.info(info);
-    }
-  };
-});
+  handle(info) {
+    log.info(info);
+  }
+}
+
+export default TeamWar;

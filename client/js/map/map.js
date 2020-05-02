@@ -1,215 +1,212 @@
-/* global log, _ */
+class Map {
+  constructor(game) {
+    this.game = game;
+    this.renderer = this.game.renderer;
+    this.supportsWorker = this.game.app.hasWorker();
 
-define(() => {
-  return class {
-    constructor(game) {
-      this.game = game;
-      this.renderer = this.game.renderer;
-      this.supportsWorker = this.game.app.hasWorker();
+    this.data = [];
+    this.objects = [];
+    this.tilesets = [];
+    this.rawTilesets = [];
+    this.lastSyncData = []; // Prevent unnecessary sync data.
 
-      this.data = [];
-      this.objects = [];
-      this.tilesets = [];
-      this.rawTilesets = [];
-      this.lastSyncData = []; // Prevent unnecessary sync data.
+    this.grid = null;
+    this.webGLMap = null; // Map used for rendering webGL.
 
-      this.grid = null;
-      this.webGLMap = null; // Map used for rendering webGL.
+    this.tilesetsLoaded = false;
+    this.mapLoaded = false;
 
-      this.tilesetsLoaded = false;
-      this.mapLoaded = false;
+    this.preloadedData = false;
 
-      this.preloadedData = false;
+    this.load();
 
-      this.load();
+    this.ready();
+  }
 
-      this.ready();
-    }
-
-    ready() {
-      const rC = () => {
-        if (this.readyCallback) {
-          this.readyCallback();
-        }
-      };
-
-      if (this.mapLoaded && this.tilesetsLoaded) {
-        rC();
-      } else {
-        setTimeout(() => {
-          this.loadTilesets();
-          this.ready();
-        }, 50);
+  ready() {
+    const rC = () => {
+      if (this.readyCallback) {
+        this.readyCallback();
       }
+    };
+
+    if (this.mapLoaded && this.tilesetsLoaded) {
+      rC();
+    } else {
+      setTimeout(() => {
+        this.loadTilesets();
+        this.ready();
+      }, 50);
     }
+  }
 
-    load() {
-      if (this.supportsWorker) {
-        if (this.game.isDebug()) {
-          log.info("Parsing map with Web Workers...");
-        }
+  load() {
+    if (this.supportsWorker) {
+      if (this.game.isDebug()) {
+        log.info("Parsing map with Web Workers...");
+      }
 
-        const worker = new Worker("./js/map/mapworker.js");
-        worker.postMessage(1);
+      const worker = new Worker("./js/map/mapworker.js");
+      worker.postMessage(1);
 
-        worker.onmessage = event => {
-          const map = event.data;
+      worker.onmessage = event => {
+        const map = event.data;
 
-          this.parseMap(map);
-          this.grid = map.grid;
+        this.parseMap(map);
+        this.grid = map.grid;
+        this.mapLoaded = true;
+      };
+    } else {
+      if (this.game.isDebug()) {
+        log.info("Parsing map with Ajax...");
+      }
+
+      $.get(
+        "data/maps/map.json",
+        data => {
+          this.parseMap(data);
+          this.loadCollisions();
           this.mapLoaded = true;
-        };
-      } else {
-        if (this.game.isDebug()) {
-          log.info("Parsing map with Ajax...");
-        }
+        },
+        "json"
+      );
+    }
+  }
 
-        $.get(
-          "data/maps/map.json",
-          data => {
-            this.parseMap(data);
-            this.loadCollisions();
-            this.mapLoaded = true;
-          },
-          "json"
-        );
+  synchronize(tileData) {
+    // Use traditional for-loop instead of _
+    for (let i = 0; i < tileData.length; i++) {
+      const tile = tileData[i];
+      const collisionIndex = this.collisions.indexOf(tile.index);
+      const objectIndex = this.objects.indexOf(tile.index);
+
+      this.data[tile.index] = tile.data;
+
+      if (tile.isCollision && collisionIndex < 0) {
+        // Adding new collision tileIndex
+        this.collisions.push(tile.index);
+      }
+
+      if (!tile.isCollision && collisionIndex > 0) {
+        // Removing existing collision tileIndex
+        const position = this.indexToGridPosition(tile.index + 1);
+
+        this.collisions.splice(collisionIndex, 1);
+
+        this.grid[position.y][position.x] = 0;
+      }
+
+      if (tile.isObject && objectIndex < 0) {
+        this.objects.push(tile.index);
+      }
+
+      if (!tile.isObject && objectIndex > 0) {
+        this.objects.splice(objectIndex, 1);
       }
     }
 
-    synchronize(tileData) {
-      // Use traditional for-loop instead of _
-      for (let i = 0; i < tileData.length; i++) {
-        const tile = tileData[i];
-        const collisionIndex = this.collisions.indexOf(tile.index);
-        const objectIndex = this.objects.indexOf(tile.index);
-
-        this.data[tile.index] = tile.data;
-
-        if (tile.isCollision && collisionIndex < 0) {
-          // Adding new collision tileIndex
-          this.collisions.push(tile.index);
-        }
-
-        if (!tile.isCollision && collisionIndex > 0) {
-          // Removing existing collision tileIndex
-          const position = this.indexToGridPosition(tile.index + 1);
-
-          this.collisions.splice(collisionIndex, 1);
-
-          this.grid[position.y][position.x] = 0;
-        }
-
-        if (tile.isObject && objectIndex < 0) {
-          this.objects.push(tile.index);
-        }
-
-        if (!tile.isObject && objectIndex > 0) {
-          this.objects.splice(objectIndex, 1);
-        }
-      }
-
-      if (this.webGLMap) {
-        this.synchronizeWebGL(tileData);
-      }
-
-      this.saveRegionData();
-
-      this.lastSyncData = tileData;
+    if (this.webGLMap) {
+      this.synchronizeWebGL(tileData);
     }
 
-    loadTilesets() {
-      if (this.rawTilesets.length < 1) {
-        return;
-      }
+    this.saveRegionData();
 
-      _.each(this.rawTilesets, rawTileset => {
-        this.loadTileset(rawTileset, tileset => {
-          this.tilesets[tileset.index] = tileset;
+    this.lastSyncData = tileData;
+  }
 
-          if (this.tilesets.length === this.rawTilesets.length) {
-            this.tilesetsLoaded = true;
-          }
-        });
+  loadTilesets() {
+    if (this.rawTilesets.length < 1) {
+      return;
+    }
+
+    _.each(this.rawTilesets, rawTileset => {
+      this.loadTileset(rawTileset, tileset => {
+        this.tilesets[tileset.index] = tileset;
+
+        if (this.tilesets.length === this.rawTilesets.length) {
+          this.tilesetsLoaded = true;
+        }
       });
+    });
+  }
+
+  loadTileset(rawTileset, callback) {
+    const tileset = new Image();
+
+    tileset.index = this.rawTilesets.indexOf(rawTileset);
+    tileset.name = rawTileset.imageName;
+
+    tileset.crossOrigin = "Anonymous";
+    tileset.path = "img/tilesets/" + tileset.name;
+    tileset.src = "img/tilesets/" + tileset.name;
+    tileset.raw = tileset;
+    tileset.firstGID = rawTileset.firstGID;
+    tileset.lastGID = rawTileset.lastGID;
+    tileset.loaded = true;
+    tileset.scale = rawTileset.scale;
+
+    tileset.onload = () => {
+      if (tileset.width % this.tileSize > 0) {
+        // Prevent uneven tilemaps from loading.
+        throw Error("The tile size is malformed in the tile set: " + path);
+      }
+
+      callback(tileset);
+    };
+
+    tileset.onerror = () => {
+      throw Error("Could not find tile set: " + path);
+    };
+  }
+
+  parseMap(map) {
+    this.width = map.width;
+    this.height = map.height;
+    this.tileSize = map.tilesize;
+    this.blocking = map.blocking || [];
+    this.collisions = map.collisions;
+    this.high = map.high;
+    this.lights = map.lights;
+    this.rawTilesets = map.tilesets;
+    this.animatedTiles = map.animations;
+    this.depth = map.depth;
+
+    for (let i = 0; i < this.width * this.height; i++) {
+      this.data.push(0);
     }
+  }
 
-    loadTileset(rawTileset, callback) {
-      const tileset = new Image();
+  // Load the webGL map into the memory.
+  loadWebGL(context) {
+    const map = this.formatWebGL();
+    const resources = {};
 
-      tileset.index = this.rawTilesets.indexOf(rawTileset);
-      tileset.name = rawTileset.imageName;
-
-      tileset.crossOrigin = "Anonymous";
-      tileset.path = "img/tilesets/" + tileset.name;
-      tileset.src = "img/tilesets/" + tileset.name;
-      tileset.raw = tileset;
-      tileset.firstGID = rawTileset.firstGID;
-      tileset.lastGID = rawTileset.lastGID;
-      tileset.loaded = true;
-      tileset.scale = rawTileset.scale;
-
-      tileset.onload = () => {
-        if (tileset.width % this.tileSize > 0) {
-          // Prevent uneven tilemaps from loading.
-          throw Error("The tile size is malformed in the tile set: " + path);
-        }
-
-        callback(tileset);
+    for (let i = 0; i < this.tilesets.length; i++) {
+      resources[this.tilesets[i].name] = {
+        name: this.tilesets[i].name,
+        url: this.tilesets[i].path,
+        data: this.tilesets[i],
+        extension: "png"
       };
-
-      tileset.onerror = () => {
-        throw Error("Could not find tile set: " + path);
-      };
     }
 
-    parseMap(map) {
-      this.width = map.width;
-      this.height = map.height;
-      this.tileSize = map.tilesize;
-      this.blocking = map.blocking || [];
-      this.collisions = map.collisions;
-      this.high = map.high;
-      this.lights = map.lights;
-      this.rawTilesets = map.tilesets;
-      this.animatedTiles = map.animations;
-      this.depth = map.depth;
-
-      for (let i = 0; i < this.width * this.height; i++) {
-        this.data.push(0);
-      }
+    if (this.webGLMap) {
+      this.webGLMap.glTerminate();
     }
 
-    // Load the webGL map into the memory.
-    loadWebGL(context) {
-      const map = this.formatWebGL();
-      const resources = {};
+    this.webGLMap = new glTiled.GLTilemap(map, {
+      gl: context,
+      assetCache: resources
+    });
 
-      for (let i = 0; i < this.tilesets.length; i++) {
-        resources[this.tilesets[i].name] = {
-          name: this.tilesets[i].name,
-          url: this.tilesets[i].path,
-          data: this.tilesets[i],
-          extension: "png"
-        };
-      }
+    this.webGLMap.glInitialize(context);
+    this.webGLMap.repeatTiles = false;
 
-      if (this.webGLMap) {
-        this.webGLMap.glTerminate();
-      }
+    context.viewport(0, 0, context.canvas.width, context.canvas.height);
+    this.webGLMap.resizeViewport(context.canvas.width, context.canvas.height);
+  }
 
-      this.webGLMap = new glTiled.GLTilemap(map, {
-        gl: context,
-        assetCache: resources
-      });
-
-      this.webGLMap.glInitialize(context);
-      this.webGLMap.repeatTiles = false;
-
-      context.viewport(0, 0, context.canvas.width, context.canvas.height);
-      this.webGLMap.resizeViewport(context.canvas.width, context.canvas.height);
-    }
-
-    /**
+  /**
      * To reduce development strain, we convert the entirety of the client
      * map into the bare minimum necessary for the gl-tiled library.
      * This is because gl-tiled uses the original Tiled mapping format.
@@ -217,239 +214,240 @@ define(() => {
      * the entire library adapted for Gizmo.
      */
 
-    formatWebGL() {
-      // Create the object's constants.
+  formatWebGL() {
+    // Create the object's constants.
 
-      const object = {
-        compressionlevel: -1,
-        width: this.width,
-        height: this.height,
-        tilewidth: this.tileSize,
-        tileheight: this.tileSize,
-        type: "map",
-        version: 1.2,
-        tiledversion: "1.3.1",
-        orientation: "orthogonal",
-        renderorder: "right-down",
-        layers: [],
-        tilesets: []
+    const object = {
+      compressionlevel: -1,
+      width: this.width,
+      height: this.height,
+      tilewidth: this.tileSize,
+      tileheight: this.tileSize,
+      type: "map",
+      version: 1.2,
+      tiledversion: "1.3.1",
+      orientation: "orthogonal",
+      renderorder: "right-down",
+      layers: [],
+      tilesets: []
+    };
+
+    /* Create 'layers' based on map depth and data. */
+    for (let i = 0; i < this.depth; i++) {
+      const layerObject = {
+        id: i,
+        width: object.width,
+        height: object.height,
+        name: "layer" + i,
+        opacity: 1,
+        type: "tilelayer",
+        visible: true,
+        x: 0,
+        y: 0,
+        data: []
       };
 
-      /* Create 'layers' based on map depth and data. */
-      for (let i = 0; i < this.depth; i++) {
-        const layerObject = {
-          id: i,
-          width: object.width,
-          height: object.height,
-          name: "layer" + i,
-          opacity: 1,
-          type: "tilelayer",
-          visible: true,
-          x: 0,
-          y: 0,
-          data: []
-        };
+      for (let j = 0; j < this.data.length; j++) {
+        const tile = this.data[j];
 
-        for (let j = 0; j < this.data.length; j++) {
-          const tile = this.data[j];
-
-          if (Array.isArray(tile)) {
-            if (tile[i]) {
-              layerObject.data[j] = tile[i];
-            } else {
-              layerObject.data[j] = 0;
-            }
-          } else if (i === 0) {
-            layerObject.data[j] = tile;
+        if (Array.isArray(tile)) {
+          if (tile[i]) {
+            layerObject.data[j] = tile[i];
           } else {
             layerObject.data[j] = 0;
           }
+        } else if (i === 0) {
+          layerObject.data[j] = tile;
+        } else {
+          layerObject.data[j] = 0;
         }
-
-        object.layers.push(layerObject);
       }
 
-      for (let i = 0; i < this.tilesets.length; i++) {
-        const tileset = {
-          columns: 64,
-          margin: 0,
-          spacing: 0,
-          firstgid: this.tilesets[i].firstGID,
-          image: this.tilesets[i].name,
-          imagewidth: this.tilesets[i].width,
-          imageheight: this.tilesets[i].height,
-          name: this.tilesets[i].name.split(".png")[0],
-          tilecount:
+      object.layers.push(layerObject);
+    }
+
+    for (let i = 0; i < this.tilesets.length; i++) {
+      const tileset = {
+        columns: 64,
+        margin: 0,
+        spacing: 0,
+        firstgid: this.tilesets[i].firstGID,
+        image: this.tilesets[i].name,
+        imagewidth: this.tilesets[i].width,
+        imageheight: this.tilesets[i].height,
+        name: this.tilesets[i].name.split(".png")[0],
+        tilecount:
             (this.tilesets[i].width / 16) * (this.tilesets[i].height / 16),
-          tilewidth: object.tilewidth,
-          tileheight: object.tileheight,
-          tiles: []
-        };
-
-        for (const j in this.animatedTiles) {
-          const indx = parseInt(j);
-
-          if (indx > tileset.firstgid - 1 && indx < tileset.tilecount) {
-            tileset.tiles.push({
-              animation: this.animatedTiles[j],
-              id: indx
-            });
-          }
-        }
-
-        log.info(tileset);
-
-        object.tilesets.push(tileset);
-      }
-
-      if (this.game.isDebug()) {
-        log.info("Successfully generated the WebGL map.");
-      }
-
-      return object;
-    }
-
-    synchronizeWebGL(tileData) {
-      this.loadWebGL(this.renderer.backContext);
-    }
-
-    loadCollisions() {
-      this.grid = [];
-
-      for (let i = 0; i < this.height; i++) {
-        this.grid[i] = [];
-        for (let j = 0; j < this.width; j++) {
-          this.grid[i][j] = 0;
-        }
-      }
-
-      _.each(this.collisions, index => {
-        const position = this.indexToGridPosition(index + 1);
-        this.grid[position.y][position.x] = 1;
-      });
-
-      _.each(this.blocking, index => {
-        const position = this.indexToGridPosition(index + 1);
-
-        if (this.grid[position.y]) {
-          this.grid[position.y][position.x] = 1;
-        }
-      });
-    }
-
-    updateCollisions() {
-      _.each(this.collisions, index => {
-        const position = this.indexToGridPosition(index + 1);
-
-        if (position.x > this.width - 1) {
-          position.x = this.width - 1;
-        }
-
-        if (position.y > this.height - 1) {
-          position.y = this.height - 1;
-        }
-
-        this.grid[position.y][position.x] = 1;
-      });
-    }
-
-    indexToGridPosition(index) {
-      index -= 1;
-
-      const x = this.getX(index + 1, this.width);
-      const y = Math.floor(index / this.width);
-
-      return {
-        x: x,
-        y: y
+        tilewidth: object.tilewidth,
+        tileheight: object.tileheight,
+        tiles: []
       };
-    }
 
-    gridPositionToIndex(x, y) {
-      return y * this.width + x + 1;
-    }
+      for (const j in this.animatedTiles) {
+        const indx = parseInt(j);
 
-    isColliding(x, y) {
-      if (this.isOutOfBounds(x, y) || !this.grid) {
-        return false;
+        if (indx > tileset.firstgid - 1 && indx < tileset.tilecount) {
+          tileset.tiles.push({
+            animation: this.animatedTiles[j],
+            id: indx
+          });
+        }
       }
 
-      return this.grid[y][x] === 1;
+      log.info(tileset);
+
+      object.tilesets.push(tileset);
     }
 
-    isObject(x, y) {
-      const index = this.gridPositionToIndex(x, y) - 1;
-
-      return this.objects.indexOf(index) > -1;
+    if (this.game.isDebug()) {
+      log.info("Successfully generated the WebGL map.");
     }
 
-    isHighTile(id) {
-      return this.high.indexOf(id + 1) > -1;
+    return object;
+  }
+
+  synchronizeWebGL(tileData) {
+    this.loadWebGL(this.renderer.backContext);
+  }
+
+  loadCollisions() {
+    this.grid = [];
+
+    for (let i = 0; i < this.height; i++) {
+      this.grid[i] = [];
+      for (let j = 0; j < this.width; j++) {
+        this.grid[i][j] = 0;
+      }
     }
 
-    isLightTile(id) {
-      return this.lights.indexOf(id + 1) > -1;
+    _.each(this.collisions, index => {
+      const position = this.indexToGridPosition(index + 1);
+      this.grid[position.y][position.x] = 1;
+    });
+
+    _.each(this.blocking, index => {
+      const position = this.indexToGridPosition(index + 1);
+
+      if (this.grid[position.y]) {
+        this.grid[position.y][position.x] = 1;
+      }
+    });
+  }
+
+  updateCollisions() {
+    _.each(this.collisions, index => {
+      const position = this.indexToGridPosition(index + 1);
+
+      if (position.x > this.width - 1) {
+        position.x = this.width - 1;
+      }
+
+      if (position.y > this.height - 1) {
+        position.y = this.height - 1;
+      }
+
+      this.grid[position.y][position.x] = 1;
+    });
+  }
+
+  indexToGridPosition(index) {
+    index -= 1;
+
+    const x = this.getX(index + 1, this.width);
+    const y = Math.floor(index / this.width);
+
+    return {
+      x: x,
+      y: y
+    };
+  }
+
+  gridPositionToIndex(x, y) {
+    return y * this.width + x + 1;
+  }
+
+  isColliding(x, y) {
+    if (this.isOutOfBounds(x, y) || !this.grid) {
+      return false;
     }
 
-    isAnimatedTile(id) {
-      return id in this.animatedTiles;
-    }
+    return this.grid[y][x] === 1;
+  }
 
-    isOutOfBounds(x, y) {
-      return (
-        isInt(x) &&
+  isObject(x, y) {
+    const index = this.gridPositionToIndex(x, y) - 1;
+
+    return this.objects.indexOf(index) > -1;
+  }
+
+  isHighTile(id) {
+    return this.high.indexOf(id + 1) > -1;
+  }
+
+  isLightTile(id) {
+    return this.lights.indexOf(id + 1) > -1;
+  }
+
+  isAnimatedTile(id) {
+    return id in this.animatedTiles;
+  }
+
+  isOutOfBounds(x, y) {
+    return (
+      isInt(x) &&
         isInt(y) &&
         (x < 0 || x >= this.width || y < 0 || y >= this.height)
-      );
+    );
+  }
+
+  getX(index, width) {
+    if (index === 0) {
+      return 0;
     }
 
-    getX(index, width) {
-      if (index === 0) {
-        return 0;
-      }
+    return index % width === 0 ? width - 1 : (index % width) - 1;
+  }
 
-      return index % width === 0 ? width - 1 : (index % width) - 1;
-    }
+  getTileAnimation(id) {
+    return this.animatedTiles[id];
+  }
 
-    getTileAnimation(id) {
-      return this.animatedTiles[id];
-    }
-
-    getTilesetFromId(id) {
-      for (const idx in this.tilesets) {
-        if (
-          id > this.tilesets[idx].firstGID - 1 &&
+  getTilesetFromId(id) {
+    for (const idx in this.tilesets) {
+      if (
+        id > this.tilesets[idx].firstGID - 1 &&
           id < this.tilesets[idx].lastGID + 1
-        ) {
-          return this.tilesets[idx];
-        }
+      ) {
+        return this.tilesets[idx];
       }
-
-      return null;
     }
 
-    saveRegionData() {
-      this.game.storage.setRegionData(this.data, this.collisions);
+    return null;
+  }
+
+  saveRegionData() {
+    this.game.storage.setRegionData(this.data, this.collisions);
+  }
+
+  loadRegionData() {
+    const regionData = this.game.storage.getRegionData();
+    const collisions = this.game.storage.getCollisions();
+
+    if (regionData.length < 1) {
+      return;
     }
 
-    loadRegionData() {
-      const regionData = this.game.storage.getRegionData();
-      const collisions = this.game.storage.getCollisions();
+    this.preloadedData = true;
 
-      if (regionData.length < 1) {
-        return;
-      }
+    this.data = regionData;
+    this.collisions = collisions;
 
-      this.preloadedData = true;
+    this.updateCollisions();
+  }
 
-      this.data = regionData;
-      this.collisions = collisions;
+  onReady(callback) {
+    this.readyCallback = callback;
+  }
+}
 
-      this.updateCollisions();
-    }
-
-    onReady(callback) {
-      this.readyCallback = callback;
-    }
-  };
-});
+export default Map;

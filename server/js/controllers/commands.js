@@ -4,7 +4,6 @@ const _ = require("underscore");
 const Messages = require("../network/messages");
 const Packets = require("../network/packets");
 const Utils = require("../util/utils");
-const MapClient = require("../../data/map/world_client");
 
 class Commands {
   constructor(player) {
@@ -18,21 +17,15 @@ class Commands {
     const self = this;
     const blocks = rawText.substring(1).split(" ");
 
-    if (blocks.length < 1) {
-      return;
-    }
+    if (blocks.length < 1) return;
 
     const command = blocks.shift();
 
     self.handlePlayerCommands(command, blocks);
 
-    if (self.player.rights > 0) {
-      self.handleModeratorCommands(command, blocks);
-    }
+    if (self.player.rights > 0) self.handleModeratorCommands(command, blocks);
 
-    if (self.player.rights > 1) {
-      self.handleAdminCommands(command, blocks);
-    }
+    if (self.player.rights > 1) self.handleAdminCommands(command, blocks);
   }
 
   handlePlayerCommands(command, blocks) {
@@ -143,19 +136,14 @@ class Commands {
         const targetName = blocks.join(" ");
         const user = self.world.getPlayerByName(targetName);
 
-        if (!user) {
-          return;
-        }
+        if (!user) return;
 
-        if (!duration) {
-          duration = 24;
-        }
+        if (!duration) duration = 24;
 
         const timeFrame = new Date().getTime() + duration * 60 * 60;
 
-        if (command === "mute") {
-          user.mute = timeFrame;
-        } else if (command === "ban") {
+        if (command === "mute") user.mute = timeFrame;
+        else if (command === "ban") {
           user.ban = timeFrame;
           user.save();
 
@@ -171,9 +159,7 @@ class Commands {
         const uTargetName = blocks.join(" ");
         const uUser = self.world.getPlayerByName(uTargetName);
 
-        if (!uTargetName) {
-          return;
-        }
+        if (!uTargetName) return;
 
         uUser.mute = new Date().getTime() - 3600;
 
@@ -193,9 +179,7 @@ class Commands {
         const ability = parseInt(blocks.shift());
         const abilityLevel = parseInt(blocks.shift());
 
-        if (!spawnId || !count) {
-          return;
-        }
+        if (!spawnId || !count) return;
 
         self.player.inventory.add({
           id: spawnId,
@@ -220,13 +204,9 @@ class Commands {
         const id = parseInt(blocks.shift());
         let dCount = parseInt(blocks.shift());
 
-        if (!id) {
-          return;
-        }
+        if (!id) return;
 
-        if (!dCount) {
-          dCount = 1;
-        }
+        if (!dCount) dCount = 1;
 
         self.world.dropItem(id, dCount, self.player.x, self.player.y);
 
@@ -247,9 +227,7 @@ class Commands {
         const y = parseInt(blocks.shift());
         const withAnimation = parseInt(blocks.shift());
 
-        if (x && y) {
-          self.player.teleport(x, y, false, withAnimation);
-        }
+        if (x && y) self.player.teleport(x, y, false, withAnimation);
 
         return;
 
@@ -257,9 +235,7 @@ class Commands {
         username = blocks.join(" ");
         player = self.world.getPlayerByName(username);
 
-        if (player) {
-          player.teleport(self.player.x, self.player.y);
-        }
+        if (player) player.teleport(self.player.x, self.player.y);
 
         return;
 
@@ -267,9 +243,7 @@ class Commands {
         username = blocks.join(" ");
         player = self.world.getPlayerByName(username);
 
-        if (player) {
-          self.player.teleport(player.x, player.y);
-        }
+        if (player) self.player.teleport(player.x, player.y);
 
         return;
 
@@ -292,9 +266,7 @@ class Commands {
           const posX = parseInt(blocks.shift());
           const posY = parseInt(blocks.shift());
 
-          if (!posX || !posY) {
-            return;
-          }
+          if (!posX || !posY) return;
 
           self.player.send(
             new Messages.Pointer(Packets.PointerOpcode.Location, {
@@ -306,9 +278,7 @@ class Commands {
         } else {
           const instance = blocks.shift();
 
-          if (!instance) {
-            return;
-          }
+          if (!instance) return;
 
           self.player.send(
             new Messages.Pointer(Packets.PointerOpcode.NPC, {
@@ -329,9 +299,7 @@ class Commands {
       case "attackaoe":
         let radius = parseInt(blocks.shift());
 
-        if (!radius) {
-          radius = 1;
-        }
+        if (!radius) radius = 1;
 
         self.player.combat.dealAoE(radius);
 
@@ -340,9 +308,7 @@ class Commands {
       case "addexp":
         const exp = parseInt(blocks.shift());
 
-        if (!exp) {
-          return;
-        }
+        if (!exp) return;
 
         self.player.addExperience(exp);
 
@@ -353,9 +319,7 @@ class Commands {
         const tileY = parseInt(blocks.shift());
         const tileInfo = parseInt(blocks.shift());
 
-        if (!tileX || !tileY) {
-          return;
-        }
+        if (!tileX || !tileY) return;
 
         const tileIndex = self.world.region.gridPositionToIndex(
           tileX - 1,
@@ -378,20 +342,19 @@ class Commands {
         const getTileX = parseInt(blocks.shift());
         const getTileY = parseInt(blocks.shift());
 
-        if (!getTileX || !getTileY) {
-          return;
-        }
+        if (!getTileX || !getTileY) return;
 
-        const getTileIndex = self.world.region.gridPositionToIndex(
+        const getTileIndex = self.world.map.gridPositionToIndex(
           getTileX,
           getTileY
         );
 
         log.info("Tile Index: " + getTileIndex);
-        log.info("Tile Info: " + MapClient.data[getTileIndex]);
+        log.info("Tile Info: " + self.world.map.clientMap.data[getTileIndex]);
         log.info(
           "Actual Index: " + self.world.map.getActualTileIndex(getTileIndex)
         );
+        log.info("Tree? " + self.world.map.getTree(getTileX, getTileY));
 
         return;
 

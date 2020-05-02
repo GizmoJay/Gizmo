@@ -23,9 +23,7 @@ class MobHandler {
   load() {
     const self = this;
 
-    if (!self.mob.roaming) {
-      return;
-    }
+    if (!self.mob.roaming) return;
 
     self.roamingInterval = setInterval(() => {
       if (!self.mob.dead) {
@@ -44,34 +42,22 @@ class MobHandler {
         );
 
         // Return if the tile is colliding.
-        if (self.map.isColliding(newX, newY)) {
-          return;
-        }
+        if (self.map.isColliding(newX, newY)) return;
 
         // Prevent movement if the area is empty.
-        if (self.map.isEmpty(newX, newY)) {
-          return;
-        }
+        if (self.map.isEmpty(newX, newY)) return;
 
         // Don't have mobs block a door.
-        if (self.map.isDoor(newX, newY)) {
-          return;
-        }
+        if (self.map.isDoor(newX, newY)) return;
 
         // Prevent mobs from going outside of their roaming radius.
-        if (distance < self.mob.maxRoamingDistance) {
-          return;
-        }
+        if (distance < self.mob.maxRoamingDistance) return;
 
         // No need to move mobs to the same position as theirs.
-        if (newX === self.mob.x && newY === self.mob.y) {
-          return;
-        }
+        if (newX === self.mob.x && newY === self.mob.y) return;
 
         // We don't want mobs randomly roaming while in combat.
-        if (self.mob.combat.started) {
-          return;
-        }
+        if (self.mob.combat.started) return;
 
         /**
          * An expansion of the plateau level present in BrowserQuest.
@@ -107,25 +93,17 @@ class MobHandler {
     const self = this;
 
     // Combat plugin has its own set of callbacks.
-    if (Mobs.hasCombatPlugin(self.mob.id)) {
-      return;
-    }
+    if (Mobs.hasCombatPlugin(self.mob.id)) return;
 
     self.mob.onLoad(() => {
-      if (self.mob.miniboss) {
-        self.mob.setMinibossData();
-      }
+      if (self.mob.miniboss) self.mob.setMinibossData();
     });
 
     self.mob.onDeath(() => {
-      if (!self.mob.miniboss || !self.combat) {
-        return;
-      }
+      if (!self.mob.miniboss || !self.combat) return;
 
       self.combat.forEachAttacker(attacker => {
-        if (attacker) {
-          attacker.finishAchievement(self.mob.achievementId);
-        }
+        if (attacker) attacker.finishAchievement(self.mob.achievementId);
       });
     });
 
@@ -133,11 +111,9 @@ class MobHandler {
   }
 
   forceTalk(message) {
-    var self = this;
+    let self = this;
 
-    if (!self.world) {
-      return;
-    }
+    if (!self.world) return;
 
     self.world.push(Packets.PushOpcode.Regions, {
       regionId: self.mob.region,

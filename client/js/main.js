@@ -1,41 +1,35 @@
 /* global log, Detect */
 
-// import App from "./app";
-// import Game from "./game";
+import App from "./app";
+import Game from "./game";
 
-define(["./app", "./game"], (App, Game) => {
-  let app, body, chatInput, game;
+let app, body, chatInput, game;
 
-  const load = () => {
-    $(document).ready(() => {
-      app = new App();
-      body = $("body");
-      chatInput = $("#chatInput");
+const addClasses = () => {
+  if (Detect.isWindows()) body.addClass("windows");
 
-      addClasses();
-      initGame();
-    });
-  };
+  if (Detect.isOpera()) body.addClass("opera");
 
-  const addClasses = () => {
-    if (Detect.isWindows()) body.addClass("windows");
+  if (Detect.isFirefoxAndroid()) chatInput.removeAttr("placeholder");
+};
 
-    if (Detect.isOpera()) body.addClass("opera");
+const initGame = () => {
+  app.onReady(() => {
+    app.sendStatus("Loading game");
 
-    if (Detect.isFirefoxAndroid()) chatInput.removeAttr("placeholder");
-  };
+    if (app.config.debug) log.info("Loading the main application...");
+    if (app.config.worldSwitch) $("#worlds-switch").show();
 
-  const initGame = () => {
-    app.onReady(() => {
-      app.sendStatus("Loading game");
+    game = new Game(app);
+    app.setGame(game);
+  });
+};
 
-      if (app.config.debug) log.info("Loading the main application...");
-      if (app.config.worldSwitch) $("#worlds-switch").show();
+$(document).ready(() => {
+  app = new App();
+  body = $("body");
+  chatInput = $("#chatInput");
 
-      game = new Game(app);
-      app.setGame(game);
-    });
-  };
-
-  load();
+  addClasses();
+  initGame();
 });

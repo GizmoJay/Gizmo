@@ -50,7 +50,6 @@ class Map {
     self.objects = map.objects;
     self.cursors = map.cursors;
     self.trees = map.trees;
-    // self.cursorTiles = {}; // Global objects with custom cursors
 
     self.zoneWidth = 25;
     self.zoneHeight = 20;
@@ -71,9 +70,8 @@ class Map {
 
     self.readyInterval = setInterval(() => {
       if (!self.world.ready) {
-        if (self.readyCallback) {
-          self.readyCallback();
-        } else {
+        if (self.readyCallback) self.readyCallback();
+        else {
           clearInterval(self.readyInterval);
           self.readyInterval = null;
         }
@@ -194,9 +192,7 @@ class Map {
   }
 
   getX(index, width) {
-    if (index === 0) {
-      return 0;
-    }
+    if (index === 0) return 0;
 
     return index % width === 0 ? width - 1 : (index % width) - 1;
   }
@@ -222,9 +218,7 @@ class Map {
   inTutorialArea(entity) {
     const self = this;
 
-    if (entity.x === -1 || entity.y === -1) {
-      return true;
-    }
+    if (entity.x === -1 || entity.y === -1) return true;
 
     return (
       self.inArea(entity.x, entity.y, 370, 36, 10, 10) ||
@@ -256,15 +250,26 @@ class Map {
 
     if (tiles instanceof Array) {
       for (const i in tiles) {
-        if (self.isObject(tiles[i])) {
-          objectId = tiles[i];
-        } else {
-          if (self.isObject(tiles)) objectId = tiles;
-        }
+        if (self.isObject(tiles[i])) objectId = tiles[i];
+        else if (self.isObject(tiles)) objectId = tiles;
       }
     }
 
     return objectId;
+  }
+
+  getTree(x, y) {
+    const self = this;
+    const index = self.gridPositionToIndex(x, y) - 1;
+    const tiles = self.clientMap.data[index];
+
+    if (tiles instanceof Array) {
+      for (const i in tiles) if (tiles[i] in self.trees) return tiles[i];
+    }
+
+    if (tiles in self.trees) return tiles;
+
+    return null;
   }
 
   isDoor(x, y) {
@@ -295,9 +300,7 @@ class Map {
   isColliding(x, y) {
     const self = this;
 
-    if (self.isOutOfBounds(x, y)) {
-      return false;
-    }
+    if (self.isOutOfBounds(x, y)) return false;
 
     const tileIndex = self.gridPositionToIndex(x, y);
 
@@ -308,9 +311,7 @@ class Map {
   isEmpty(x, y) {
     const self = this;
 
-    if (self.isOutOfBounds(x, y)) {
-      return true;
-    }
+    if (self.isOutOfBounds(x, y)) return true;
 
     const tileIndex = self.gridPositionToIndex(x, y);
 
@@ -321,9 +322,7 @@ class Map {
     const self = this;
     const index = self.gridPositionToIndex(x, y);
 
-    if (!self.isPlateau(index)) {
-      return 0;
-    }
+    if (!self.isPlateau(index)) return 0;
 
     return self.plateau[index];
   }
@@ -332,9 +331,7 @@ class Map {
     const self = this;
     const tileset = self.getTileset(tileIndex);
 
-    if (!tileset) {
-      return;
-    }
+    if (!tileset) return;
 
     return tileIndex - tileset.firstGID - 1;
   }

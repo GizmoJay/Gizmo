@@ -22,11 +22,8 @@ class Quest {
   load(stage) {
     const self = this;
 
-    if (!stage) {
-      self.update();
-    } else {
-      self.stage = parseInt(stage);
-    }
+    if (!stage) self.update();
+    else self.stage = parseInt(stage);
   }
 
   finish() {
@@ -71,9 +68,7 @@ class Quest {
   triggerTalk(npc) {
     const self = this;
 
-    if (self.npcTalkCallback) {
-      self.npcTalkCallback(npc);
-    }
+    if (self.npcTalkCallback) self.npcTalkCallback(npc);
   }
 
   update() {
@@ -84,9 +79,7 @@ class Quest {
     const self = this;
     const conversation = self.data.conversations[id];
 
-    if (!conversation || !conversation[self.stage]) {
-      return [""];
-    }
+    if (!conversation || !conversation[self.stage]) return [""];
 
     return conversation[self.stage];
   }
@@ -94,15 +87,11 @@ class Quest {
   updatePointers() {
     const self = this;
 
-    if (!self.data.pointers) {
-      return;
-    }
+    if (!self.data.pointers) return;
 
     const pointer = self.data.pointers[self.stage];
 
-    if (!pointer) {
-      return;
-    }
+    if (!pointer) return;
 
     const opcode = pointer[0];
 
@@ -127,9 +116,7 @@ class Quest {
   forceTalk(npc, message) {
     const self = this;
 
-    if (!npc) {
-      return;
-    }
+    if (!npc) return;
 
     self.player.talkIndex = 0;
 
@@ -160,9 +147,7 @@ class Quest {
   hasMob(mob) {
     const self = this;
 
-    if (!self.data.mobs) {
-      return;
-    }
+    if (!self.data.mobs) return;
 
     return self.data.mobs.indexOf(mob.id) > -1;
   }

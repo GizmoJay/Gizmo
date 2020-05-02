@@ -2,9 +2,6 @@ var Logger = function (level) {
   this.level = level;
 };
 
-Logger.prototype.info = function () {};
-Logger.prototype.debug = function () {};
-Logger.prototype.error = function () {};
 Logger.prototype.info = function (message) {
   if (this.level === "debug" || this.level === "info") {
     if (window.console) {

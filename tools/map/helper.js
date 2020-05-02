@@ -53,9 +53,7 @@ class Helper {
   }
 
   getX(index, width) {
-    if (index === 0) {
-      return 0;
-    }
+    if (index === 0) return 0;
 
     return index % width === 0 ? width - 1 : (index % width) - 1;
   }

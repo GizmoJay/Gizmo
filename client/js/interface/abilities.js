@@ -1,13 +1,13 @@
-define(() => {
-  return class {
-    constructor(game) {
-      this.game = game;
+class Abilities {
+  constructor(game) {
+    this.game = game;
 
-      this.shortcuts = $("#abilityShortcut");
-    }
+    this.shortcuts = $("#abilityShortcut");
+  }
 
-    getList() {
-      return this.shortcuts.find("ul");
-    }
-  };
-});
+  getList() {
+    return this.shortcuts.find("ul");
+  }
+}
+
+export default Abilities;

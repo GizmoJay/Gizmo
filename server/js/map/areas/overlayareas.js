@@ -23,9 +23,7 @@ class OverlayAreas {
       overlayArea.darkness = o.darkness;
       overlayArea.type = o.type;
 
-      if (o.fog) {
-        overlayArea.fog = o.fog;
-      }
+      if (o.fog) overlayArea.fog = o.fog;
 
       self.overlayAreas.push(overlayArea);
     });

@@ -2,11 +2,13 @@
 
 config = { debugLevel: "all", gver: 1 };
 
-var Utils = require("../../server/js/util/utils");
-var io = require("socket.io-client");
-var _ = require("underscore");
-var Log = require("../../server/js/util/log");
+let Utils = require("../../server/js/util/utils");
+let io = require("socket.io-client");
+let _ = require("underscore");
+let Log = require("../../server/js/util/log");
 log = new Log("info");
+
+const { port } = require("../../server/config");
 
 class Entity {
   constructor(id, x, y, connection) {
@@ -59,7 +61,7 @@ class Bot {
     const self = this;
     let connection = null;
 
-    connection = io("ws://127.0.0.1:8080", {
+    connection = io(`ws://127.0.0.1:${port}`, {
       forceNew: true,
       reconnection: false
     });
@@ -80,7 +82,7 @@ class Bot {
 
     connection.on("message", message => {
       if (message.startsWith("[")) {
-        var data = JSON.parse(message);
+        let data = JSON.parse(message);
 
         if (data.length > 1) {
           _.each(data, msg => {
@@ -126,8 +128,8 @@ class Bot {
   }
 
   send(connection, packet, data) {
-    var self = this;
-    var json = JSON.stringify([packet, data]);
+    let self = this;
+    let json = JSON.stringify([packet, data]);
 
     if (connection && connection.connected) {
       connection.send(json);
@@ -172,4 +174,5 @@ class Bot {
 
 module.exports = Bot;
 
+// eslint-disable-next-line no-new
 new Bot();

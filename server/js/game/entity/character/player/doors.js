@@ -41,13 +41,9 @@ class Doors {
   getStatus(door) {
     const self = this;
 
-    if (door.status) {
-      return door.status;
-    }
+    if (door.status) return door.status;
 
-    if (config.offlineMode) {
-      return true;
-    }
+    if (config.offlineMode) return true;
 
     switch (door.requirement) {
       case "quest":
@@ -102,9 +98,7 @@ class Doors {
       /* There's no need to send dynamic data if the player is not nearby. */
       const doorRegion = self.regions.regionIdFromPosition(door.x, door.y);
 
-      if (!self.regions.isSurrounding(self.player.region, doorRegion)) {
-        return;
-      }
+      if (!self.regions.isSurrounding(self.player.region, doorRegion)) return;
 
       const tiles = self.getTiles(door);
 

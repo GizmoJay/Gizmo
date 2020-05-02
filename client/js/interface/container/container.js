@@ -1,48 +1,49 @@
-define(["./slot"], Slot => {
-  return class {
-    constructor(size) {
-      this.size = size;
+import Slot from "./slot";
 
-      this.slots = [];
+class Container {
+  constructor(size) {
+    this.size = size;
 
-      for (let i = 0; i < this.size; i++) {
-        this.slots.push(new Slot(i));
+    this.slots = [];
+
+    for (let i = 0; i < this.size; i++) {
+      this.slots.push(new Slot(i));
+    }
+  }
+
+  /**
+   * We receive information from the server here,
+   * so we mustn't do any calculations. Instead,
+   * we just modify the container directly.
+   */
+  setSlot(index, info) {
+    this.slots[index].load(
+      info.string,
+      info.count,
+      info.ability,
+      info.abilityLevel,
+      info.edible,
+      info.equippable
+    );
+  }
+
+  getEmptySlot() {
+    for (let i = 0; i < this.slots; i++) {
+      if (!this.slots[i].string) {
+        return i;
       }
     }
 
-    setSlot(index, info) {
-      /**
-       * We receive information from the server here,
-       * so we mustn't do any calculations. Instead,
-       * we just modify the container directly.
-       */
+    return -1;
+  }
 
-      this.slots[index].load(
-        info.string,
-        info.count,
-        info.ability,
-        info.abilityLevel,
-        info.edible,
-        info.equippable
-      );
+  getImageFormat(scale, name) {
+    if (scale === 1) {
+      scale = 2;
     }
 
-    getEmptySlot() {
-      for (let i = 0; i < this.slots; i++) {
-        if (!this.slots[i].string) {
-          return i;
-        }
-      }
+    return "url(\"img/" + scale + "/item-" + name + ".png\")";
+  }
+}
 
-      return -1;
-    }
-
-    getImageFormat(scale, name) {
-      if (scale === 1) {
-        scale = 2;
-      }
-
-      return "url(\"img/" + scale + "/item-" + name + ".png\")";
-    }
-  };
-});
+export default Container;

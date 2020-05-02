@@ -21,9 +21,7 @@ class BulkySituation extends Quest {
 
     super.load(stage);
 
-    if (self.stage > 9998) {
-      return;
-    }
+    if (self.stage > 9998) return;
 
     self.loadCallbacks();
   }
@@ -48,9 +46,7 @@ class BulkySituation extends Quest {
         })
       );
 
-      if (self.player.talkIndex === 0) {
-        self.progress("talk");
-      }
+      if (self.player.talkIndex === 0) self.progress("talk");
     });
   }
 
@@ -58,9 +54,7 @@ class BulkySituation extends Quest {
     const self = this;
     const task = self.data.task[self.stage];
 
-    if (!task || task !== type) {
-      return;
-    }
+    if (!task || task !== type) return;
 
     if (self.stage === self.data.stages) {
       self.finish();

@@ -7,29 +7,20 @@
   "VillageGirl": {
     "name": "Azaria",
     "id": 1,
-    "text": [
-      "Who are you?",
-      "I feel as if we've met before, but I cannot remember."
-    ]
+    "text": ["Who are you?", "I feel as if we've met before, but I cannot remember."]
   },
 
   "Villager": {
     "id": 2,
     "name": "Bulk Bogan",
-    "text": [
-      "Thank you kindly for the help, dear adventurer.",
-      "I will ensure to contact you in the",
-      "nearby future regarding further adventures."
-    ]
+    "text": ["Thank you kindly for the help, dear adventurer.", "I will ensure to contact you in the",
+          "nearby future regarding further adventures."]
   },
 
   "BeachNpc": {
     "id": 3,
     "name": "Bubba",
-    "text": [
-      "Well, thanks for the help.",
-      "Not really doing much but thanks regardless."
-    ]
+    "text": ["Well, thanks for the help.", "Not really doing much but thanks regardless."]
   },
 
   "Agent": {
@@ -101,12 +92,9 @@
   "Coder": {
     "id": 17,
     "name": "Programmer",
-    "text": [
-      "Oh.. This is awkward...",
-      "You may be wondering why I'm here as well.",
-      "Well just letting you know..",
-      "It's definitely not because we're running low on pixel art.."
-    ]
+    "text": ["Oh.. This is awkward...", "You may be wondering why I'm here as well.", "Well just letting you know..",
+            "It's definitely not because we're running low on pixel art..", "Regardless.. If you want to join the community",
+            "Our Discord <a target=\"_blank\" href=\"https://discord.gg/hFPzybb\">is available here!</a>"]
   },
 
   "ForestNpc": {

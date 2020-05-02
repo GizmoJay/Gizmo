@@ -26,9 +26,7 @@ Shops.increment = (npcId, itemId, count) => {
   const shop = Shops.Ids[npcId];
   const index = shop.items.indexOf(itemId);
 
-  if (index < 0) {
-    return;
-  }
+  if (index < 0) return;
 
   shop.count[index] += count;
 };
@@ -36,15 +34,11 @@ Shops.increment = (npcId, itemId, count) => {
 Shops.decrement = (npcId, buyId, count) => {
   const shop = Shops.Ids[npcId];
 
-  if (!buyId || buyId < 0) {
-    return;
-  }
+  if (!buyId || buyId < 0) return;
 
   shop.count[buyId] -= count;
 
-  if (shop.count[buyId] < 0) {
-    shop.count[buyId] = 0;
-  }
+  if (shop.count[buyId] < 0) shop.count[buyId] = 0;
 };
 
 Shops.getCost = (npcId, buyId, count) => {
@@ -56,9 +50,7 @@ Shops.getCost = (npcId, buyId, count) => {
 
   const shop = Shops.Ids[npcId];
 
-  if (!shop || buyId < 0) {
-    return 2;
-  }
+  if (!shop || buyId < 0) return 2;
 
   return shop.prices[buyId] * count;
 };
@@ -66,9 +58,7 @@ Shops.getCost = (npcId, buyId, count) => {
 Shops.getStock = (npcId, buyId) => {
   const shop = Shops.Ids[npcId];
 
-  if (!shop || !buyId || buyId < 0) {
-    return null;
-  }
+  if (!shop || !buyId || buyId < 0) return null;
 
   return shop.count[buyId];
 };
@@ -76,9 +66,7 @@ Shops.getStock = (npcId, buyId) => {
 Shops.getOriginalStock = (shopId, buyId) => {
   const shop = Shops.Ids[shopId];
 
-  if (!buyId || buyId < 0) {
-    return;
-  }
+  if (!buyId || buyId < 0) return;
 
   return shop.originalCount[buyId];
 };
@@ -87,21 +75,15 @@ Shops.getCount = npcId => {
   const count = Shops.Ids[npcId].count;
   const counts = [];
 
-  if (_.isArray(count)) {
-    return count;
-  }
+  if (_.isArray(count)) return count;
 
-  for (let i = 0; i < Shops.getItemCount(npcId); i++) {
-    counts.push(count);
-  }
+  for (let i = 0; i < Shops.getItemCount(npcId); i++) counts.push(count);
 
   return counts;
 };
 
 Shops.getItem = (npcId, buyId) => {
-  if (!buyId || buyId < 0) {
-    return;
-  }
+  if (!buyId || buyId < 0) return;
 
   return Shops.Ids[npcId].items[buyId];
 };

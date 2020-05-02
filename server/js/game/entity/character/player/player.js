@@ -39,6 +39,7 @@ class Player extends Character {
     self.connection = connection;
 
     self.clientId = clientId;
+
     self.globalObjects = world.globalObjects;
 
     self.incoming = new Incoming(self);
@@ -63,8 +64,8 @@ class Player extends Character {
     self.handler = new Handler(self);
 
     self.inventory = new Inventory(self, 20);
-    self.abilities = new Abilities(self);
     self.professions = new Professions(self);
+    self.abilities = new Abilities(self);
     self.enchant = new Enchant(self);
     self.bank = new Bank(self, 56);
     self.quests = new Quests(self);
@@ -122,9 +123,7 @@ class Player extends Character {
     );
     self.mana = new Mana(data.mana, Formulas.getMaxMana(self.level));
 
-    if (data.invisibleIds) {
-      self.invisiblesIds = data.invisibleIds.split(" ");
-    }
+    if (data.invisibleIds) self.invisiblesIds = data.invisibleIds.split(" ");
 
     self.userAgent = data.userAgent;
 
@@ -167,18 +166,14 @@ class Player extends Character {
   loadRegions(regions) {
     const self = this;
 
-    if (!regions) {
-      return;
-    }
+    if (!regions) return;
 
     if (self.mapVersion !== self.world.map.version) {
       self.mapVersion = self.world.map.version;
 
       self.save();
 
-      if (config.debug) {
-        log.info(`Updated map version for ${self.username}`);
-      }
+      if (config.debug) log.info(`Updated map version for ${self.username}`);
 
       return;
     }
@@ -186,6 +181,21 @@ class Player extends Character {
     if (regions.gameVersion === config.gver) {
       self.regionsLoaded = regions.regions.split(",");
     }
+  }
+
+  loadProfessions() {
+    const self = this;
+
+    if (config.offlineMode) return;
+
+    self.database.loader.getProfessions(self, info => {
+      if (!info) {
+        // If this somehow happens.
+        return;
+      }
+
+      self.professions.update(info);
+    });
   }
 
   loadInventory() {
@@ -204,29 +214,12 @@ class Player extends Character {
           return;
         }
 
-        if (ids.length !== self.inventory.size) {
-          self.save();
-        }
+        if (ids.length !== self.inventory.size) self.save();
 
         self.inventory.load(ids, counts, skills, skillLevels);
         self.inventory.check();
       }
     );
-  }
-
-  loadProfessions() {
-    const self = this;
-
-    if (config.offlineMode) return;
-
-    self.database.loader.getProfessions(self, info => {
-      if (!info) {
-        // If this somehow happens.
-        return;
-      }
-
-      self.professions.update(info);
-    });
   }
 
   loadBank() {
@@ -243,9 +236,7 @@ class Player extends Character {
         return;
       }
 
-      if (ids.length !== self.bank.size) {
-        self.save();
-      }
+      if (ids.length !== self.bank.size) self.save();
 
       self.bank.load(ids, counts, skills, skillLevels);
       self.bank.check();
@@ -255,9 +246,7 @@ class Player extends Character {
   loadQuests() {
     const self = this;
 
-    if (config.offlineMode) {
-      return;
-    }
+    if (config.offlineMode) return;
 
     self.database.loader.getAchievements(self, (ids, progress) => {
       ids.pop();
@@ -301,9 +290,7 @@ class Player extends Character {
       );
 
       /* Update region here because we receive quest info */
-      if (self.questsLoaded) {
-        self.updateRegion();
-      }
+      if (self.questsLoaded) self.updateRegion();
 
       self.achievementsLoaded = true;
     });
@@ -317,9 +304,7 @@ class Player extends Character {
       );
 
       /* Update region here because we receive quest info */
-      if (self.achievementsLoaded) {
-        self.updateRegion();
-      }
+      if (self.achievementsLoaded) self.updateRegion();
 
       self.questsLoaded = true;
     });
@@ -333,17 +318,13 @@ class Player extends Character {
       self.connection.close("Player: " + self.username + " is banned.");
     }
 
-    if (self.x <= 0 || self.y <= 0) {
-      self.sendToSpawn();
-    }
+    if (self.x <= 0 || self.y <= 0) self.sendToSpawn();
 
     if (self.hitPoints.getHitPoints() < 0) {
       self.hitPoints.setHitPoints(self.getMaxHitPoints());
     }
 
-    if (self.mana.getMana() < 0) {
-      self.mana.setMana(self.mana.getMaxMana());
-    }
+    if (self.mana.getMana() < 0) self.mana.setMana(self.mana.getMaxMana());
 
     self.verifyRights();
 
@@ -444,9 +425,7 @@ class Player extends Character {
      * Passed from the superclass...
      */
 
-    if (!self.hitPoints || !self.mana) {
-      return;
-    }
+    if (!self.hitPoints || !self.mana) return;
 
     self.hitPoints.heal(amount);
     self.mana.heal(amount);
@@ -494,9 +473,7 @@ class Player extends Character {
     const self = this;
     const item = Items.getPlugin(id);
 
-    if (!item) {
-      return;
-    }
+    if (!item) return;
 
     new item(id).onUse(self);
   }
@@ -505,27 +482,21 @@ class Player extends Character {
     const self = this;
     const data = Items.getData(string);
     let type;
+    let id;
+    let power;
 
-    if (!data || data === "null") {
-      return;
-    }
+    if (!data || data === "null") return;
 
     log.debug(`Equipping item - ${[string, count, ability, abilityLevel]}`);
 
-    if (Items.isArmour(string)) {
-      type = Modules.Equipment.Armour;
-    } else if (Items.isWeapon(string)) {
-      type = Modules.Equipment.Weapon;
-    } else if (Items.isPendant(string)) {
-      type = Modules.Equipment.Pendant;
-    } else if (Items.isRing(string)) {
-      type = Modules.Equipment.Ring;
-    } else if (Items.isBoots(string)) {
-      type = Modules.Equipment.Boots;
-    }
+    if (Items.isArmour(string)) type = Modules.Equipment.Armour;
+    else if (Items.isWeapon(string)) type = Modules.Equipment.Weapon;
+    else if (Items.isPendant(string)) type = Modules.Equipment.Pendant;
+    else if (Items.isRing(string)) type = Modules.Equipment.Ring;
+    else if (Items.isBoots(string)) type = Modules.Equipment.Boots;
 
-    const id = Items.stringToId(string);
-    const power = Items.getLevelRequirement(string);
+    id = Items.stringToId(string);
+    power = Items.getLevelRequirement(string);
 
     switch (type) {
       case Modules.Equipment.Armour:
@@ -537,33 +508,25 @@ class Player extends Character {
         break;
 
       case Modules.Equipment.Weapon:
-        if (self.hasWeapon()) {
-          self.inventory.add(self.weapon.getItem());
-        }
+        if (self.hasWeapon()) self.inventory.add(self.weapon.getItem());
 
         self.setWeapon(id, count, ability, abilityLevel, power);
         break;
 
       case Modules.Equipment.Pendant:
-        if (self.hasPendant()) {
-          self.inventory.add(self.pendant.getItem());
-        }
+        if (self.hasPendant()) self.inventory.add(self.pendant.getItem());
 
         self.setPendant(id, count, ability, abilityLevel, power);
         break;
 
       case Modules.Equipment.Ring:
-        if (self.hasRing()) {
-          self.inventory.add(self.ring.getItem());
-        }
+        if (self.hasRing()) self.inventory.add(self.ring.getItem());
 
         self.setRing(id, count, ability, abilityLevel, power);
         break;
 
       case Modules.Equipment.Boots:
-        if (self.hasBoots()) {
-          self.inventory.add(self.boots.getItem());
-        }
+        if (self.hasBoots()) self.inventory.add(self.boots.getItem());
 
         self.setBoots(id, count, ability, abilityLevel, power);
         break;
@@ -590,9 +553,7 @@ class Player extends Character {
     const self = this;
     const entity = self.world.getEntityByInstance(instance);
 
-    if (!entity) {
-      return false;
-    }
+    if (!entity) return false;
 
     return super.hasInvisibleId(entity.id) || super.hasInvisible(entity);
   }
@@ -605,9 +566,7 @@ class Player extends Character {
     const self = this;
     let requirement = Items.getLevelRequirement(string);
 
-    if (requirement > Constants.MAX_LEVEL) {
-      requirement = Constants.MAX_LEVEL;
-    }
+    if (requirement > Constants.MAX_LEVEL) requirement = Constants.MAX_LEVEL;
 
     if (requirement > self.level) {
       self.notify(
@@ -624,9 +583,7 @@ class Player extends Character {
 
     self.dead = true;
 
-    if (self.deathCallback) {
-      self.deathCallback();
-    }
+    if (self.deathCallback) self.deathCallback();
 
     self.send(new Messages.Death(self.instance));
   }
@@ -634,9 +591,7 @@ class Player extends Character {
   teleport(x, y, isDoor, animate) {
     const self = this;
 
-    if (self.teleportCallback) {
-      self.teleportCallback(x, y, isDoor);
-    }
+    if (self.teleportCallback) self.teleportCallback(x, y, isDoor);
 
     self.sendToAdjacentRegions(
       self.region,
@@ -665,7 +620,7 @@ class Player extends Character {
 
     let data;
 
-    switch (info) {
+    switch (info.type) {
       case "sign":
         data = self.globalObjects.getSignData(id);
 
@@ -687,6 +642,12 @@ class Player extends Character {
         break;
 
       case "lumberjacking":
+        const lumberjacking = self.professions.getProfession(
+          Modules.Professions.Lumberjacking
+        );
+
+        if (lumberjacking) lumberjacking.handle(id, info.tree);
+
         break;
     }
   }
@@ -694,15 +655,11 @@ class Player extends Character {
   incrementCheatScore(amount) {
     const self = this;
 
-    if (self.combat.started) {
-      return;
-    }
+    if (self.combat.started) return;
 
     self.cheatScore += amount;
 
-    if (self.cheatScoreCallback) {
-      self.cheatScoreCallback();
-    }
+    if (self.cheatScoreCallback) self.cheatScoreCallback();
   }
 
   updatePVP(pvp, permanent) {
@@ -712,19 +669,12 @@ class Player extends Character {
      * No need to update if the state is the same
      */
 
-    if (!self.region) {
-      return;
-    }
+    if (!self.region) return;
 
-    if (self.pvp === pvp || self.permanentPVP) {
-      return;
-    }
+    if (self.pvp === pvp || self.permanentPVP) return;
 
-    if (self.pvp && !pvp) {
-      self.notify("You are no longer in a PvP zone!");
-    } else {
-      self.notify("You have entered a PvP zone!");
-    }
+    if (self.pvp && !pvp) self.notify("You are no longer in a PvP zone!");
+    else self.notify("You have entered a PvP zone!");
 
     self.pvp = pvp;
     self.permanentPVP = permanent;
@@ -738,9 +688,7 @@ class Player extends Character {
   updateOverlay(overlay) {
     const self = this;
 
-    if (self.overlayArea === overlay) {
-      return;
-    }
+    if (self.overlayArea === overlay) return;
 
     self.overlayArea = overlay;
 
@@ -753,17 +701,13 @@ class Player extends Character {
           colour: "rgba(0,0,0," + overlay.darkness + ")"
         })
       );
-    } else {
-      self.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
-    }
+    } else self.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
   }
 
   updateCamera(camera) {
     const self = this;
 
-    if (self.cameraArea === camera) {
-      return;
-    }
+    if (self.cameraArea === camera) return;
 
     self.cameraArea = camera;
 
@@ -781,9 +725,7 @@ class Player extends Character {
           self.send(new Messages.Camera(Packets.CameraOpcode.Player));
           break;
       }
-    } else {
-      self.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
-    }
+    } else self.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
   }
 
   updateMusic(song) {
@@ -812,9 +754,7 @@ class Player extends Character {
 
     self.profileDialogOpen = state;
 
-    if (self.profileToggleCallback) {
-      self.profileToggleCallback(state);
-    }
+    if (self.profileToggleCallback) self.profileToggleCallback(state);
   }
 
   toggleInventory(state) {
@@ -822,9 +762,7 @@ class Player extends Character {
 
     self.inventoryOpen = state;
 
-    if (self.inventoryToggleCallback) {
-      self.inventoryToggleCallback(state);
-    }
+    if (self.inventoryToggleCallback) self.inventoryToggleCallback(state);
   }
 
   toggleWarp(state) {
@@ -832,9 +770,7 @@ class Player extends Character {
 
     self.warpOpen = state;
 
-    if (self.warpToggleCallback) {
-      self.warpToggleCallback(state);
-    }
+    if (self.warpToggleCallback) self.warpToggleCallback(state);
   }
 
   getMana() {
@@ -879,9 +815,7 @@ class Player extends Character {
   setArmour(id, count, ability, abilityLevel) {
     const self = this;
 
-    if (!id) {
-      return;
-    }
+    if (!id) return;
 
     self.armour = new Armour(
       Items.idToString(id),
@@ -905,9 +839,7 @@ class Player extends Character {
   setWeapon(id, count, ability, abilityLevel) {
     const self = this;
 
-    if (!id) {
-      return;
-    }
+    if (!id) return;
 
     self.weapon = new Weapon(
       Items.idToString(id),
@@ -917,17 +849,13 @@ class Player extends Character {
       abilityLevel
     );
 
-    if (self.weapon.ranged) {
-      self.attackRange = 7;
-    }
+    if (self.weapon.ranged) self.attackRange = 7;
   }
 
   setPendant(id, count, ability, abilityLevel) {
     const self = this;
 
-    if (!id) {
-      return;
-    }
+    if (!id) return;
 
     self.pendant = new Pendant(
       Items.idToString(id),
@@ -941,9 +869,7 @@ class Player extends Character {
   setRing(id, count, ability, abilityLevel) {
     const self = this;
 
-    if (!id) {
-      return;
-    }
+    if (!id) return;
 
     self.ring = new Ring(
       Items.idToString(id),
@@ -957,9 +883,7 @@ class Player extends Character {
   setBoots(id, count, ability, abilityLevel) {
     const self = this;
 
-    if (!id) {
-      return;
-    }
+    if (!id) return;
 
     self.boots = new Boots(
       Items.idToString(id),
@@ -980,9 +904,7 @@ class Player extends Character {
   setPosition(x, y) {
     const self = this;
 
-    if (self.dead) {
-      return;
-    }
+    if (self.dead) return;
 
     if (self.world.map.isOutOfBounds(x, y)) {
       x = 50;
@@ -1043,9 +965,7 @@ class Player extends Character {
   timeout() {
     const self = this;
 
-    if (!self.connection) {
-      return;
-    }
+    if (!self.connection) return;
 
     self.connection.sendUTF8("timeout");
     self.connection.close("Player timed out.");
@@ -1152,9 +1072,7 @@ class Player extends Character {
      * other special events and determine a spawn point.
      */
 
-    if (!self.finishedTutorial()) {
-      return self.getTutorial().getSpawn();
-    }
+    if (!self.finishedTutorial()) return self.getTutorial().getSpawn();
 
     return { x: 325, y: 87 };
   }
@@ -1284,9 +1202,7 @@ class Player extends Character {
      * mana, exp, and other variables
      */
 
-    if (!self.hitPoints || !self.mana) {
-      return;
-    }
+    if (!self.hitPoints || !self.mana) return;
 
     const info = {
       id: self.instance,
@@ -1310,9 +1226,7 @@ class Player extends Character {
   notify(message, colour) {
     const self = this;
 
-    if (!message) {
-      return;
-    }
+    if (!message) return;
 
     message = Utils.parseMessage(message);
 
@@ -1333,9 +1247,7 @@ class Player extends Character {
   chat(source, text, colour, isGlobal, withBubble) {
     const self = this;
 
-    if (!source || !text) {
-      return;
-    }
+    if (!source || !text) return;
 
     self.send(
       new Messages.Chat({
@@ -1368,9 +1280,7 @@ class Player extends Character {
   finishedTutorial() {
     const self = this;
 
-    if (!self.quests || !config.tutorialEnabled) {
-      return true;
-    }
+    if (!self.quests || !config.tutorialEnabled) return true;
 
     return self.quests.getQuest(0).isFinished();
   }
@@ -1378,15 +1288,11 @@ class Player extends Character {
   finishedAchievement(id) {
     const self = this;
 
-    if (!self.quests) {
-      return false;
-    }
+    if (!self.quests) return false;
 
     const achievement = self.quests.getAchievement(id);
 
-    if (!achievement) {
-      return true;
-    }
+    if (!achievement) return true;
 
     return achievement.isFinished();
   }
@@ -1394,15 +1300,11 @@ class Player extends Character {
   finishAchievement(id) {
     const self = this;
 
-    if (!self.quests) {
-      return;
-    }
+    if (!self.quests) return;
 
     const achievement = self.quests.getAchievement(id);
 
-    if (!achievement || achievement.isFinished()) {
-      return;
-    }
+    if (!achievement || achievement.isFinished()) return;
 
     achievement.finish();
   }
@@ -1410,9 +1312,7 @@ class Player extends Character {
   checkRegions() {
     const self = this;
 
-    if (!self.regionPosition) {
-      return;
-    }
+    if (!self.regionPosition) return;
 
     const diffX = Math.abs(self.regionPosition[0] - self.x);
     const diffY = Math.abs(self.regionPosition[1] - self.y);
@@ -1420,9 +1320,7 @@ class Player extends Character {
     if (diffX >= 10 || diffY >= 10) {
       self.regionPosition = [self.x, self.y];
 
-      if (self.regionCallback) {
-        self.regionCallback();
-      }
+      if (self.regionCallback) self.regionCallback();
     }
   }
 
@@ -1454,21 +1352,15 @@ class Player extends Character {
   killCharacter(character) {
     const self = this;
 
-    if (self.killCallback) {
-      self.killCallback(character);
-    }
+    if (self.killCallback) self.killCallback(character);
   }
 
   save() {
     const self = this;
 
-    if (config.offlineMode || self.isGuest) {
-      return;
-    }
+    if (config.offlineMode || self.isGuest) return;
 
-    if ((!self.questsLoaded || !self.achievementsLoaded) && !self.new) {
-      return;
-    }
+    if ((!self.questsLoaded || !self.achievementsLoaded) && !self.new) return;
 
     self.database.creator.save(self);
   }

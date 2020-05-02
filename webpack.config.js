@@ -55,7 +55,7 @@ module.exports = {
       // },
       {
         enforce: "pre",
-        test: /\.js$/i,
+        test: /\.m?js$/i,
         exclude: /(node_modules|bower_components)/,
         use: "eslint-loader"
       },

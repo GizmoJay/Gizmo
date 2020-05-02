@@ -15,9 +15,7 @@ module.exports = function requireItems(directory) {
   files.forEach(file => {
     const match = file.match(Filter);
 
-    if (match) {
-      modules[match[1]] = resolve(require(directory + file));
-    }
+    if (match) modules[match[1]] = resolve(require(directory + file));
   });
 
   return modules;
