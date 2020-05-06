@@ -36,12 +36,9 @@ class Quest extends Page {
 
         name.text(
           achievement.name +
-              (achievement.count > 2
-                ? " " +
-                  (achievement.progress - 1) +
-                  "/" +
-                  (achievement.count - 1)
-                : "")
+            (achievement.count > 2
+              ? " " + (achievement.progress - 1) + "/" + (achievement.count - 1)
+              : "")
         );
       } else if (achievement.progress > 9998) {
         name.text(achievement.name);
@@ -115,9 +112,7 @@ class Quest extends Page {
     }
 
     if (!info.isQuest && info.count > 2) {
-      name.text(
-        info.name + " " + (info.progress - 1) + "/" + (info.count - 1)
-      );
+      name.text(info.name + " " + (info.progress - 1) + "/" + (info.count - 1));
     } else {
       name.text(info.name);
     }
@@ -184,25 +179,25 @@ class Quest extends Page {
   }
 
   /**
-     * Might as well properly organize them based
-     * on their type of item and id (index).
-     */
+   * Might as well properly organize them based
+   * on their type of item and id (index).
+   */
 
   getItem(isQuest, id) {
     return $(
       "<div id=\"" +
-          (isQuest ? "quest" : "achievement") +
-          id +
-          "\" class=\"questItem\"></div>"
+        (isQuest ? "quest" : "achievement") +
+        id +
+        "\" class=\"questItem\"></div>"
     );
   }
 
   getName(isQuest, id) {
     return $(
       "<div id=\"" +
-          (isQuest ? "quest" : "achievement") +
-          id +
-          "name\" class=\"questName\"></div>"
+        (isQuest ? "quest" : "achievement") +
+        id +
+        "name\" class=\"questName\"></div>"
     );
   }
 }

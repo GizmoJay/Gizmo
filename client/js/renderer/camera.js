@@ -41,9 +41,9 @@ class Camera {
     this.gridHeight = factorHeight;
 
     this.borderX =
-        this.map.width * this.tileSize - this.gridWidth * this.tileSize;
+      this.map.width * this.tileSize - this.gridWidth * this.tileSize;
     this.borderY =
-        this.map.height * this.tileSize - this.gridHeight * this.tileSize;
+      this.map.height * this.tileSize - this.gridHeight * this.tileSize;
   }
 
   setPosition(x, y) {
@@ -212,9 +212,9 @@ class Camera {
 
   zoneClip() {
     /**
-       * Clip the map to the boundaries of the map if
-       * we zone somewhere out of the limitations.
-       */
+     * Clip the map to the boundaries of the map if
+     * we zone somewhere out of the limitations.
+     */
 
     if (this.gridX < 0) {
       this.setGridPosition(0, this.gridY);
@@ -256,9 +256,9 @@ class Camera {
   isVisible(x, y, offset, offset2) {
     return (
       x > this.gridX - offset &&
-        x < this.gridX + this.gridWidth &&
-        y > this.gridY - offset &&
-        y < this.gridY + this.gridHeight + offset2
+      x < this.gridX + this.gridWidth &&
+      y > this.gridY - offset &&
+      y < this.gridY + this.gridHeight + offset2
     );
   }
 }

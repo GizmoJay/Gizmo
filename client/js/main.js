@@ -1,5 +1,18 @@
 /* global log, Detect */
 
+// import "../lib/gl-tiled";
+// import "../lib/gl-tiled.resource-loader";
+// import "../lib/illuminated";
+// import "./utils/detect";
+// import "./lib/log";
+// import "../lib/socket.io";
+// import "./lib/underscore";
+// import "./lib/jquery";
+// import "./utils/util";
+
+// import "../manifest.json";
+// import "../browserconfig.xml";
+
 import App from "./app";
 import Game from "./game";
 
@@ -14,15 +27,13 @@ const addClasses = () => {
 };
 
 const initGame = () => {
-  app.onReady(() => {
-    app.sendStatus("Loading game");
+  app.sendStatus("Loading game");
 
-    if (app.config.debug) log.info("Loading the main application...");
-    if (app.config.worldSwitch) $("#worlds-switch").show();
+  if (app.config.debug) log.info("Loading the main application...");
+  if (app.config.worldSwitch) $("#worlds-switch").show();
 
-    game = new Game(app);
-    app.setGame(game);
-  });
+  game = new Game(app);
+  app.setGame(game);
 };
 
 $(document).ready(() => {

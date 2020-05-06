@@ -9,11 +9,11 @@ class Shop {
     this.inventory = $("#shopInventorySlots");
 
     /**
-       * sellSlot represents what the player currently has queued for sale
-       * and sellSlotReturn shows the currency the player is receiving.
-       * The reason for this is because shops are written such that
-       * they can handle different currencies.
-       */
+     * sellSlot represents what the player currently has queued for sale
+     * and sellSlotReturn shows the currency the player is receiving.
+     * The reason for this is because shops are written such that
+     * they can handle different currencies.
+     */
 
     this.sellSlot = $("#shopSellSlot");
     this.sellSlotReturn = $("#shopSellSlotReturn");
@@ -122,11 +122,11 @@ class Shop {
   }
 
   /**
-     * The shop file is already built to support full de-initialization of objects when
-     * we receive an update about the stocks. So we just use that whenever we want to resize.
-     * This is just a temporary fix, in reality, we do not want anyone to actually see the shop
-     * do a full refresh when they buy an item or someone else buys an item.
-     */
+   * The shop file is already built to support full de-initialization of objects when
+   * we receive an update about the stocks. So we just use that whenever we want to resize.
+   * This is just a temporary fix, in reality, we do not want anyone to actually see the shop
+   * do a full refresh when they buy an item or someone else buys an item.
+   */
 
   resize() {
     this.getInventoryList().empty();
@@ -148,9 +148,7 @@ class Shop {
 
   load() {
     for (let i = 0; i < this.container.size; i++) {
-      const shopItem = $(
-        "<div id=\"shopItem" + i + "\" class=\"shopItem\"></div>"
-      );
+      const shopItem = $("<div id=\"shopItem" + i + "\" class=\"shopItem\"></div>");
       const string = this.data.strings[i];
       const name = this.data.names[i];
       const count = this.data.counts[i];

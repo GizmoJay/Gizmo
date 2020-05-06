@@ -44,8 +44,7 @@ class Updater {
             switch (entity.orientation) {
               case Modules.Orientation.Left:
               case Modules.Orientation.Right:
-                const isLeft =
-                    entity.orientation === Modules.Orientation.Left;
+                const isLeft = entity.orientation === Modules.Orientation.Left;
 
                 entity.movement.start(
                   this.game.time,

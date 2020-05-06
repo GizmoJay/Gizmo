@@ -50,8 +50,8 @@ class Warp {
 
   toggle() {
     /**
-       * Just so it fades out nicely.
-       */
+     * Just so it fades out nicely.
+     */
 
     if (this.isVisible()) {
       this.hide();

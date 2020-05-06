@@ -51,7 +51,7 @@ class Header {
 
     this.health.css("width", diff + "px");
     this.healthBarText.text(
-      this.player.hitPoints + "/" + this.player.maxHitPoints
+      `${this.player.hitPoints}/${this.player.maxHitPoints}`
     );
   }
 
@@ -61,7 +61,7 @@ class Header {
 
     const experience = this.player.experience - this.player.prevExperience;
     const nextExperience =
-        this.player.nextExperience - this.player.prevExperience;
+      this.player.nextExperience - this.player.prevExperience;
     const diff = Math.floor(width * (experience / nextExperience));
 
     this.exp.css("width", diff + "px");

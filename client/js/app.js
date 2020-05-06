@@ -1,4 +1,6 @@
 /* global log, Class, Detect, Modules */
+import install from "../lib/pwa";
+import config from "../data/config.json";
 
 class App {
   constructor() {
@@ -25,10 +27,9 @@ class App {
     this.respawn = $("#respawn");
 
     this.rememberMe = $("#rememberMe");
-    this.guest = $("#guest");
 
     this.about = $("#toggle-about");
-    this.credits = $("#toggle-credits");
+    // this.credits = $("#toggle-credits");
     this.discord = $("#toggle-discord");
     this.git = $("#toggle-git");
 
@@ -38,6 +39,7 @@ class App {
     this.registerFields = [];
 
     this.game = null;
+    this.config = config;
     this.parchmentAnimating = false;
     this.loggingIn = false;
 
@@ -67,10 +69,10 @@ class App {
     this.parchment.click(() => {
       if (
         this.parchment.hasClass("about") ||
-          this.parchment.hasClass("credits") ||
-          this.parchment.hasClass("git")
+        // this.parchment.hasClass("credits") ||
+        this.parchment.hasClass("git")
       ) {
-        this.parchment.removeClass("about credits git");
+        this.parchment.removeClass("about git"); // credits
         this.displayScroll("loadCharacter");
       }
     });
@@ -79,9 +81,9 @@ class App {
       this.displayScroll("about");
     });
 
-    this.credits.click(() => {
-      this.displayScroll("credits");
-    });
+    // this.credits.click(() => {
+    //   this.displayScroll("credits");
+    // });
 
     this.discord.click(() => {
       window.open("https://discord.gg/hFPzybb");
@@ -101,14 +103,6 @@ class App {
       this.rememberMe.toggleClass("active");
 
       this.game.storage.toggleRemember(!active);
-    });
-
-    this.guest.click(() => {
-      if (!this.game) {
-        return;
-      }
-
-      this.guest.toggleClass("active");
     });
 
     this.respawn.click(() => {
@@ -167,14 +161,6 @@ class App {
     //   });
     // });
 
-    $.getJSON("data/config.json", json => {
-      this.config = json;
-
-      if (this.readyCallback) {
-        this.readyCallback();
-      }
-    });
-
     $(document).bind("keydown", e => {
       if (e.which === Modules.Keys.Enter) {
         return false;
@@ -213,9 +199,9 @@ class App {
     $(document).mousemove(event => {
       if (
         !this.game ||
-          !this.game.input ||
-          !this.game.started ||
-          event.target.id !== "textCanvas"
+        !this.game.input ||
+        !this.game.started ||
+        event.target.id !== "textCanvas"
       ) {
         return;
       }
@@ -250,18 +236,19 @@ class App {
   login() {
     if (
       this.loggingIn ||
-        !this.game ||
-        !this.game.loaded ||
-        this.statusMessage ||
-        !this.verifyForm()
+      !this.game ||
+      !this.game.loaded ||
+      this.statusMessage ||
+      !this.verifyForm()
     ) {
       return;
     }
 
+    this.container.css("visibility", "visible");
     this.toggleLogin(true);
     this.game.connect();
 
-    install();
+    install(); // $("pwa-install")[0].openPrompt();
   }
 
   fadeMenu() {
@@ -321,7 +308,7 @@ class App {
     if (this.game.started) {
       this.parchment.removeClass().addClass(content);
 
-      this.body.removeClass("credits legal about").toggleClass(content);
+      this.body.removeClass("legal about").toggleClass(content); // credits
 
       if (this.game.player) {
         this.body.toggleClass("death");
@@ -344,19 +331,19 @@ class App {
 
     switch (activeForm) {
       case "loadCharacter":
-        const nameInput = $("#loginNameInput");
+        const emailInput = $("#loginEmailInput");
         const passwordInput = $("#loginPasswordInput");
 
         if (this.loginFields.length === 0) {
-          this.loginFields = [nameInput, passwordInput];
+          this.loginFields = [emailInput, passwordInput];
         }
 
-        if (!nameInput.val() && !this.isGuest()) {
-          this.sendError(nameInput, "Please enter a username.");
+        if (!emailInput.val()) {
+          this.sendError(emailInput, "Please enter a email.");
           return false;
         }
 
-        if (!passwordInput.val() && !this.isGuest()) {
+        if (!passwordInput.val()) {
           this.sendError(passwordInput, "Please enter a password.");
           return false;
         }
@@ -364,24 +351,22 @@ class App {
         break;
 
       case "createCharacter":
-        const characterName = $("#registerNameInput");
+        const email = $("#registerEmailInput");
         const registerPassword = $("#registerPasswordInput");
         const registerPasswordConfirmation = $(
           "#registerPasswordConfirmationInput"
         );
-        const email = $("#registerEmailInput");
 
         if (this.registerFields.length === 0) {
           this.registerFields = [
-            characterName,
+            email,
             registerPassword,
-            registerPasswordConfirmation,
-            email
+            registerPasswordConfirmation
           ];
         }
 
-        if (!characterName.val()) {
-          this.sendError(characterName, "A username is necessary you silly.");
+        if (!email.val() || !this.verifyEmail(email.val())) {
+          this.sendError(email, "An email is required!");
           return false;
         }
 
@@ -395,11 +380,6 @@ class App {
             registerPasswordConfirmation,
             "The passwords do not match!"
           );
-          return false;
-        }
-
-        if (!email.val() || !this.verifyEmail(email.val())) {
-          this.sendError(email, "An email is required!");
           return false;
         }
 
@@ -459,7 +439,7 @@ class App {
   cleanErrors() {
     const activeForm = this.getActiveForm();
     const fields =
-        activeForm === "loadCharacter" ? this.loginFields : this.registerFields;
+      activeForm === "loadCharacter" ? this.loginFields : this.registerFields;
 
     for (let i = 0; i < fields.length; i++) {
       fields[i].removeClass("field-error");
@@ -475,10 +455,6 @@ class App {
 
   isRegistering() {
     return this.getActiveForm() === "createCharacter";
-  }
-
-  isGuest() {
-    return this.guest.hasClass("active");
   }
 
   setGame(game) {
@@ -511,7 +487,7 @@ class App {
     }
 
     const dots =
-        "<span class=\"loader__dot\">.</span><span class=\"loader__dot\">.</span><span class=\"loader__dot\">.</span>";
+      "<span class=\"loader__dot\">.</span><span class=\"loader__dot\">.</span><span class=\"loader__dot\">.</span>";
     this.loading.html(message + dots);
   }
 
@@ -551,18 +527,11 @@ class App {
 
   updateRange(obj) {
     const val =
-        (obj.val() - obj.attr("min")) / (obj.attr("max") - obj.attr("min"));
+      (obj.val() - obj.attr("min")) / (obj.attr("max") - obj.attr("min"));
 
     obj.css(
       "background-image",
-      "-webkit-gradient(linear, left top, right top, " +
-          "color-stop(" +
-          val +
-          ", #4d4d4d), " +
-          "color-stop(" +
-          val +
-          ", #C5C5C5)" +
-          ")"
+      `-webkit-gradient(linear, left top, right top, color-stop(${val}, #4d4d4d), color-stop(${val}, #C5C5C5))`
     );
   }
 
@@ -572,10 +541,6 @@ class App {
 
   getOrientation() {
     return window.innerHeight > window.innerWidth ? "portrait" : "landscape";
-  }
-
-  onReady(callback) {
-    this.readyCallback = callback;
   }
 }
 

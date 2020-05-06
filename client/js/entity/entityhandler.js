@@ -34,10 +34,10 @@ class EntityHandler {
 
         this.entity.forEachAttacker(attacker => {
           /**
-             * This is the client-sided logic for representing PVP
-             * fights. It basically adds another layer of movement
-             * so the entity is always following the player.
-             */
+           * This is the client-sided logic for representing PVP
+           * fights. It basically adds another layer of movement
+           * so the entity is always following the player.
+           */
 
           if (this.entity.type !== "player") {
             return;
@@ -73,9 +73,8 @@ class EntityHandler {
 
         if (
           this.entity.attackRange > 1 &&
-            this.entity.hasTarget() &&
-            this.entity.getDistance(this.entity.target) <=
-              this.entity.attackRange
+          this.entity.hasTarget() &&
+          this.entity.getDistance(this.entity.target) <= this.entity.attackRange
         ) {
           this.entity.stop(false);
         }
@@ -97,9 +96,9 @@ class EntityHandler {
   isCharacter() {
     return (
       this.entity.type &&
-        (this.entity.type === "player" ||
-          this.entity.type === "mob" ||
-          this.entity.type === "npc")
+      (this.entity.type === "player" ||
+        this.entity.type === "mob" ||
+        this.entity.type === "npc")
     );
   }
 

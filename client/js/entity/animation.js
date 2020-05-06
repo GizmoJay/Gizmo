@@ -1,8 +1,4 @@
 class Animation {
-  /**
-   * Ripped from BrowserQuest's client
-   */
-
   constructor(name, length, row, width, height) {
     this.name = name;
     this.length = length;

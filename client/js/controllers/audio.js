@@ -45,28 +45,21 @@ class Audio {
   }
 
   parse(path, name, channels, callback) {
-    const fullPath = path + name + "." + this.format;
+    const fullPath = require(`../../audio/${path}/${name}.${this.format}`).default;
     const sound = document.createElement("audio");
 
-    sound.addEventListener(
-      "canplaythrough",
-      function() {
-        this.removeEventListener("canplaythrough", arguments.callee, false);
+    function event() {
+      sound.removeEventListener("canplaythrough", event, false);
 
-        if (callback) {
-          callback();
-        }
-      },
-      false
-    );
+      if (callback) callback();
+    }
+    sound.addEventListener("canplaythrough", event, false);
 
     sound.addEventListener(
       "error",
       () => {
         log.error(
-          "The audible: " +
-              name +
-              " could not be loaded - unsupported extension?"
+          `The audible: ${name} could not be loaded - unsupported extension?`
         );
 
         this.audibles[name] = null;
@@ -94,11 +87,7 @@ class Audio {
   }
 
   play(type, name) {
-    if (
-      !this.isEnabled() ||
-        !this.fileExists(name) ||
-        this.game.player.dead
-    ) {
+    if (!this.isEnabled() || !this.fileExists(name) || this.game.player.dead) {
       return;
     }
 
@@ -130,7 +119,7 @@ class Audio {
 
       case Modules.AudioTypes.SFX:
         if (!this.sounds[name]) {
-          this.parse("audio/sounds/", name, 4);
+          this.parse("sounds", name, 4);
         }
 
         const sound = this.get(name);
@@ -166,7 +155,7 @@ class Audio {
       }
 
       if (song.name in this.music && !this.music[song.name]) {
-        this.parse("audio/music/", song.name, 1);
+        this.parse("music", song.name, 1);
 
         const music = this.audibles[song.name][0];
 

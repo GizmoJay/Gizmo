@@ -1,4 +1,3 @@
-
 /**
  * The children of these classes are responsible for
  * clear and concise ways of organizing stats of weapons

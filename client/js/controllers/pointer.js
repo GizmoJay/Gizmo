@@ -17,12 +17,12 @@ class Pointer {
 
     switch (type) {
       case Modules.Pointers.Button:
-        this.pointers[id] = new Pointer(id, $("#" + name), type);
+        this.pointers[id] = new Pointer(id, $(`#${name}`), type);
 
         break;
 
       default:
-        const element = $("<div id=\"" + id + "\" class=\"pointer\"></div>");
+        const element = $(`<div id="${id}" class="pointer"></div>`);
 
         this.setSize(element);
 
@@ -54,12 +54,14 @@ class Pointer {
 
   setSize(element) {
     element.css({
-      width: 16 + 16 * this.scale + "px",
-      height: 16 + 16 * this.scale + "px",
+      width: `${16}${16 * this.scale}px`,
+      height: `${16}${16 * this.scale}px`,
       margin: "inherit",
-      "margin-top": "-" + 6 * this.scale + "px",
-      top: 10 * this.scale + "px",
-      background: "url(\"img/" + this.scale + "/pointer.png\")"
+      "margin-top": `-${6 * this.scale}px`,
+      top: `${10 * this.scale}px`,
+      background: `url("${
+        require(`../../img/${this.scale}/pointer.png`).default
+      }")`
     });
   }
 

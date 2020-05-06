@@ -34,10 +34,10 @@ class Overlay {
       this.health.css({
         display: "block",
         width:
-            Math.ceil((entity.hitPoints / entity.maxHitPoints) * 100) - 10 + "%"
+          Math.ceil((entity.hitPoints / entity.maxHitPoints) * 100) - 10 + "%"
       });
 
-      this.details.html(entity.hitPoints + " / " + entity.maxHitPoints);
+      this.details.html(`${entity.hitPoints} / ${entity.maxHitPoints}`);
     } else {
       this.health.css("display", "none");
       this.details.html("");
@@ -46,20 +46,18 @@ class Overlay {
     this.onUpdate((entityId, hitPoints) => {
       if (
         this.hovering &&
-          this.hovering.id === entityId &&
-          this.hovering.type !== "npc" &&
-          this.hovering.type !== "item"
+        this.hovering.id === entityId &&
+        this.hovering.type !== "npc" &&
+        this.hovering.type !== "item"
       ) {
         if (hitPoints < 1) {
           this.hide();
         } else {
           this.health.css(
             "width",
-            Math.ceil((hitPoints / this.hovering.maxHitPoints) * 100) -
-                10 +
-                "%"
+            Math.ceil((hitPoints / this.hovering.maxHitPoints) * 100) - 10 + "%"
           );
-          this.details.html(hitPoints + " / " + this.hovering.maxHitPoints);
+          this.details.html(`${hitPoints} / ${this.hovering.maxHitPoints}`);
         }
       }
     });
@@ -68,8 +66,8 @@ class Overlay {
   validEntity(entity) {
     return (
       entity &&
-        entity.id !== this.input.getPlayer().id &&
-        entity.type !== "projectile"
+      entity.id !== this.input.getPlayer().id &&
+      entity.type !== "projectile"
     );
   }
 

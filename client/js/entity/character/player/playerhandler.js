@@ -19,10 +19,10 @@ class PlayerHandler {
       }
 
       /**
-         * If the position is the same as the player's current position
-         * we will return nothing. Otherwise this will just create
-         * a colliding tile and will interfere with combat.
-         */
+       * If the position is the same as the player's current position
+       * we will return nothing. Otherwise this will just create
+       * a colliding tile and will interfere with combat.
+       */
 
       let ignores = [];
       const isObject = this.map.isObject(x, y);
@@ -66,7 +66,7 @@ class PlayerHandler {
       this.input.selectedCellVisible = true;
 
       if (this.game.isDebug()) {
-        log.info("Movement speed: " + this.player.movementSpeed);
+        log.info(`Movement speed: ${this.player.movementSpeed}`);
       }
 
       this.socket.send(Packets.Movement, [
@@ -169,8 +169,8 @@ class PlayerHandler {
 
     this.player.onMove(() => {
       /**
-         * This is a callback representing the absolute exact position of the player.
-         */
+       * This is a callback representing the absolute exact position of the player.
+       */
 
       if (this.camera.centered) {
         this.camera.centreOn(this.player);

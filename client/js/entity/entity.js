@@ -50,10 +50,10 @@ class Entity {
   }
 
   /**
-     * This is important for when the client is
-     * on a mobile screen. So the sprite has to be
-     * handled differently.
-     */
+   * This is important for when the client is
+   * on a mobile screen. So the sprite has to be
+   * handled differently.
+   */
 
   loadDirty() {
     this.dirty = true;
@@ -134,7 +134,7 @@ class Entity {
   setAnimation(name, speed, count, onEndCount) {
     if (
       !this.spriteLoaded ||
-        (this.currentAnimation && this.currentAnimation.name === name)
+      (this.currentAnimation && this.currentAnimation.name === name)
     ) {
       return;
     }
@@ -156,9 +156,9 @@ class Entity {
     this.currentAnimation.setCount(
       count || 0,
       onEndCount ||
-          (() => {
-            this.idle();
-          })
+        (() => {
+          this.idle();
+        })
     );
   }
 
@@ -199,16 +199,16 @@ class Entity {
   inAttackRadius(entity) {
     return (
       entity &&
-        this.getDistance(entity) < 2 &&
-        !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
+      this.getDistance(entity) < 2 &&
+      !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
     );
   }
 
   inExtraAttackRadius(entity) {
     return (
       entity &&
-        this.getDistance(entity) < 3 &&
-        !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
+      this.getDistance(entity) < 3 &&
+      !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
     );
   }
 

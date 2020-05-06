@@ -48,9 +48,7 @@ class Actions {
           left: "10%"
         });
 
-        const dropButton = $(
-          "<div id=\"drop\" class=\"actionButton\">Drop</div>"
-        );
+        const dropButton = $("<div id=\"drop\" class=\"actionButton\">Drop</div>");
 
         this.add(dropButton);
 

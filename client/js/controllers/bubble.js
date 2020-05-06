@@ -9,25 +9,21 @@ class Bubble {
   }
 
   /**
-     * This creates the blob that will be used to display text.
-     *
-     * `id` - An identifier for the bubble we are creating.
-     * `message` - A string of the text we are displaying.
-     * `duration` - How long the bubble will display for.
-     * `isObject` - (optional) Boolean value used to determine object.
-     * `info` - (optional) Used in conjunction with `isObject` to specify object data.
-     */
+   * This creates the blob that will be used to display text.
+   *
+   * `id` - An identifier for the bubble we are creating.
+   * `message` - A string of the text we are displaying.
+   * `duration` - How long the bubble will display for.
+   * `isObject` - (optional) Boolean value used to determine object.
+   * `info` - (optional) Used in conjunction with `isObject` to specify object data.
+   */
   create(id, message, duration, isObject, info) {
     if (this.bubbles[id]) {
       this.bubbles[id].reset(this.game.time);
-      $("#" + id + " p").html(message);
+      $(`#${id} p`).html(message);
     } else {
       const element = $(
-        "<div id='" +
-            id +
-            "' class='bubble'><p>" +
-            message +
-            "</p><div class='bubbleTip'></div></div>"
+        `<div id='${id}' class='bubble'><p>${message}</p><div class='bubbleTip'></div></div>`
       );
 
       $(element).appendTo(this.container);
@@ -53,7 +49,7 @@ class Bubble {
     const offsetY = -20;
 
     const y =
-        (info.y - this.game.getCamera().y) * scale - tileSize * 2 - offsetY;
+      (info.y - this.game.getCamera().y) * scale - tileSize * 2 - offsetY;
 
     bubble.element.css(
       "left",

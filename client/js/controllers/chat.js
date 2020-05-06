@@ -24,7 +24,7 @@ class Chat {
   }
 
   add(source, text, colour) {
-    const element = $("<p>" + source + " » " + text + "</p>");
+    const element = $(`<p>${source} » ${text}</p>`);
 
     this.showChat();
 

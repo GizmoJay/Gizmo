@@ -62,9 +62,9 @@ class Interface {
 
   loadInventory(size, data) {
     /**
-       * This can be called multiple times and can be used
-       * to completely refresh the inventory.
-       */
+     * This can be called multiple times and can be used
+     * to completely refresh the inventory.
+     */
 
     this.inventory = new Inventory(this.game, size);
 
@@ -73,9 +73,9 @@ class Interface {
 
   loadBank(size, data) {
     /**
-       * Similar structure as the inventory, just that it
-       * has two containers. The bank and the inventory.
-       */
+     * Similar structure as the inventory, just that it
+     * has two containers. The bank and the inventory.
+     */
 
     if (!this.inventory) {
       log.error("Inventory not initialized.");
@@ -131,17 +131,17 @@ class Interface {
     const done = $("#done");
 
     /**
-       * Simple warning dialogue
-       */
+     * Simple warning dialogue
+     */
 
     ok.click(() => {
       this.hideNotify();
     });
 
     /**
-       * Callbacks responsible for
-       * Confirmation dialogues
-       */
+     * Callbacks responsible for
+     * Confirmation dialogues
+     */
 
     cancel.click(() => {
       this.hideConfirm();
@@ -199,15 +199,15 @@ class Interface {
 
     if (
       this.profile &&
-        (this.profile.isVisible() || this.profile.settings.isVisible())
+      (this.profile.isVisible() || this.profile.settings.isVisible())
     ) {
       this.profile.hide();
     }
 
     if (
       this.game.input &&
-        this.game.input.chatHandler &&
-        this.game.input.chatHandler.input.is(":visible")
+      this.game.input.chatHandler &&
+      this.game.input.chatHandler.input.is(":visible")
     ) {
       this.game.input.chatHandler.hideInput();
     }

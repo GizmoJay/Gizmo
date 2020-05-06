@@ -1,4 +1,3 @@
-
 import Character from "../character";
 import Armour from "./equipment/armour";
 import Weapon from "./equipment/weapon";
@@ -10,9 +9,10 @@ class Player extends Character {
   constructor() {
     super(-1, Modules.Types.Player);
 
+    this._id = "";
     this.username = "";
-    this.password = "";
     this.email = "";
+    this.password = "";
 
     this.avatar = null;
 
@@ -71,8 +71,8 @@ class Player extends Character {
 
   loadHandler(game) {
     /**
-       * This is for other player characters
-       */
+     * This is for other player characters
+     */
 
     this.handler.setGame(game);
     this.handler.load();
@@ -183,14 +183,7 @@ class Player extends Character {
             power
           );
         } else {
-          this.armour.update(
-            name,
-            string,
-            count,
-            ability,
-            abilityLevel,
-            power
-          );
+          this.armour.update(name, string, count, ability, abilityLevel, power);
         }
 
         if (this.updateArmourCallback) {
@@ -210,14 +203,7 @@ class Player extends Character {
             power
           );
         } else {
-          this.weapon.update(
-            name,
-            string,
-            count,
-            ability,
-            abilityLevel,
-            power
-          );
+          this.weapon.update(name, string, count, ability, abilityLevel, power);
         }
 
         this.weapon.ranged = string.includes("bow");
@@ -278,14 +264,7 @@ class Player extends Character {
             power
           );
         } else {
-          this.boots.update(
-            name,
-            string,
-            count,
-            ability,
-            abilityLevel,
-            power
-          );
+          this.boots.update(name, string, count, ability, abilityLevel, power);
         }
 
         break;

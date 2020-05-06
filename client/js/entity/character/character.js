@@ -1,4 +1,3 @@
-
 import Entity from "../entity";
 import Transition from "../../utils/transition";
 import Animation from "../animation";
@@ -112,10 +111,9 @@ class Character extends Entity {
 
     if (o.indexOf(animation) > -1) {
       animation +=
-          "_" +
-          (orientation === Modules.Orientation.Left
-            ? "right"
-            : this.orientationToString(orientation));
+        `_${orientation === Modules.Orientation.Left
+          ? "right"
+          : this.orientationToString(orientation)}`;
       this.spriteFlipX = this.orientation === Modules.Orientation.Left;
     }
 
@@ -251,13 +249,13 @@ class Character extends Entity {
   }
 
   /**
-     * We can have the movement remain client sided because
-     * the server side will be responsible for determining
-     * whether or not the player should have reached the
-     * location and ban all hackers. That and the fact
-     * the movement speed is constantly updated to avoid
-     * hacks previously present in BQ.
-     */
+   * We can have the movement remain client sided because
+   * the server side will be responsible for determining
+   * whether or not the player should have reached the
+   * location and ban all hackers. That and the fact
+   * the movement speed is constantly updated to avoid
+   * hacks previously present in BQ.
+   */
 
   nextStep() {
     let stop = false;
@@ -356,9 +354,9 @@ class Character extends Entity {
 
   followPath(path) {
     /**
-       * This is to ensure the player does not click on
-       * himself or somehow into another dimension
-       */
+     * This is to ensure the player does not click on
+     * himself or somehow into another dimension
+     */
 
     if (!path || path.length < 2) {
       return;
@@ -409,10 +407,10 @@ class Character extends Entity {
   hasEffect() {
     return (
       this.critical ||
-        this.stunned ||
-        this.terror ||
-        this.explosion ||
-        this.healing
+      this.stunned ||
+      this.terror ||
+      this.explosion ||
+      this.healing
     );
   }
 
@@ -461,8 +459,8 @@ class Character extends Entity {
   }
 
   /**
-     * TRIGGERED!!!!
-     */
+   * TRIGGERED!!!!
+   */
 
   triggerHealthBar() {
     this.healthBarVisible = true;
@@ -499,8 +497,8 @@ class Character extends Entity {
   isMoving() {
     return (
       this.currentAnimation.name === "walk" ||
-        this.x % 2 !== 0 ||
-        this.y % 2 !== 0
+      this.x % 2 !== 0 ||
+      this.y % 2 !== 0
     );
   }
 
@@ -577,12 +575,12 @@ class Character extends Entity {
 
   setObjectTarget(x, y) {
     /**
-       * All we are doing is mimicking the `setTarget` entity
-       * parameter. But we are throwing in an extra.
-       */
+     * All we are doing is mimicking the `setTarget` entity
+     * parameter. But we are throwing in an extra.
+     */
 
     this.setTarget({
-      id: x + "-" + y,
+      id: `${x}-${y}`,
       type: "object",
       gridX: x,
       gridY: y

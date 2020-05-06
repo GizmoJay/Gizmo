@@ -1,5 +1,6 @@
 import Sprite from "../entity/sprite";
 import Animation from "../entity/animation";
+import sprites from "../../data/sprites.json";
 
 /**
  * Class responsible for loading all the necessary sprites from the JSON.
@@ -12,9 +13,7 @@ class Sprites {
 
     this.sparksAnimation = null;
 
-    $.getJSON("data/sprites.json", json => {
-      this.load(json);
-    });
+    this.load(sprites);
 
     this.loadAnimations();
   }
@@ -44,12 +43,8 @@ class Sprites {
     });
 
     if (this.renderer.game.isDebug()) {
-      log.info("Updated sprites to scale: " + this.renderer.getScale());
+      log.info(`Updated sprites to scale: ${this.renderer.getScale()}`);
     }
-  }
-
-  onLoadedSprites(callback) {
-    this.loadedSpritesCallback = callback;
   }
 }
 

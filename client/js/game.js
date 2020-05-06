@@ -219,9 +219,9 @@ class Game {
 
   postLoad() {
     /**
-       * Call this after the player has been welcomed
-       * by the server and the client received the connection.
-       */
+     * Call this after the player has been welcomed
+     * by the server and the client received the connection.
+     */
 
     this.renderer.loadStaticSprites();
 
@@ -259,7 +259,7 @@ class Game {
   }
 
   loadStorage() {
-    const loginName = $("#loginNameInput");
+    const loginName = $("#loginEmailInput");
     const loginPassword = $("#loginPasswordInput");
 
     loginName.prop("readonly", false);
@@ -269,8 +269,8 @@ class Game {
       return;
     }
 
-    if (this.getStorageUsername() !== "") {
-      loginName.val(this.getStorageUsername());
+    if (this.getStorageEmail() !== "") {
+      loginName.val(this.getStorageEmail());
     }
 
     if (this.getStoragePassword() !== "") {
@@ -317,10 +317,10 @@ class Game {
 
   handleDisconnection(noError) {
     /**
-       * This function is responsible for handling sudden
-       * disconnects of a player whilst in the game, not
-       * menu-based errors.
-       */
+     * This function is responsible for handling sudden
+     * disconnects of a player whilst in the game, not
+     * menu-based errors.
+     */
 
     if (!this.started) {
       return;
@@ -422,6 +422,14 @@ class Game {
 
       return items[_.keys(items)[0]];
     }
+  }
+
+  getStorageId() {
+    return this.storage.data.player._id;
+  }
+
+  getStorageEmail() {
+    return this.storage.data.player.email;
   }
 
   getStorageUsername() {

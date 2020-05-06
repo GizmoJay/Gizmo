@@ -27,13 +27,14 @@ class Socket {
       url = "https://" + this.config.ip + "/server";
     }
 
-    $.get(url)
-      .done(data => {
-        callback(data);
-      })
-      .fail(() => {
-        callback("error");
-      });
+    // FIXME: for Hub
+    // $.get(url)
+    // .done(data => {
+    // callback(data);
+    // })
+    // .fail(() => {
+    callback("error");
+    // });
   }
 
   connect() {

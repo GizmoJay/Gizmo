@@ -26,7 +26,7 @@ class Bank {
 
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
-      const slot = $("<div id=\"bankSlot" + i + "\" class=\"bankSlot\"></div>");
+      const slot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`);
 
       this.container.setSlot(i, item);
 
@@ -35,9 +35,7 @@ class Bank {
         "margin-bottom": 4 * this.getScale() + "px"
       });
 
-      const image = $(
-        "<div id=\"bankImage" + i + "\" class=\"bankImage\"></div>"
-      );
+      const image = $(`<div id="bankImage${i}" class="bankImage"></div>`);
 
       if (item.string) {
         image.css(
@@ -58,7 +56,7 @@ class Bank {
 
       if (count > 999999) {
         count =
-            count.toString().substring(0, count.toString().length - 6) + "M";
+          count.toString().substring(0, count.toString().length - 6) + "M";
       } else if (count > 9999) {
         count = count.toString().substring(0, 2) + "K";
       } else if (count === 1) {
@@ -67,15 +65,11 @@ class Bank {
 
       slot.append(image);
       slot.append(
-        "<div id=\"bankItemCount" +
-            i +
-            "\" class=\"itemCount\">" +
-            count +
-            "</div>"
+        `<div id="bankItemCount${i}" class="itemCount">${count}</div>`
       );
 
-      slot.find("#bankItemCount" + i).css({
-        "font-size": 4 * this.getScale() + "px",
+      slot.find(`#bankItemCount${i}`).css({
+        "font-size": `${4 * this.getScale()}px`,
         "margin-top": "0",
         "margin-left": "0"
       });
@@ -90,7 +84,7 @@ class Bank {
     for (let j = 0; j < this.inventoryContainer.size; j++) {
       const iItem = this.inventoryContainer.slots[j];
       const iSlot = $(
-        "<div id=\"bankInventorySlot" + j + "\" class=\"bankSlot\"></div>"
+        `<div id="bankInventorySlot${j}" class="bankSlot"></div>`
       );
 
       iSlot.css({
@@ -99,7 +93,7 @@ class Bank {
       });
 
       const slotImage = $(
-        "<div id=\"inventoryImage" + j + "\" class=\"bankImage\"></div>"
+        `<div id="inventoryImage${j}" class="bankImage"></div>`
       );
 
       if (iItem.string) {
@@ -121,7 +115,7 @@ class Bank {
 
       if (count > 999999) {
         count =
-            count.toString().substring(0, count.toString().length - 6) + "M";
+          count.toString().substring(0, count.toString().length - 6) + "M";
       } else if (count > 9999) {
         count = count.toString().substring(0, 2) + "K";
       } else if (count === 1) {
@@ -130,14 +124,10 @@ class Bank {
 
       iSlot.append(slotImage);
       iSlot.append(
-        "<div id=\"inventoryItemCount" +
-            j +
-            "\" class=\"itemCount\">" +
-            count +
-            "</div>"
+        `<div id="inventoryItemCount${j}" class="itemCount">${count}</div>`
       );
 
-      iSlot.find("#inventoryItemCount" + j).css({
+      iSlot.find(`#inventoryItemCount${j}`).css({
         "margin-top": "0",
         "margin-left": "0"
       });
@@ -155,8 +145,8 @@ class Bank {
     const inventoryList = this.getInventoryList();
 
     for (let i = 0; i < bankList.length; i++) {
-      const bankSlot = $(bankList[i]).find("#bankSlot" + i);
-      const image = bankSlot.find("#bankImage" + i);
+      const bankSlot = $(bankList[i]).find(`#bankSlot${i}`);
+      const image = bankSlot.find(`#bankImage${i}`);
       const slot = this.container.slots[i];
 
       bankSlot.css({
@@ -164,7 +154,7 @@ class Bank {
         "margin-bottom": 4 * this.getScale() + "px"
       });
 
-      bankSlot.find("#bankItemCount" + i).css({
+      bankSlot.find(`#bankItemCount${i}`).css({
         "font-size": 4 * this.getScale() + "px",
         "margin-top": "0",
         "margin-left": "0"
@@ -181,10 +171,8 @@ class Bank {
     }
 
     for (let j = 0; j < inventoryList.length; j++) {
-      const inventorySlot = $(inventoryList[j]).find(
-        "#bankInventorySlot" + j
-      );
-      const iImage = inventorySlot.find("#inventoryImage" + j);
+      const inventorySlot = $(inventoryList[j]).find(`#bankInventorySlot${j}`);
+      const iImage = inventorySlot.find(`#inventoryImage${j}`);
       const iSlot = this.inventoryContainer.slots[j];
 
       inventorySlot.css({
@@ -228,9 +216,9 @@ class Bank {
 
     slot.setCount(info.count);
 
-    const bankSlot = item.find("#bankSlot" + info.index);
-    const cssSlot = bankSlot.find("#bankImage" + info.index);
-    const count = bankSlot.find("#bankItemCount" + info.index);
+    const bankSlot = item.find(`#bankSlot${info.index}`);
+    const cssSlot = bankSlot.find(`#bankImage${info.index}`);
+    const count = bankSlot.find(`#bankItemCount${info.index}`);
 
     cssSlot.css(
       "background-image",
@@ -254,17 +242,17 @@ class Bank {
       return;
     }
 
-    const divItem = item.find("#bankSlot" + info.index);
+    const divItem = item.find(`#bankSlot${info.index}`);
 
     slot.count -= info.count;
 
     if (slot.count < 1) {
-      divItem.find("#bankImage" + info.index).css("background-image", "");
-      divItem.find("#bankItemCount" + info.index).text("");
+      divItem.find(`#bankImage${info.index}`).css("background-image", "");
+      divItem.find(`#bankItemCount${info.index}`).text("");
 
       slot.empty();
     } else {
-      divItem.find("#bankItemCount" + info.index).text(slot.count);
+      divItem.find(`#bankItemCount${info.index}`).text(slot.count);
     }
   }
 
@@ -275,8 +263,8 @@ class Bank {
       return;
     }
 
-    const slot = item.find("#bankInventorySlot" + info.index);
-    const image = slot.find("#inventoryImage" + info.index);
+    const slot = item.find(`#bankInventorySlot${info.index}`);
+    const image = slot.find(`#inventoryImage${info.index}`);
 
     image.css(
       "background-image",
@@ -288,7 +276,7 @@ class Bank {
     }
 
     if (info.count > 1) {
-      slot.find("#inventoryItemCount" + info.index).text(info.count);
+      slot.find(`#inventoryItemCount${info.index}`).text(info.count);
     }
   }
 
@@ -300,21 +288,21 @@ class Bank {
     }
 
     /**
-       * All we're doing here is subtracting and updating the count
-       * of the items in the inventory first.
-       */
+     * All we're doing here is subtracting and updating the count
+     * of the items in the inventory first.
+     */
 
     const itemContainer = this.inventoryContainer.slots[info.index];
-    const slot = item.find("#bankInventorySlot" + info.index);
+    const slot = item.find(`#bankInventorySlot${info.index}`);
     const diff = itemContainer.count - info.count;
 
     if (diff > 1) {
-      slot.find("#inventoryItemCount" + info.index).text(diff);
+      slot.find(`#inventoryItemCount${info.index}`).text(diff);
     } else if (diff === 1) {
-      slot.find("#inventoryItemCount" + info.index).text("");
+      slot.find(`#inventoryItemCount${info.index}`).text("");
     } else {
-      slot.find("#inventoryImage" + info.index).css("background-image", "");
-      slot.find("#inventoryItemCount" + info.index).text("");
+      slot.find(`#inventoryImage${info.index}`).css("background-image", "");
+      slot.find(`#inventoryItemCount${info.index}`).text("");
     }
   }
 

@@ -34,7 +34,7 @@ class Page {
       return "";
     }
 
-    return "url(\"img/" + scale + "/item-" + name + ".png\")";
+    return `url("${require(`../../../img/${scale}/item-${name}.png`).default}")`;
   }
 }
 

@@ -1,9 +1,8 @@
-
 /**
-   * Very useful file used for queuing various objects,
-   * most notably used in the info controller to queue
-   * objects to delete
-   */
+ * Very useful file used for queuing various objects,
+ * most notably used in the info controller to queue
+ * objects to delete
+ */
 
 class Queue {
   constructor() {

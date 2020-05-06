@@ -86,8 +86,8 @@ class Info {
 
       case Modules.Info.Countdown:
         /**
-           * We only allow the creation of one countdown timer.
-           */
+         * We only allow the creation of one countdown timer.
+         */
 
         if (countdownExists) {
           return;
@@ -145,7 +145,7 @@ class Info {
   }
 
   generateId(time, info, x, y) {
-    return time + "" + Math.abs(info) + "" + x + "" + y;
+    return `${time}${Math.abs(info)}${x}${y}`;
   }
 }
 

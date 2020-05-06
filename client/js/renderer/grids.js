@@ -58,8 +58,8 @@ class Grids {
   removeFromRenderingGrid(entity, x, y) {
     if (
       entity &&
-        this.renderingGrid[y][x] &&
-        entity.id in this.renderingGrid[y][x]
+      this.renderingGrid[y][x] &&
+      entity.id in this.renderingGrid[y][x]
     ) {
       delete this.renderingGrid[y][x][entity.id];
     }

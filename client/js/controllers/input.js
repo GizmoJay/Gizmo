@@ -1,4 +1,3 @@
-
 import Animation from "../entity/animation";
 import Chat from "./chat";
 import Overlay from "./overlay";
@@ -47,9 +46,9 @@ class Input {
 
   load() {
     /**
-       * This is the animation for the target
-       * cell spinner sprite (only on desktop)
-       */
+     * This is the animation for the target
+     * cell spinner sprite (only on desktop)
+     */
 
     this.targetAnimation = new Animation("move", 4, 0, 16, 16);
     this.targetAnimation.setSpeed(50);
@@ -257,14 +256,14 @@ class Input {
     this.setPassiveTarget();
 
     /**
-       * It can be really annoying having the chat open
-       * on mobile, and it is far harder to control.
-       */
+     * It can be really annoying having the chat open
+     * on mobile, and it is far harder to control.
+     */
 
     if (
       this.renderer.mobile &&
-        this.chatHandler.input.is(":visible") &&
-        this.chatHandler.input.val() === ""
+      this.chatHandler.input.is(":visible") &&
+      this.chatHandler.input.val() === ""
     ) {
       this.chatHandler.hideInput();
     }
@@ -275,7 +274,7 @@ class Input {
 
     if (
       (this.game.zoning && this.game.zoning.direction) ||
-        player.disableAction
+      player.disableAction
     ) {
       return;
     }
@@ -310,8 +309,8 @@ class Input {
 
       if (
         player.getDistance(this.entity) < 7 &&
-          player.isRanged() &&
-          this.isAttackable(this.entity)
+        player.isRanged() &&
+        this.isAttackable(this.entity)
       ) {
         this.game.socket.send(Packets.Target, [
           Packets.TargetOpcode.Attack,
@@ -323,7 +322,7 @@ class Input {
 
       if (
         this.entity.gridX === player.gridX &&
-          this.entity.gridY === player.gridY
+        this.entity.gridY === player.gridY
       ) {
         this.game.socket.send(Packets.Target, [
           Packets.TargetOpcode.Attack,
@@ -461,11 +460,7 @@ class Input {
   }
 
   setCursor(cursor) {
-    if (cursor) {
-      this.newCursor = cursor;
-    } else {
-      log.error("Cursor: " + cursor + " could not be found.");
-    }
+    cursor ? this.newCursor = cursor : log.error(`Cursor: ${cursor} could not be found.`);
   }
 
   setAttackTarget() {
@@ -487,14 +482,13 @@ class Input {
       return;
     }
 
-    const tileScale =
-        this.renderer.tileSize * this.renderer.getSuperScaling();
+    const tileScale = this.renderer.tileSize * this.renderer.getSuperScaling();
     const offsetX = this.mouse.x % tileScale;
     const offsetY = this.mouse.y % tileScale;
     const x =
-        (this.mouse.x - offsetX) / tileScale + this.game.getCamera().gridX;
+      (this.mouse.x - offsetX) / tileScale + this.game.getCamera().gridX;
     const y =
-        (this.mouse.y - offsetY) / tileScale + this.game.getCamera().gridY;
+      (this.mouse.y - offsetY) / tileScale + this.game.getCamera().gridY;
 
     return {
       x: x,
@@ -534,22 +528,22 @@ class Input {
   isTargetable(entity) {
     return (
       this.isAttackable(entity) ||
-        entity.type === "npc" ||
-        entity.type === "chest"
+      entity.type === "npc" ||
+      entity.type === "chest"
     );
   }
 
   isAttackable(entity) {
     return (
       entity.type === "mob" ||
-        (entity.type === "player" && entity.pvp && this.game.pvp)
+      (entity.type === "player" && entity.pvp && this.game.pvp)
     );
   }
 
   isSamePosition(position) {
     return (
       position.x === this.game.player.gridX &&
-        position.y === this.game.player.gridY
+      position.y === this.game.player.gridY
     );
   }
 

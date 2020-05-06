@@ -26,9 +26,7 @@ class Entities {
     if (!this.sprites) {
       this.sprites = new Sprites(this.game.renderer);
 
-      this.sprites.onLoadedSprites(() => {
-        this.game.input.loadCursors();
-      });
+      this.game.input.loadCursors();
     }
 
     this.game.app.sendStatus("Loading grids");
@@ -59,10 +57,10 @@ class Entities {
     switch (info.type) {
       case "chest":
         /**
-           * Here we will parse the different types of chests..
-           * We can go Dark Souls style and implement mimics
-           * the proper way -ahem- Gizmo V1.0
-           */
+         * Here we will parse the different types of chests..
+         * We can go Dark Souls style and implement mimics
+         * the proper way -ahem- Gizmo V1.0
+         */
 
         const chest = new Chest(info.id, info.string);
 
@@ -133,19 +131,16 @@ class Entities {
         projectile.type = info.type;
 
         /**
-           * Move this into the external overall function
-           */
+         * Move this into the external overall function
+         */
 
         projectile.onImpact(() => {
           /**
-             * The data in the projectile is only for rendering purposes
-             * there is nothing you can change for the actual damage output here.
-             */
+           * The data in the projectile is only for rendering purposes
+           * there is nothing you can change for the actual damage output here.
+           */
 
-          if (
-            this.isPlayer(projectile.owner.id) ||
-              this.isPlayer(target.id)
-          ) {
+          if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id)) {
             this.game.socket.send(Packets.Projectile, [
               Packets.ProjectileOpcode.Impact,
               info.id,
@@ -236,7 +231,7 @@ class Entities {
     }
 
     const sprite = this.getSprite(
-      info.type === "item" ? "item-" + info.string : info.string
+      info.type === "item" ? `item-${info.string}` : info.string
     );
 
     entity.setGridPosition(info.x, info.y);
@@ -265,8 +260,8 @@ class Entities {
     }
 
     /**
-       * Get ready for errors!
-       */
+     * Get ready for errors!
+     */
   }
 
   isPlayer(id) {
@@ -299,7 +294,7 @@ class Entities {
       if (ids) {
         if (
           ids.indexOf(parseInt(entity.id)) < 0 &&
-            entity.id !== this.game.player.id
+          entity.id !== this.game.player.id
         ) {
           this.removeEntity(entity);
         }
@@ -331,7 +326,7 @@ class Entities {
 
     if (
       !(entity instanceof Item && entity.dropped) &&
-        !this.renderer.isPortableDevice()
+      !this.renderer.isPortableDevice()
     ) {
       entity.fadeIn(this.game.time);
     }

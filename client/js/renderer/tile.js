@@ -25,7 +25,7 @@ class Tile {
   animate(time) {
     if (
       time - this.lastTime >
-        this.animationInfo[this.animationIndex].duration
+      this.animationInfo[this.animationIndex].duration
     ) {
       this.update();
       this.lastTime = time;

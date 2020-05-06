@@ -1,13 +1,12 @@
-var deferredPrompt = null;
+let deferredPrompt = null;
 
-var install = function () {
+export default function install() {
   if (deferredPrompt) {
     try {
-      if (localStorage.getItem("prompted") !== "true") {
-        deferredPrompt.prompt();
-      }
+      if (localStorage.getItem("prompted") !== "true")
+      { deferredPrompt.prompt(); }
     } catch (err) {}
-    deferredPrompt.userChoice.then(function (choiceResult) {
+    deferredPrompt.userChoice.then(function(choiceResult) {
       localStorage.setItem("prompted", true);
       if (choiceResult.outcome === "accepted") {
         // PWA has been installed
@@ -18,44 +17,44 @@ var install = function () {
       deferredPrompt = null;
     });
   }
-};
+}
 
+let refreshing;
 // Check compatibility for the browser we're running this in
 if ("serviceWorker" in navigator) {
-  var refreshing;
   // ? Maybe prompt user before force refreshing
-  navigator.serviceWorker.addEventListener("controllerchange", function () {
+  navigator.serviceWorker.addEventListener("controllerchange", function() {
     if (refreshing) return;
+    window.location.reload();
     refreshing = true;
-    window.location.reload(true);
   });
 
-  window.addEventListener("beforeinstallprompt", function (e) {
+  window.addEventListener("beforeinstallprompt", function(e) {
     // Prevent Chrome 67 and earlier from automatically showing the prompt
     e.preventDefault();
     deferredPrompt = e;
   });
 
-  window.addEventListener("load", function () {
-    if (navigator.serviceWorker.controller) {
-      log.info(
-        "[PWA Builder] active service worker found, no need to register"
-      );
-    } else {
+  window.addEventListener("load", function() {
+    if (navigator.serviceWorker.controller)
+    { log.info(
+      "[PWA Builder] active service worker found, no need to register"
+    ); }
+    else {
       // Register the service worker
       navigator.serviceWorker
         .register("sw.js", {
           scope: "../"
         })
-        .then(function (reg) {
+        .then(function(reg) {
           log.info(
             "[PWA Builder] Service worker has been registered for scope: " +
-              reg.scope
+                            reg.scope
           );
 
-          reg.onupdatefound = function () {
-            var installingWorker = reg.installing;
-            installingWorker.onstatechange = function () {
+          reg.onupdatefound = function() {
+            const installingWorker = reg.installing;
+            installingWorker.onstatechange = function() {
               switch (installingWorker.state) {
                 case "installed":
                   if (navigator.serviceWorker.controller);
@@ -64,7 +63,7 @@ if ("serviceWorker" in navigator) {
             };
           };
         })
-        .catch(function (err) {
+        .catch(function(err) {
           log.error("[SW ERROR]", err);
         });
     }

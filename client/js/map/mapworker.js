@@ -1,6 +1,7 @@
-importScripts("../../data/maps/map.js", "../lib/underscore.js");
+import _ from "../lib/underscore";
+import mapData from "../../data/maps/map.json";
 
-onmessage = event => {
+self.onmessage = event => {
   loadCollisionGrid();
 
   postMessage(mapData);

@@ -1,4 +1,3 @@
-
 const storage = window.localStorage;
 const name = "data";
 
@@ -29,6 +28,7 @@ class Storage {
       clientVersion: this.app.config.version,
 
       player: {
+        email: "",
         username: "",
         password: "",
         autoLogin: false,
@@ -50,7 +50,9 @@ class Storage {
 
       map: {
         regionData: [],
-        collisions: []
+        collisions: [],
+        objects: [],
+        cursorTiles: {}
       }
     };
   }
@@ -99,9 +101,11 @@ class Storage {
     this.save();
   }
 
-  setRegionData(regionData, collisionData) {
+  setRegionData(regionData, collisionData, objects, cursorTiles) {
     this.data.map.regionData = regionData;
     this.data.map.collisions = collisionData;
+    this.data.map.objects = objects;
+    this.data.map.cursorTiles = cursorTiles;
 
     this.save();
   }
@@ -121,6 +125,13 @@ class Storage {
   getCollisions() {
     return this.data.map.collisions;
   }
-}
+
+  getObjects() {
+    return this.data.map.objects;
+  }
+
+  getCursorTiles() {
+    return this.data.map.cursorTiles;
+  }}
 
 export default Storage;

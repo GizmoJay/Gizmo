@@ -1,4 +1,3 @@
-
 import Camera from "./camera";
 import Tile from "./tile";
 import Player from "../entity/character/player/player";
@@ -42,8 +41,8 @@ class Renderer {
     } // Background
     else {
       this.backContext =
-          this.background.getContext("webgl") ||
-          this.background.getContext("experimental-webgl");
+        this.background.getContext("webgl") ||
+        this.background.getContext("experimental-webgl");
     }
 
     this.foreContext = this.foreground.getContext("2d"); // Foreground
@@ -256,8 +255,8 @@ class Renderer {
     this.removeSmoothing();
 
     /**
-       * Rendering related draws
-       */
+     * Rendering related draws
+     */
 
     this.draw();
 
@@ -283,8 +282,8 @@ class Renderer {
   }
 
   /**
-     * Context Drawing
-     */
+   * Context Drawing
+   */
 
   draw() {
     if (this.webGL) {
@@ -565,16 +564,16 @@ class Renderer {
 
   drawEntityBack(entity) {
     /**
-       * Function used to draw special effects prior
-       * to rendering the entity.
-       */
+     * Function used to draw special effects prior
+     * to rendering the entity.
+     */
   }
 
   drawEntityFore(entity) {
     /**
-       * Function used to draw special effects after
-       * having rendererd the entity
-       */
+     * Function used to draw special effects after
+     * having rendererd the entity
+     */
 
     if (entity instanceof Character && !entity.dead && !entity.teleporting) {
       if (entity.hasWeapon()) {
@@ -589,9 +588,9 @@ class Renderer {
           const weaponAnimationData = weapon.animationData[animation.name];
           const frame = entity.currentAnimation.currentFrame;
           const index =
-              frame.index < weaponAnimationData.length
-                ? frame.index
-                : frame.index % weaponAnimationData.length;
+            frame.index < weaponAnimationData.length
+              ? frame.index
+              : frame.index % weaponAnimationData.length;
           const weaponX = weapon.width * index * this.superScaling;
           const weaponY = weapon.height * animation.row * this.superScaling;
           const weaponWidth = weapon.width * this.superScaling;
@@ -649,9 +648,9 @@ class Renderer {
       const sparksAnimation = this.entities.sprites.sparksAnimation;
       const sparksFrame = sparksAnimation.currentFrame;
       const sparksX =
-          this.sparksSprite.width * sparksFrame.index * this.superScaling;
+        this.sparksSprite.width * sparksFrame.index * this.superScaling;
       const sparksY =
-          this.sparksSprite.height * sparksAnimation.row * this.superScaling;
+        this.sparksSprite.height * sparksAnimation.row * this.superScaling;
       const sparksWidth = this.sparksSprite.width * this.superScaling;
       const sparksHeight = this.sparksSprite.height * this.superScaling;
 
@@ -670,11 +669,7 @@ class Renderer {
   }
 
   drawHealth(entity) {
-    if (
-      !entity.hitPoints ||
-        entity.hitPoints < 0 ||
-        !entity.healthBarVisible
-    ) {
+    if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) {
       return;
     }
 
@@ -704,8 +699,8 @@ class Renderer {
   drawName(entity) {
     if (
       entity.hidden ||
-        !entity.drawNames() ||
-        (!this.drawNames && !this.drawLevels)
+      !entity.drawNames() ||
+      (!this.drawNames && !this.drawLevels)
     ) {
       return;
     }
@@ -738,7 +733,7 @@ class Renderer {
         this.drawText(
           entity.name,
           x,
-          this.drawLevels && entity.type !== "npc" ? y - 8 : y,
+          y + 30,
           true,
           colour,
           "#000"
@@ -747,9 +742,9 @@ class Renderer {
 
       if (
         this.drawLevels &&
-          (entity.type === "mob" || entity.type === "player")
+        (entity.type === "mob" || entity.type === "player")
       ) {
-        this.drawText("Level " + entity.level, x, y, true, colour, "#000");
+        this.drawText(`Level ${entity.level}`, x, y, true, colour, "#000");
       }
 
       if (entity.type === "item") {
@@ -759,10 +754,7 @@ class Renderer {
 
         if (entity.ability > -1) {
           this.drawText(
-            Modules.EnchantmentNames[entity.ability] +
-                " [+" +
-                entity.abilityLevel +
-                "]",
+            `${Modules.EnchantmentNames[entity.ability]} [+${entity.abilityLevel}]`,
             x,
             entity.y + 20,
             true,
@@ -781,13 +773,7 @@ class Renderer {
         entity.hasCounter = false;
       }
 
-      this.drawText(
-        entity.counter,
-        entity.x + 8,
-        entity.y - 10,
-        true,
-        colour
-      );
+      this.drawText(entity.counter, entity.x + 8, entity.y - 10, true, colour);
     }
 
     this.textContext.restore();
@@ -796,9 +782,9 @@ class Renderer {
   drawLighting(lighting) {
     if (lighting.relative) {
       const lightX =
-          (lighting.light.origX - this.camera.x / 16) * this.lightTileSize;
+        (lighting.light.origX - this.camera.x / 16) * this.lightTileSize;
       const lightY =
-          (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
+        (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
 
       lighting.light.position = new Vec2(lightX, lightY);
       lighting.compute(this.overlay.width, this.overlay.height);
@@ -814,9 +800,9 @@ class Renderer {
   drawCursor() {
     if (
       this.tablet ||
-        this.mobile ||
-        this.hasRenderedMouse() ||
-        this.input.cursorMoved
+      this.mobile ||
+      this.hasRenderedMouse() ||
+      this.input.cursorMoved
     ) {
       return;
     }
@@ -879,11 +865,11 @@ class Renderer {
 
     this.drawText(
       "x: " +
-          player.gridX +
-          " y: " +
-          player.gridY +
-          " tileIndex: " +
-          this.map.gridPositionToIndex(player.gridX, player.gridY),
+        player.gridX +
+        " y: " +
+        player.gridY +
+        " tileIndex: " +
+        this.map.gridPositionToIndex(player.gridX, player.gridY),
       10,
       51,
       false,
@@ -893,11 +879,11 @@ class Renderer {
     if (this.input.hoveringEntity) {
       this.drawText(
         "x: " +
-            this.input.getCoords().x +
-            " y: " +
-            this.input.getCoords().y +
-            " instance: " +
-            this.input.hoveringEntity.id,
+          this.input.getCoords().x +
+          " y: " +
+          this.input.getCoords().y +
+          " instance: " +
+          this.input.hoveringEntity.id,
         10,
         71,
         false,
@@ -921,12 +907,7 @@ class Renderer {
     }
 
     this.camera.forEachVisiblePosition((x, y) => {
-      if (
-        x < 0 ||
-          y < 0 ||
-          x > this.map.width - 1 ||
-          y > this.map.height - 1
-      ) {
+      if (x < 0 || y < 0 || x > this.map.width - 1 || y > this.map.height - 1) {
         return;
       }
 
@@ -976,17 +957,17 @@ class Renderer {
   }
 
   /**
-     * Primitive drawing functions
-     */
+   * Primitive drawing functions
+   */
 
   drawTile(context, tileId, cellId) {
     const originalTileId = tileId;
     let rotation;
 
     /**
-       * `originalTileId` is the tileId prior to doing any
-       * bitwise operations (for rotations).
-       */
+     * `originalTileId` is the tileId prior to doing any
+     * bitwise operations (for rotations).
+     */
 
     if (tileId < 0) {
       return;
@@ -1007,8 +988,8 @@ class Renderer {
 
       tileId &= ~(
         HORIZONTAL_FLIP_FLAG |
-          VERTICAL_FLIP_FLAG |
-          DIAGONAL_FLIP_FLAG
+        VERTICAL_FLIP_FLAG |
+        DIAGONAL_FLIP_FLAG
       );
     }
 
@@ -1019,11 +1000,11 @@ class Renderer {
     }
 
     /**
-       * Removed tilesetScale (tileset.scale) variables since it
-       * is generally always 1. The reason for the variable was
-       * due to the usage of the large PNG file, which Chrome
-       * split up and messed with.
-       */
+     * Removed tilesetScale (tileset.scale) variables since it
+     * is generally always 1. The reason for the variable was
+     * due to the usage of the large PNG file, which Chrome
+     * split up and messed with.
+     */
 
     if (!(originalTileId in this.tiles)) {
       const setWidth = tileset.width / this.tileSize;
@@ -1147,18 +1128,18 @@ class Renderer {
 
     this.forEachVisibleTile((id, index) => {
       /**
-         * We don't want to reinitialize animated tiles that already exist
-         * and are within the visible camera proportions. This way we can parse
-         * it every time the tile moves slightly.
-         */
+       * We don't want to reinitialize animated tiles that already exist
+       * and are within the visible camera proportions. This way we can parse
+       * it every time the tile moves slightly.
+       */
 
       if (!this.map.isAnimatedTile(id)) {
         return;
       }
 
       /**
-         * Push the pre-existing tiles.
-         */
+       * Push the pre-existing tiles.
+       */
 
       if (!(index in this.animatedTiles)) {
         const tile = new Tile(id, index, this.map);
@@ -1198,12 +1179,12 @@ class Renderer {
   drawTargetCell() {
     if (
       this.mobile ||
-        this.tablet ||
-        !this.input.targetVisible ||
-        !this.input ||
-        !this.camera ||
-        !this.map ||
-        this.input.keyMovement
+      this.tablet ||
+      !this.input.targetVisible ||
+      !this.input ||
+      !this.camera ||
+      !this.map ||
+      this.input.keyMovement
     ) {
       return;
     }
@@ -1213,7 +1194,7 @@ class Renderer {
     if (
       !(
         location.x === this.input.selectedX &&
-          location.y === this.input.selectedY
+        location.y === this.input.selectedY
       )
     ) {
       const isColliding = this.map.isColliding(location.x, location.y);
@@ -1227,8 +1208,8 @@ class Renderer {
   }
 
   /**
-     * Primordial Rendering functions
-     */
+   * Primordial Rendering functions
+   */
 
   forEachVisibleIndex(callback, offset) {
     this.camera.forEachVisiblePosition((x, y) => {
@@ -1348,7 +1329,7 @@ class Renderer {
 
     return (
       this.renderedFrame[0] === this.camera.x &&
-        this.renderedFrame[1] === this.camera.y
+      this.renderedFrame[1] === this.camera.y
     );
   }
 
@@ -1391,8 +1372,8 @@ class Renderer {
   }
 
   /**
-     * Rendering Functions
-     */
+   * Rendering Functions
+   */
 
   updateView() {
     this.forEachContext(context => {
@@ -1429,7 +1410,7 @@ class Renderer {
   hasRenderedMouse() {
     return (
       this.input.lastMousePosition.x === this.input.mouse.x &&
-        this.input.lastMousePosition.y === this.input.mouse.y
+      this.input.lastMousePosition.y === this.input.mouse.y
     );
   }
 
@@ -1468,8 +1449,8 @@ class Renderer {
   }
 
   /**
-     * Miscellaneous functions
-     */
+   * Miscellaneous functions
+   */
 
   forAllContexts(callback) {
     _.each(this.allContexts, context => {
@@ -1520,8 +1501,7 @@ class Renderer {
   }
 
   verifyCentration() {
-    this.forceRendering =
-        (this.mobile || this.tablet) && this.camera.centered;
+    this.forceRendering = (this.mobile || this.tablet) && this.camera.centered;
   }
 
   isPortableDevice() {
@@ -1622,8 +1602,8 @@ class Renderer {
 
       if (
         lighting.light.origX === light.origX &&
-          lighting.light.origY === light.origY &&
-          lighting.light.distance === light.distance
+        lighting.light.origY === light.origY &&
+        lighting.light.distance === light.distance
       ) {
         return true;
       }
@@ -1641,10 +1621,9 @@ class Renderer {
 
     return (
       position.x > this.camera.gridX - position.diff &&
-        position.x <
-          this.camera.gridX + this.camera.gridWidth + position.diff &&
-        position.y > this.camera.gridY - position.diff &&
-        position.y < this.camera.gridY + this.camera.gridHeight + position.diff
+      position.x < this.camera.gridX + this.camera.gridWidth + position.diff &&
+      position.y > this.camera.gridY - position.diff &&
+      position.y < this.camera.gridY + this.camera.gridHeight + position.diff
     );
   }
 
@@ -1656,8 +1635,8 @@ class Renderer {
   }
 
   /**
-     * Setters
-     */
+   * Setters
+   */
 
   setTileset(tileset) {
     this.tileset = tileset;
@@ -1676,8 +1655,8 @@ class Renderer {
   }
 
   /**
-     * Getters
-     */
+   * Getters
+   */
 
   getTargetBounds(x, y) {
     const bounds = {};

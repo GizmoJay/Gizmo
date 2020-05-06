@@ -35,7 +35,7 @@ class Enchant {
 
     for (let i = 0; i < this.getInventorySize(); i++) {
       const item = $(inventoryList[i]).clone();
-      const slot = item.find("#bankInventorySlot" + i);
+      const slot = item.find(`#bankInventorySlot${i}`);
 
       slot.click(event => {
         this.select(event);
@@ -54,7 +54,7 @@ class Enchant {
   }
 
   add(type, index) {
-    const image = this.getSlot(index).find("#inventoryImage" + index);
+    const image = this.getSlot(index).find(`#inventoryImage${index}`);
 
     switch (type) {
       case "item":
@@ -91,13 +91,13 @@ class Enchant {
     image.css("background-image", "");
 
     this.getSlot(index)
-      .find("#inventoryItemCount" + index)
+      .find(`#inventoryItemCount${index}`)
       .text("");
   }
 
   moveBack(type, index) {
-    const image = this.getSlot(index).find("#inventoryImage" + index);
-    const itemCount = this.getSlot(index).find("#inventoryItemCount" + index);
+    const image = this.getSlot(index).find(`#inventoryImage${index}`);
+    const itemCount = this.getSlot(index).find(`#inventoryItemCount${index}`);
     const count = this.getItemSlot(index).count;
 
     switch (type) {

@@ -51,8 +51,7 @@ Packets = {
 
 Packets.IntroOpcode = {
   Login: 0,
-  Register: 1,
-  Guest: 2
+  Register: 1
 };
 
 Packets.EquipmentOpcode = {

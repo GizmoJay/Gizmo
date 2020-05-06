@@ -42,7 +42,8 @@ class Sprite {
   loadSprite() {
     const sprite = this.sprite;
 
-    this.filepath = "img/sprites/" + this.id + ".png";
+    this.filepath = require(`../../img/sprites/${this.id}.png`).default;
+
     this.animationData = sprite.animations;
 
     this.width = sprite.width;
@@ -51,7 +52,7 @@ class Sprite {
     this.offsetX = sprite.offsetX !== undefined ? sprite.offsetX : -16;
     this.offsetY = sprite.offsetY !== undefined ? sprite.offsetY : -16;
     this.offfsetAngle =
-        sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
+      sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
 
     this.idleSpeed = sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
   }
@@ -89,8 +90,8 @@ class Sprite {
   }
 
   /**
-     * This is when an entity gets hit, they turn red then white.
-     */
+   * This is when an entity gets hit, they turn red then white.
+   */
 
   createHurtSprite() {
     if (!this.loaded) {
@@ -110,13 +111,7 @@ class Sprite {
     canvas.height = this.image.height;
 
     try {
-      context.drawImage(
-        this.image,
-        0,
-        0,
-        this.image.width,
-        this.image.height
-      );
+      context.drawImage(this.image, 0, 0, this.image.width, this.image.height);
 
       spriteData = context.getImageData(
         0,

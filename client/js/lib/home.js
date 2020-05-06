@@ -1,3 +1,3 @@
-if (window !== "undefined") define(() => {
+define(() => {
   require(["../main"]);
 });

@@ -16,7 +16,7 @@ class Overlay {
     const overlay = new Image();
 
     overlay.crossOrigin = "Anonymous";
-    overlay.src = "img/overlays/" + overlayName;
+    overlay.src = require(`../../img/overlays/${overlayName}`).default;
 
     overlay.onload = () => {
       if (this.game.isDebug()) {

@@ -74,12 +74,6 @@ class Messages {
     this.app.toggleLogin(false);
 
     switch (message) {
-      case "updated":
-        this.app.sendError(null, "The client has been updated!");
-
-        this.app.openScroll("loadCharacter", "clientUpdated");
-        break;
-
       case "full":
         this.app.sendError(null, "The servers are currently full!");
         break;
@@ -89,10 +83,7 @@ class Messages {
         break;
 
       case "development":
-        this.app.sendError(
-          null,
-          "The game is currently in development mode."
-        );
+        this.app.sendError(null, "The game is currently in development mode.");
         break;
 
       case "disallowed":
@@ -109,15 +100,12 @@ class Messages {
       case "userexists":
         this.app.sendError(
           null,
-          "The username you have chosen already exists."
+          "The email you have used already exists."
         );
         break;
 
       case "emailexists":
-        this.app.sendError(
-          null,
-          "The email you have chosen is not available."
-        );
+        this.app.sendError(null, "The email you have chosen is not available.");
         break;
 
       case "loggedin":
@@ -127,7 +115,7 @@ class Messages {
       case "invalidlogin":
         this.app.sendError(
           null,
-          "You have entered the wrong username or password."
+          "You have entered the wrong email or password."
         );
         break;
 
@@ -162,8 +150,8 @@ class Messages {
   }
 
   /**
-     * Data Receivers
-     */
+   * Data Receivers
+   */
 
   receiveHandshake(data) {
     const info = data.shift();
@@ -486,8 +474,8 @@ class Messages {
   }
 
   /**
-     * Universal Callbacks
-     */
+   * Universal Callbacks
+   */
 
   onHandshake(callback) {
     this.handshakeCallback = callback;

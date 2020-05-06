@@ -1,3 +1,6 @@
+import Worker from "./mapworker";
+import mapData from "../../data/maps/map.json";
+
 class Map {
   constructor(game) {
     this.game = game;
@@ -46,7 +49,7 @@ class Map {
         log.info("Parsing map with Web Workers...");
       }
 
-      const worker = new Worker("./js/map/mapworker.js");
+      const worker = new Worker();
       worker.postMessage(1);
 
       worker.onmessage = event => {
@@ -61,15 +64,9 @@ class Map {
         log.info("Parsing map with Ajax...");
       }
 
-      $.get(
-        "data/maps/map.json",
-        data => {
-          this.parseMap(data);
-          this.loadCollisions();
-          this.mapLoaded = true;
-        },
-        "json"
-      );
+      this.parseMap(mapData);
+      this.loadCollisions();
+      this.mapLoaded = true;
     }
   }
 
@@ -137,8 +134,8 @@ class Map {
     tileset.name = rawTileset.imageName;
 
     tileset.crossOrigin = "Anonymous";
-    tileset.path = "img/tilesets/" + tileset.name;
-    tileset.src = "img/tilesets/" + tileset.name;
+    tileset.path = require("../../img/tilesets/" + tileset.name).default;
+    tileset.src = require("../../img/tilesets/" + tileset.name).default;
     tileset.raw = tileset;
     tileset.firstGID = rawTileset.firstGID;
     tileset.lastGID = rawTileset.lastGID;
@@ -148,14 +145,16 @@ class Map {
     tileset.onload = () => {
       if (tileset.width % this.tileSize > 0) {
         // Prevent uneven tilemaps from loading.
-        throw Error("The tile size is malformed in the tile set: " + path);
+        throw Error(
+          "The tile size is malformed in the tile set: " + tileset.path
+        );
       }
 
       callback(tileset);
     };
 
     tileset.onerror = () => {
-      throw Error("Could not find tile set: " + path);
+      throw Error("Could not find tile set: " + tileset.path);
     };
   }
 
@@ -207,12 +206,12 @@ class Map {
   }
 
   /**
-     * To reduce development strain, we convert the entirety of the client
-     * map into the bare minimum necessary for the gl-tiled library.
-     * This is because gl-tiled uses the original Tiled mapping format.
-     * It is easier for us to adapt to that format than to rewrite
-     * the entire library adapted for Gizmo.
-     */
+   * To reduce development strain, we convert the entirety of the client
+   * map into the bare minimum necessary for the gl-tiled library.
+   * This is because gl-tiled uses the original Tiled mapping format.
+   * It is easier for us to adapt to that format than to rewrite
+   * the entire library adapted for Gizmo.
+   */
 
   formatWebGL() {
     // Create the object's constants.
@@ -277,7 +276,7 @@ class Map {
         imageheight: this.tilesets[i].height,
         name: this.tilesets[i].name.split(".png")[0],
         tilecount:
-            (this.tilesets[i].width / 16) * (this.tilesets[i].height / 16),
+          (this.tilesets[i].width / 16) * (this.tilesets[i].height / 16),
         tilewidth: object.tilewidth,
         tileheight: object.tileheight,
         tiles: []
@@ -395,8 +394,8 @@ class Map {
   isOutOfBounds(x, y) {
     return (
       isInt(x) &&
-        isInt(y) &&
-        (x < 0 || x >= this.width || y < 0 || y >= this.height)
+      isInt(y) &&
+      (x < 0 || x >= this.width || y < 0 || y >= this.height)
     );
   }
 
@@ -416,7 +415,7 @@ class Map {
     for (const idx in this.tilesets) {
       if (
         id > this.tilesets[idx].firstGID - 1 &&
-          id < this.tilesets[idx].lastGID + 1
+        id < this.tilesets[idx].lastGID + 1
       ) {
         return this.tilesets[idx];
       }
@@ -426,12 +425,19 @@ class Map {
   }
 
   saveRegionData() {
-    this.game.storage.setRegionData(this.data, this.collisions);
+    this.game.storage.setRegionData(
+      this.data,
+      this.collisions,
+      this.objects,
+      this.cursorTiles
+    );
   }
 
   loadRegionData() {
     const regionData = this.game.storage.getRegionData();
     const collisions = this.game.storage.getCollisions();
+    const objects = this.game.storage.getObjects();
+    const cursorTiles = this.game.storage.getCursorTiles();
 
     if (regionData.length < 1) {
       return;
@@ -441,6 +447,8 @@ class Map {
 
     this.data = regionData;
     this.collisions = collisions;
+    this.objects = objects;
+    this.cursorTiles = cursorTiles;
 
     this.updateCollisions();
   }

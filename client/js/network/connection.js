@@ -43,39 +43,30 @@ class Connection {
 
       if (this.app.isRegistering()) {
         const registerInfo = this.app.registerFields;
-        const username = registerInfo[0].val();
+        const email = registerInfo[0].val();
         const password = registerInfo[1].val();
-        const email = registerInfo[3].val();
 
         this.socket.send(Packets.Intro, [
           Packets.IntroOpcode.Register,
-          username,
-          password,
-          email
-        ]);
-      } else if (this.app.isGuest()) {
-        this.socket.send(Packets.Intro, [
-          Packets.IntroOpcode.Guest,
-          "n",
-          "n",
-          "n"
+          email,
+          password
         ]);
       } else {
         const loginInfo = this.app.loginFields;
-        const name = loginInfo[0].val();
+        const email = loginInfo[0].val();
         const pass = loginInfo[1].val();
 
         this.socket.send(Packets.Intro, [
           Packets.IntroOpcode.Login,
-          name,
+          email,
           pass
         ]);
 
         if (this.game.hasRemember()) {
-          this.storage.data.player.username = name;
+          this.storage.data.player.email = email;
           this.storage.data.player.password = pass;
         } else {
-          this.storage.data.player.username = "";
+          this.storage.data.player.email = "";
           this.storage.data.player.password = "";
         }
 
@@ -153,9 +144,7 @@ class Connection {
       const newIds = _.difference(data, known);
 
       this.entities.decrepit = _.reject(this.entities.getAll(), entity => {
-        return (
-          _.include(known, entity.id) || entity.id === this.game.player.id
-        );
+        return _.include(known, entity.id) || entity.id === this.game.player.id;
       });
 
       this.entities.clean(newIds);
@@ -301,9 +290,9 @@ class Connection {
       }
 
       /**
-         * Teleporting an entity seems to cause a glitch with the
-         * hitbox. Make sure you keep an eye out for this.
-         */
+       * Teleporting an entity seems to cause a glitch with the
+       * hitbox. Make sure you keep an eye out for this.
+       */
 
       const doTeleport = () => {
         this.entities.unregisterPosition(entity);
@@ -389,7 +378,7 @@ class Connection {
 
       if (
         this.game.player.hasTarget() &&
-          this.game.player.target.id === entity.id
+        this.game.player.target.id === entity.id
       ) {
         this.game.player.removeTarget();
       }
@@ -398,7 +387,7 @@ class Connection {
 
       if (
         entity.id !== this.game.player.id &&
-          this.game.player.getDistance(entity) < 5
+        this.game.player.getDistance(entity) < 5
       ) {
         this.audio.play(
           Modules.AudioTypes.SFX,
@@ -434,7 +423,7 @@ class Connection {
 
           if (
             target.id === this.game.player.id ||
-              attacker.id === this.game.player.id
+            attacker.id === this.game.player.id
           ) {
             this.socket.send(Packets.Combat, [
               Packets.CombatOpcode.Initiate,
@@ -521,16 +510,13 @@ class Connection {
     });
 
     this.messages.onAnimation((id, info) => {
-      const entity = this.entities.get(id);
-      const animation = info.shift();
-      const speed = info.shift();
-      const count = info.shift();
+      const character = this.entities.get(id);
 
-      if (!entity) {
+      if (!character) {
         return;
       }
 
-      entity.animate(animation, speed, count);
+      character.animate(animation, speed, count);
     });
 
     this.messages.onProjectile((opcode, info) => {
@@ -558,8 +544,8 @@ class Connection {
 
         if (
           this.game.player.hasTarget() &&
-            this.game.player.target.id === entity.id &&
-            this.input.overlay.updateCallback
+          this.game.player.target.id === entity.id &&
+          this.input.overlay.updateCallback
         ) {
           this.input.overlay.updateCallback(entity.id, data.hitPoints);
         }
@@ -601,10 +587,10 @@ class Connection {
 
     this.messages.onCommand(info => {
       /**
-         * This is for random miscellaneous commands that require
-         * a specific action done by the client as opposed to
-         * packet-oriented ones.
-         */
+       * This is for random miscellaneous commands that require
+       * a specific action done by the client as opposed to
+       * packet-oriented ones.
+       */
 
       log.info(info);
 
@@ -751,8 +737,8 @@ class Connection {
       }
 
       /**
-         * Healing just triggers an info to display.
-         */
+       * Healing just triggers an info to display.
+       */
 
       switch (info.type) {
         case "health":
@@ -789,17 +775,17 @@ class Connection {
       }
 
       /**
-         * We only receive level information about other entities.
-         */
+       * We only receive level information about other entities.
+       */
       if (entity.level !== info.level) {
         entity.level = info.level;
         this.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
       }
 
       /**
-         * When we receive experience information about our own player
-         * we update the experience bar and create an info.
-         */
+       * When we receive experience information about our own player
+       * we update the experience bar and create an info.
+       */
 
       if (entity.id === this.game.player.id) {
         if (info.id === this.game.player.id) {

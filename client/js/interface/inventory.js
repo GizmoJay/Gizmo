@@ -49,7 +49,7 @@ class Inventory {
 
       if (count > 999999) {
         count =
-            count.toString().substring(0, count.toString().length - 6) + "M";
+          count.toString().substring(0, count.toString().length - 6) + "M";
       } else if (count > 9999) {
         count = count.toString().substring(0, 2) + "K";
       } else if (count === 1) {
@@ -59,10 +59,10 @@ class Inventory {
       itemSlotList.append(itemSlot);
       itemSlotList.append(
         "<div id=\"itemCount" +
-            i +
-            "\" class=\"inventoryItemCount\">" +
-            count +
-            "</div>"
+          i +
+          "\" class=\"inventoryItemCount\">" +
+          count +
+          "</div>"
       );
 
       list.append(itemSlotList);
@@ -106,9 +106,7 @@ class Inventory {
     } else if (slot.equippable) {
       this.actions.add($("<div id=\"wield\" class=\"actionButton\">Wield</div>"));
     } else if (slot.count > 999999) {
-      this.actions.add(
-        $("<div id=\"itemInfo\" class=\"actionButton\">Info</div>")
-      );
+      this.actions.add($("<div id=\"itemInfo\" class=\"actionButton\">Info</div>"));
     }
 
     if (!this.actions.isVisible()) {
@@ -248,8 +246,7 @@ class Inventory {
     let count = slot.count;
 
     if (count > 999999) {
-      count =
-          count.toString().substring(0, count.toString().length - 6) + "M";
+      count = count.toString().substring(0, count.toString().length - 6) + "M";
     } else if (count > 9999) {
       count = count.toString().substring(0, 2) + "K";
     } else if (count === 1) {
