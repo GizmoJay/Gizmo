@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     // TODO: Conversion
-    amd: true,
+    amd: false, // ✅
     commonjs: true,
 
     browser: true,
@@ -22,6 +22,7 @@ module.exports = {
   rules: {
     // "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    "no-new": "off",
     semi: ["warn", "always"],
     quotes: ["warn", "double"],
 
@@ -89,6 +90,7 @@ module.exports = {
     "client-dist",
     "lib/",
     "*.min.*",
+    "client/data/",
     "~*"
   ]
 };
