@@ -1,11 +1,6 @@
 # Gizmo
 
-Gizmo is a game-engine created to aid those interested in entering the game
-development realm. The codebase is simple, clean, and intuitive. This project is
-intended to be used as a learning tool. The original idea is based on Little
-Workshop's demo game &ndash; BrowserQuest (BQ). This game uses original BQ
-assets as well as custom-made ones. The entire code-base has been written from
-scratch, using more modern approaches.
+Gizmo Game Engine Description.
 
 ## Table of Contents
 
