@@ -15,7 +15,7 @@
       "runtimeArgs": ["run-script", "dev"]
     },
     {
-      "name": "Launch Chrome against localhost",
+      "name": "Launch Chrome",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:8080",
@@ -23,7 +23,7 @@
       "sourceMaps": true
     },
     {
-      "name": "Launch Edge against localhost",
+      "name": "Launch Edge",
       "type": "msedge",
       "request": "launch",
       "version": "beta",
@@ -32,7 +32,7 @@
       "sourceMaps": true
     },
     {
-      "name": "Launch Brave against localhost",
+      "name": "Launch Brave",
       "type": "chrome",
       "request": "launch",
       "runtimeExecutable": "C:/Program Files (x86)/BraveSoftware/Brave-Browser/Application/brave.exe",
@@ -41,7 +41,7 @@
       "sourceMaps": true
     },
     {
-      "name": "Launch Firefox against localhost",
+      "name": "Launch Firefox",
       "type": "firefox",
       "request": "launch",
       "url": "http://localhost:8080",
