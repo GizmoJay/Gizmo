@@ -2,24 +2,22 @@
 
 class Area {
   constructor(id, x, y, width, height) {
-    const self = this;
+    this.id = id;
 
-    self.id = id;
+    this.x = x;
+    this.y = y;
 
-    self.x = x;
-    self.y = y;
+    this.width = width;
+    this.height = height;
 
-    self.width = width;
-    self.height = height;
+    this.entities = [];
+    this.items = [];
 
-    self.entities = [];
-    self.items = [];
+    this.hasRespawned = true;
+    this.chest = null;
 
-    self.hasRespawned = true;
-    self.chest = null;
-
-    self.maxEntities = 0;
-    self.spawnDelay = 0;
+    this.maxEntities = 0;
+    this.spawnDelay = 0;
   }
 
   contains(x, y) {
@@ -32,40 +30,35 @@ class Area {
   }
 
   addEntity(entity) {
-    const self = this;
+    if (this.entities.indexOf(entity) > 0) return;
 
-    if (self.entities.indexOf(entity) > 0) return;
-
-    self.entities.push(entity);
-    entity.area = self;
+    this.entities.push(entity);
+    entity.area = this;
 
     // Grab a spawn delay from an mob to create an offset for the chest.
-    if (!self.spawnDelay) self.spawnDelay = entity.respawnDelay;
+    if (!this.spawnDelay) this.spawnDelay = entity.respawnDelay;
 
-    if (self.spawnCallback) self.spawnCallback();
+    if (this.spawnCallback) this.spawnCallback();
   }
 
   removeEntity(entity) {
-    const self = this;
-    const index = self.entities.indexOf(entity);
+    const index = this.entities.indexOf(entity);
 
-    if (index > -1) self.entities.splice(index, 1);
+    if (index > -1) this.entities.splice(index, 1);
 
-    if (self.entities.length === 0 && self.emptyCallback) {
+    if (this.entities.length === 0 && this.emptyCallback) {
       if (entity.lastAttacker && entity.lastAttacker.type === "player") {
-        self.handleAchievement(entity.lastAttacker);
+        this.handleAchievement(entity.lastAttacker);
       }
 
-      self.emptyCallback();
+      this.emptyCallback();
     }
   }
 
   handleAchievement(entity) {
-    const self = this;
+    if (!this.achievement) return;
 
-    if (!self.achievement) return;
-
-    entity.finishAchievement(self.achievement);
+    entity.finishAchievement(this.achievement);
   }
 
   setMaxEntities(maxEntities) {

@@ -8,24 +8,21 @@ class Snek extends Combat {
     character.spawnDistance = 15;
     super(character);
 
-    const self = this;
+    this.character = character;
 
-    self.character = character;
+    this.character.onDamage((target, hitInfo) => {
+      if (!target || target.type !== "player")
+      { return; }
 
-    self.character.onDamage((target, hitInfo) => {
-      if (!target || target.type !== "player") return;
+      if (this.canPoison())
+      { target.setPoison(this.getPoisonData()); }
 
-      if (self.canPoison()) target.setPoison(self.getPoisonData());
-
-      log.info(
-        `Entity ${self.character.id} hit ${target.instance} - damage ${hitInfo.damage}.`
-      );
+      log.info(`Entity ${this.character.id} hit ${target.instance} - damage ${hitInfo.damage}.`);
     });
   }
 
   canPoison() {
-    const self = this;
-    const chance = Utils.randomInt(0, self.character.level);
+    const chance = Utils.randomInt(0, this.character.level);
 
     return chance === 7;
   }

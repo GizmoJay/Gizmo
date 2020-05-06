@@ -1,8 +1,9 @@
 /* global module */
 
-const Formulas = {};
 const Utils = require("./utils");
 const Constants = require("./constants");
+
+const Formulas = {};
 
 Formulas.LevelExp = [];
 

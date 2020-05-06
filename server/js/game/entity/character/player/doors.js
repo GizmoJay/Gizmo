@@ -7,23 +7,19 @@ const Packets = require("../../../../network/packets");
 
 class Doors {
   constructor(player) {
-    const self = this;
+    this.world = player.world;
+    this.player = player;
+    this.map = this.world.map;
+    this.regions = this.map.regions;
 
-    self.world = player.world;
-    self.player = player;
-    self.map = self.world.map;
-    self.regions = self.map.regions;
+    this.doors = {};
 
-    self.doors = {};
-
-    self.load();
+    this.load();
   }
 
   load() {
-    const self = this;
-
     _.each(DoorData, door => {
-      self.doors[door.id] = {
+      this.doors[door.id] = {
         id: door.id,
         x: door.x,
         y: door.y,
@@ -39,39 +35,36 @@ class Doors {
   }
 
   getStatus(door) {
-    const self = this;
-
     if (door.status) return door.status;
 
     if (config.offlineMode) return true;
 
     switch (door.requirement) {
       case "quest":
-        const quest = self.player.quests.getQuest(door.questId);
+        const quest = this.player.quests.getQuest(door.questId);
 
         return quest && quest.hasDoorUnlocked(door) ? "open" : "closed";
 
       case "achievement":
-        const achievement = self.player.quests.getAchievement(
+        const achievement = this.player.quests.getAchievement(
           door.achievementId
         );
 
         return achievement && achievement.isFinished() ? "open" : "closed";
 
       case "level":
-        return self.player.level >= door.level ? "open" : "closed";
+        return this.player.level >= door.level ? "open" : "closed";
     }
   }
 
   getTiles(door) {
-    const self = this;
     const tiles = {
       indexes: [],
       data: [],
       collisions: []
     };
 
-    const status = self.getStatus(door);
+    const status = this.getStatus(door);
     const doorState = {
       open: door.openIds,
       closed: door.closedIds
@@ -87,20 +80,19 @@ class Doors {
   }
 
   getAllTiles() {
-    const self = this;
     const allTiles = {
       indexes: [],
       data: [],
       collisions: []
     };
 
-    _.each(self.doors, door => {
+    _.each(this.doors, door => {
       /* There's no need to send dynamic data if the player is not nearby. */
-      const doorRegion = self.regions.regionIdFromPosition(door.x, door.y);
+      const doorRegion = this.regions.regionIdFromPosition(door.x, door.y);
 
-      if (!self.regions.isSurrounding(self.player.region, doorRegion)) return;
+      if (!this.regions.isSurrounding(this.player.region, doorRegion)) return;
 
-      const tiles = self.getTiles(door);
+      const tiles = this.getTiles(door);
 
       allTiles.indexes.push.apply(allTiles.indexes, tiles.indexes);
       allTiles.data.push.apply(allTiles.data, tiles.data);
@@ -111,9 +103,8 @@ class Doors {
   }
 
   hasCollision(x, y) {
-    const self = this;
-    const tiles = self.getAllTiles();
-    const tileIndex = self.world.map.gridPositionToIndex(x, y);
+    const tiles = this.getAllTiles();
+    const tileIndex = this.world.map.gridPositionToIndex(x, y);
     const index = tiles.indexes.indexOf(tileIndex);
 
     /**
@@ -132,12 +123,10 @@ class Doors {
   }
 
   getDoor(x, y, callback) {
-    const self = this;
-
-    for (const i in self.doors) {
-      if (self.doors.hasOwnProperty(i)) {
-        if (self.doors[i].x === x && self.doors[i].y === y) {
-          return self.doors[i];
+    for (const i in this.doors) {
+      if (this.doors.hasOwnProperty(i)) {
+        if (this.doors[i].x === x && this.doors[i].y === y) {
+          return this.doors[i];
         }
       }
     }

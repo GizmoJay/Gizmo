@@ -6,23 +6,19 @@ const map = require("../../../data/map/world_server");
 
 class MusicAreas {
   constructor() {
-    const self = this;
+    this.musicAreas = [];
 
-    self.musicAreas = [];
-
-    self.load();
+    this.load();
   }
 
   load() {
-    const self = this;
-
     _.each(map.musicAreas, m => {
       const musicArea = new Area(m.id, m.x, m.y, m.width, m.height);
 
-      self.musicAreas.push(musicArea);
+      this.musicAreas.push(musicArea);
     });
 
-    log.info("Loaded " + self.musicAreas.length + " music areas.");
+    log.info("Loaded " + this.musicAreas.length + " music areas.");
   }
 }
 

@@ -4,15 +4,13 @@ const MongoDB = require("./mongodb/mongodb");
 
 class Database {
   constructor(databaseType) {
-    const self = this;
+    this.database = null;
+    this.databaseType = databaseType;
 
-    self.database = null;
-    self.databaseType = databaseType;
-
-    switch (self.databaseType) {
+    switch (this.databaseType) {
       case "mongo":
       case "mongodb":
-        self.database = new MongoDB(
+        this.database = new MongoDB(
           config.mongoHost,
           config.mongoPort,
           config.mongoUser,
@@ -22,21 +20,19 @@ class Database {
         break;
 
       default:
-        log.error("The database " + self.databaseType + " could not be found.");
+        log.error("The database " + this.databaseType + " could not be found.");
         break;
     }
   }
 
   getDatabase() {
-    const self = this;
-
-    if (!self.database) {
+    if (!this.database) {
       log.error(
         "[Database] No database is currently present. It is advised against proceeding in this state."
       );
     }
 
-    return self.database;
+    return this.database;
   }
 }
 

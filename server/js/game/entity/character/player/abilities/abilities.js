@@ -5,15 +5,13 @@ const AbilityInfo = require("../../../../../util/abilities");
 
 class Abilities {
   constructor(player) {
-    const self = this;
+    this.player = player;
 
-    self.player = player;
+    this.abilities = {};
 
-    self.abilities = {};
+    this.shortcuts = [];
 
-    self.shortcuts = [];
-
-    self.shortcutSize = 5;
+    this.shortcutSize = 5;
   }
 
   addAbility(ability) {
@@ -21,21 +19,17 @@ class Abilities {
   }
 
   addShortcut(ability) {
-    const self = this;
+    if (this.shortcutSize >= 5) return;
 
-    if (self.shortcutSize >= 5) return;
-
-    self.shortcuts.push(ability.name);
+    this.shortcuts.push(ability.name);
   }
 
   removeAbility(ability) {
-    const self = this;
-
-    if (self.isShortcut(ability)) {
-      self.removeShortcut(self.shortcuts.indexOf(ability.name));
+    if (this.isShortcut(ability)) {
+      this.removeShortcut(this.shortcuts.indexOf(ability.name));
     }
 
-    delete self.abilities[ability.name];
+    delete this.abilities[ability.name];
   }
 
   removeShortcut(index) {
@@ -55,18 +49,17 @@ class Abilities {
   }
 
   getArray() {
-    const self = this;
     let abilities = "";
     let abilityLevels = "";
-    const shortcuts = self.shortcuts.toString();
+    const shortcuts = this.shortcuts.toString();
 
-    _.each(self.abilities, ability => {
+    _.each(this.abilities, ability => {
       abilities += ability.name;
       abilityLevels += ability.level;
     });
 
     return {
-      username: self.player.username,
+      email: this.player.email,
       abilities: abilities,
       abilityLevels: abilityLevels,
       shortcuts: shortcuts

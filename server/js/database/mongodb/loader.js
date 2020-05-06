@@ -6,11 +6,9 @@ class Loader {
   }
 
   getInventory(player, callback) {
-    const self = this;
-
-    self.database.getDatabase(database => {
+    this.database.getDatabase(database => {
       const inventory = database.collection("player_inventory");
-      const cursor = inventory.find({ username: player.username });
+      const cursor = inventory.find({ email: player.email });
 
       cursor.toArray().then(inventoryArray => {
         const info = inventoryArray[0];
@@ -35,11 +33,9 @@ class Loader {
   }
 
   getBank(player, callback) {
-    const self = this;
-
-    self.database.getDatabase(database => {
+    this.database.getDatabase(database => {
       const bank = database.collection("player_bank");
-      const cursor = bank.find({ username: player.username });
+      const cursor = bank.find({ email: player.email });
 
       cursor.toArray().then(bankArray => {
         const info = bankArray[0];
@@ -64,11 +60,9 @@ class Loader {
   }
 
   getQuests(player, callback) {
-    const self = this;
-
-    self.database.getDatabase(database => {
+    this.database.getDatabase(database => {
       const quests = database.collection("player_quests");
-      const cursor = quests.find({ username: player.username });
+      const cursor = quests.find({ email: player.email });
 
       cursor.toArray().then(questArray => {
         const info = questArray[0];
@@ -88,11 +82,9 @@ class Loader {
   }
 
   getAchievements(player, callback) {
-    const self = this;
-
-    self.database.getDatabase(database => {
+    this.database.getDatabase(database => {
       const achievements = database.collection("player_achievements");
-      const cursor = achievements.find({ username: player.username });
+      const cursor = achievements.find({ email: player.email });
 
       cursor.toArray().then(achievementsArray => {
         const info = achievementsArray[0];
@@ -112,11 +104,9 @@ class Loader {
   }
 
   getProfessions(player, callback) {
-    const self = this;
-
-    self.database.getDatabase(database => {
+    this.database.getDatabase(database => {
       const professions = database.collection("player_professions");
-      const cursor = professions.find({ username: player.username });
+      const cursor = professions.find({ email: player.email });
 
       cursor.toArray().then(professionsArray => {
         const info = professionsArray[0];

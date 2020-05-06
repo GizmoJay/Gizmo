@@ -5,36 +5,33 @@ const map = require("../../data/map/world_server");
 
 class Regions {
   constructor(map) {
-    const self = this;
+    this.map = map;
 
-    self.map = map;
+    this.width = this.map.width;
+    this.height = this.map.height;
 
-    self.width = self.map.width;
-    self.height = self.map.height;
+    this.zoneWidth = this.map.zoneWidth; // 25
+    this.zoneHeight = this.map.zoneHeight; // 20
 
-    self.zoneWidth = self.map.zoneWidth; // 25
-    self.zoneHeight = self.map.zoneHeight; // 20
+    this.regionWidth = this.map.regionWidth; // 40
+    this.regionHeight = this.map.regionHeight; // 50
 
-    self.regionWidth = self.map.regionWidth; // 40
-    self.regionHeight = self.map.regionHeight; // 50
+    this.linkedRegions = {};
 
-    self.linkedRegions = {};
-
-    self.loadDoors();
+    this.loadDoors();
   }
 
   loadDoors() {
-    const self = this;
     const doors = map.doors;
 
     _.each(doors, door => {
-      const regionId = self.regionIdFromPosition(door.x, door.y);
-      const linkedRegionId = self.regionIdFromPosition(door.tx, door.ty);
-      const linkedRegionPosition = self.regionIdToPosition(linkedRegionId);
+      const regionId = this.regionIdFromPosition(door.x, door.y);
+      const linkedRegionId = this.regionIdFromPosition(door.tx, door.ty);
+      const linkedRegionPosition = this.regionIdToPosition(linkedRegionId);
 
-      if (regionId in self.linkedRegions) {
-        self.linkedRegions[regionId].push(linkedRegionPosition);
-      } else self.linkedRegions[regionId] = [linkedRegionPosition];
+      if (regionId in this.linkedRegions) {
+        this.linkedRegions[regionId].push(linkedRegionPosition);
+      } else this.linkedRegions[regionId] = [linkedRegionPosition];
     });
   }
 
@@ -45,7 +42,7 @@ class Regions {
    */
 
   getDynamicRegions(player) {
-    const self = this;
+
   }
 
   // y y x y y
@@ -55,8 +52,7 @@ class Regions {
   // y y x y y
 
   getSurroundingRegions(id, offset = 1, stringFormat) {
-    const self = this;
-    const position = self.regionIdToPosition(id);
+    const position = this.regionIdToPosition(id);
     const x = position.x;
     const y = position.y;
 
@@ -77,7 +73,7 @@ class Regions {
       }
     }
 
-    _.each(self.linkedRegions[id], regionPosition => {
+    _.each(this.linkedRegions[id], regionPosition => {
       if (
         !_.any(list, regionPosition => {
           return regionPosition.x === x && regionPosition.y === y;
@@ -92,16 +88,15 @@ class Regions {
       const gY = regionPosition.y;
 
       return (
-        gX < 0 || gY < 0 || gX >= self.regionWidth || gY >= self.regionHeight
+        gX < 0 || gY < 0 || gX >= this.regionWidth || gY >= this.regionHeight
       );
     });
 
-    return stringFormat ? self.regionsToCoordinates(list) : list;
+    return stringFormat ? this.regionsToCoordinates(list) : list;
   }
 
   getAdjacentRegions(id, offset, stringFormat) {
-    const self = this;
-    const surroundingRegions = self.getSurroundingRegions(id, offset);
+    const surroundingRegions = this.getSurroundingRegions(id, offset);
 
     /**
      * We will leave this hardcoded to surrounding areas of
@@ -117,7 +112,7 @@ class Regions {
      * 11-2 12-2 13-2
      */
 
-    const centreRegion = self.regionIdToPosition(id);
+    const centreRegion = this.regionIdToPosition(id);
     const adjacentRegions = [];
 
     _.each(surroundingRegions, region => {
@@ -127,34 +122,28 @@ class Regions {
     });
 
     return stringFormat
-      ? self.regionsToCoordinates(adjacentRegions)
+      ? this.regionsToCoordinates(adjacentRegions)
       : adjacentRegions;
   }
 
   forEachRegion(callback) {
-    const self = this;
-
-    for (let x = 0; x < self.regionWidth; x++) {
-      for (let y = 0; y < self.regionHeight; y++) callback(x + "-" + y);
+    for (let x = 0; x < this.regionWidth; x++) {
+      for (let y = 0; y < this.regionHeight; y++) callback(x + "-" + y);
     }
   }
 
   forEachSurroundingRegion(regionId, callback, offset) {
-    const self = this;
-
     if (!regionId) return;
 
-    _.each(self.getSurroundingRegions(regionId, offset), region => {
+    _.each(this.getSurroundingRegions(regionId, offset), region => {
       callback(region.x + "-" + region.y);
     });
   }
 
   forEachAdjacentRegion(regionId, callback, offset) {
-    const self = this;
-
     if (!regionId) return;
 
-    _.each(self.getAdjacentRegions(regionId, offset), region => {
+    _.each(this.getAdjacentRegions(regionId, offset), region => {
       callback(region.x + "-" + region.y);
     });
   }
@@ -175,12 +164,11 @@ class Regions {
   }
 
   regionIdToCoordinates(id) {
-    const self = this;
     const position = id.split("-");
 
     return {
-      x: parseInt(position[0]) * self.zoneWidth,
-      y: parseInt(position[1]) * self.zoneHeight
+      x: parseInt(position[0]) * this.zoneWidth,
+      y: parseInt(position[1]) * this.zoneHeight
     };
   }
 
@@ -188,7 +176,6 @@ class Regions {
    * Converts an array of regions from object type to string format.
    */
   regionsToCoordinates(regions) {
-    const self = this;
     const stringList = [];
 
     _.each(regions, region => {
@@ -199,7 +186,9 @@ class Regions {
   }
 
   isSurrounding(regionId, toRegionId) {
-    return this.getSurroundingRegions(regionId, 1, true).indexOf(regionId) > -1;
+    return (
+      this.getSurroundingRegions(regionId, 1, true).indexOf(toRegionId) > -1
+    );
   }
 }
 

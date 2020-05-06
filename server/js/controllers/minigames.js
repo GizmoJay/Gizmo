@@ -4,22 +4,18 @@ const TeamWar = require("../minigames/impl/teamwar");
 
 class Minigames {
   constructor(world) {
-    const self = this;
+    this.world = world;
 
-    self.world = world;
+    this.minigames = {};
 
-    self.minigames = {};
-
-    self.load();
+    this.load();
   }
 
   load() {
-    const self = this;
-
-    self.minigames.TeamWar = new TeamWar(self.world);
+    this.minigames.TeamWar = new TeamWar(this.world);
 
     log.info(
-      `Finished loading ${Object.keys(self.minigames).length} minigames.`
+      `Finished loading ${Object.keys(this.minigames).length} minigames.`
     );
   }
 

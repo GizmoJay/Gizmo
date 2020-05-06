@@ -6,18 +6,14 @@ const map = require("../../../data/map/world_server");
 
 class ChestAreas {
   constructor(world) {
-    const self = this;
+    this.world = world;
 
-    self.world = world;
+    this.chestAreas = [];
 
-    self.chestAreas = [];
-
-    self.load();
+    this.load();
   }
 
   load() {
-    const self = this;
-
     _.each(map.chestAreas, m => {
       const chestArea = new Area(m.id, m.x, m.y, m.width, m.height);
 
@@ -28,28 +24,26 @@ class ChestAreas {
 
       if (m.tachievement) chestArea.achievement = parseInt(m.tachievement);
 
-      self.chestAreas.push(chestArea);
+      this.chestAreas.push(chestArea);
 
       chestArea.onEmpty(() => {
-        self.spawnChest(chestArea);
+        this.spawnChest(chestArea);
       });
 
       chestArea.onSpawn(() => {
-        self.removeChest(chestArea);
+        this.removeChest(chestArea);
       });
     });
 
-    log.info("Loaded " + self.chestAreas.length + " chest areas.");
+    log.info("Loaded " + this.chestAreas.length + " chest areas.");
   }
 
   spawnChest(chestArea) {
-    const self = this;
-
     if (new Date().getTime() - chestArea.lastSpawn < chestArea.spawnDelay) {
       return;
     }
 
-    chestArea.chest = self.world.spawnChest(
+    chestArea.chest = this.world.spawnChest(
       chestArea.items,
       chestArea.cX,
       chestArea.cY,
@@ -59,11 +53,9 @@ class ChestAreas {
   }
 
   removeChest(chestArea) {
-    const self = this;
-
     if (!chestArea.chest) return;
 
-    self.world.removeChest(chestArea.chest);
+    this.world.removeChest(chestArea.chest);
 
     chestArea.chest = null;
   }

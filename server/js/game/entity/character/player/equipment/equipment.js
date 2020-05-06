@@ -4,13 +4,11 @@ const Items = require("../../../../../util/items");
 
 class Equipment {
   constructor(name, id, count, ability, abilityLevel) {
-    const self = this;
-
-    self.name = name;
-    self.id = id;
-    self.count = count || 0;
-    self.ability = !isNaN(ability) ? ability : -1;
-    self.abilityLevel = !isNaN(abilityLevel) ? abilityLevel : -1;
+    this.name = name;
+    this.id = id;
+    this.count = count || 0;
+    this.ability = !isNaN(ability) ? ability : -1;
+    this.abilityLevel = !isNaN(abilityLevel) ? abilityLevel : -1;
   }
 
   getName() {

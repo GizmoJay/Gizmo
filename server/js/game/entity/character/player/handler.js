@@ -11,136 +11,130 @@ const Shops = require("../../../../util/shops");
 
 class Handler {
   constructor(player) {
-    const self = this;
+    this.player = player;
+    this.world = player.world;
+    this.map = player.world.map;
 
-    self.player = player;
-    self.world = player.world;
-    self.map = player.world.map;
+    this.updateTicks = 0;
+    this.updateInterval = null;
 
-    self.updateTicks = 0;
-    self.updateInterval = null;
-
-    self.load();
+    this.load();
   }
 
   destroy() {
-    const self = this;
-
-    clearInterval(self.updateInterval);
-    self.updateInterval = null;
+    clearInterval(this.updateInterval);
+    this.updateInterval = null;
   }
 
   load() {
-    const self = this;
+    this.updateInterval = setInterval(() => {
+      this.detectAggro();
+      this.detectPVP(this.player.x, this.player.y);
 
-    self.updateInterval = setInterval(() => {
-      self.detectAggro();
-      self.detectPVP(self.player.x, self.player.y);
-
-      if (self.updateTicks % 4 === 0) {
+      if (this.updateTicks % 4 === 0) {
         // Every 4 (1.6 seconds) update ticks.
-        self.handlePoison();
+        this.handlePoison();
       }
 
-      if (self.updateTicks % 16 === 0) {
+      if (this.updateTicks % 16 === 0) {
         // Every 16 (6.4 seconds) update ticks.
-        self.player.cheatScore = 0;
+        this.player.cheatScore = 0;
       }
 
-      if (self.updateTicks > 100) {
+      if (this.updateTicks > 100) {
         // Reset them every now and then.
-        self.updateTicks = 0;
+        this.updateTicks = 0;
       }
 
-      self.updateTicks++;
+      this.updateTicks++;
     }, 400);
 
-    self.player.onMovement((x, y) => {
-      self.player.checkRegions();
+    this.player.onMovement((x, y) => {
+      this.player.checkRegions();
 
-      self.detectMusic(x, y);
-      self.detectOverlay(x, y);
-      self.detectCamera(x, y);
-      self.detectLights(x, y);
-      self.detectClipping(x, y);
+      this.detectMusic(x, y);
+      this.detectOverlay(x, y);
+      this.detectCamera(x, y);
+      this.detectLights(x, y);
+      this.detectClipping(x, y);
     });
 
-    self.player.onDeath(() => {
-      self.player.combat.stop();
+    this.player.onDeath(() => {
+      this.player.combat.stop();
     });
 
-    self.player.onHit((attacker, damage) => {
+    this.player.onHit((attacker, damage) => {
       /**
        * Handles actions whenever the player
        * instance is hit by 'damage' amount
        */
 
-      if (self.player.combat.isRetaliating()) {
-        self.player.combat.begin(attacker);
+      if (this.player.combat.isRetaliating()) {
+        this.player.combat.begin(attacker);
       }
     });
 
-    self.player.onKill(character => {
-      if (self.player.quests.isAchievementMob(character)) {
-        const achievement = self.player.quests.getAchievementByMob(character);
+    this.player.onKill(character => {
+      if (this.player.quests.isAchievementMob(character)) {
+        const achievement = this.player.quests.getAchievementByMob(character);
 
         if (achievement && achievement.isStarted()) {
-          self.player.quests.getAchievementByMob(character).step();
+          this.player.quests.getAchievementByMob(character).step();
         }
       }
     });
 
-    self.player.onRegion(() => {
-      self.player.lastRegionChange = new Date().getTime();
+    this.player.onRegion(() => {
+      this.player.lastRegionChange = new Date().getTime();
 
-      self.world.region.handle(self.player);
-      self.world.region.push(self.player);
+      this.world.region.handle(this.player);
+      this.world.region.push(this.player);
     });
 
-    self.player.connection.onClose(() => {
-      self.player.stopHealing();
+    this.player.connection.onClose(() => {
+      this.player.stopHealing();
 
       /* Avoid a memory leak */
-      clearInterval(self.updateInterval);
-      self.updateInterval = null;
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
 
-      if (self.player.ready) {
+      if (this.player.ready) {
         if (config.hubEnabled) {
-          self.world.api.sendChat(
-            Utils.formatUsername(self.player.username),
+          this.world.api.sendChat(
+            Utils.formatUsername(this.player.username),
             "has logged out!"
           );
         }
       }
 
-      self.world.removePlayer(self.player);
+      this.world.removePlayer(this.player);
     });
 
-    self.player.onTalkToNPC(npc => {
-      if (self.player.quests.isQuestNPC(npc)) {
-        self.player.quests.getQuestByNPC(npc).triggerTalk(npc);
+    this.player.onTalkToNPC(npc => {
+      if (this.player.quests.isQuestNPC(npc)) {
+        this.player.quests.getQuestByNPC(npc).triggerTalk(npc);
 
         return;
       }
 
-      if (self.player.quests.isAchievementNPC(npc)) {
-        self.player.quests.getAchievementByNPC(npc).converse(npc);
+      if (this.player.quests.isAchievementNPC(npc)) {
+        this.player.quests.getAchievementByNPC(npc).converse(npc);
 
         return;
       }
 
       if (Shops.isShopNPC(npc.id)) {
-        self.world.shops.open(self.player, npc.id);
+        this.world.shops.open(this.player, npc.id);
         return;
       }
 
       switch (Npcs.getType(npc.id)) {
         case "banker":
-          self.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
+          this.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
           return;
 
         case "enchanter":
-          self.player.send(new Messages.NPC(Packets.NPCOpcode.Enchant, {}));
+          this.player.send(new Messages.NPC(Packets.NPCOpcode.Enchant, {}));
           break;
       }
 
@@ -148,109 +142,102 @@ class Handler {
 
       if (!text) return;
 
-      self.player.send(
+      this.player.send(
         new Messages.NPC(Packets.NPCOpcode.Talk, {
           id: npc.instance,
-          text: npc.talk(text, self.player)
+          text: npc.talk(text, this.player)
         })
       );
     });
 
-    self.player.onTeleport((x, y, isDoor) => {
+    this.player.onTeleport((x, y, isDoor) => {
       if (
-        !self.player.finishedTutorial() &&
+        !this.player.finishedTutorial() &&
         isDoor &&
-        self.player.doorCallback
+        this.player.doorCallback
       ) {
-        self.player.doorCallback(x, y);
+        this.player.doorCallback(x, y);
       }
     });
 
-    self.player.onPoison(info => {
-      self.player.sync();
+    this.player.onPoison(info => {
+      this.player.sync();
 
-      if (info) self.player.notify("You have been poisoned.");
-      else self.player.notify("The poison has worn off.");
+      if (info) this.player.notify("You have been poisoned.");
+      else this.player.notify("The poison has worn off.");
 
-      log.debug(`Player ${self.player.instance} updated poison status.`);
+      log.debug(`Player ${this.player.instance} updated poison status.`);
     });
 
-    self.player.onCheatScore(() => {
+    this.player.onCheatScore(() => {
       /**
        * This is a primitive anti-cheating system.
        * It will not accomplish much, but it is enough for now.
        */
 
-      if (self.player.cheatScore > 10) self.player.timeout();
+      if (this.player.cheatScore > 10) this.player.timeout();
 
-      log.debug("Cheat score - " + self.player.cheatScore);
+      log.debug("Cheat score - " + this.player.cheatScore);
     });
   }
 
   detectAggro() {
-    const self = this;
-    const region = self.world.region.regions[self.player.region];
+    const region = this.world.region.regions[this.player.region];
 
     if (!region) return;
 
     _.each(region.entities, entity => {
-      if (entity && entity.type === "mob" && self.canEntitySee(entity)) {
-        const aggro = entity.canAggro(self.player);
+      if (entity && entity.type === "mob" && this.canEntitySee(entity)) {
+        const aggro = entity.canAggro(this.player);
 
-        if (aggro) entity.combat.begin(self.player);
+        if (aggro) entity.combat.begin(this.player);
       }
     });
   }
 
   detectMusic(x, y) {
-    const self = this;
-    const musicArea = _.find(self.world.getMusicAreas(), area => {
+    const musicArea = _.find(this.world.getMusicAreas(), area => {
       return area.contains(x, y);
     });
     const song = musicArea ? musicArea.id : null;
 
-    if (self.player.currentSong !== song) self.player.updateMusic(song);
+    if (this.player.currentSong !== song) this.player.updateMusic(song);
   }
 
   detectPVP(x, y) {
-    const self = this;
-    const pvpArea = _.find(self.world.getPVPAreas(), area => {
+    const pvpArea = _.find(this.world.getPVPAreas(), area => {
       return area.contains(x, y);
     });
 
-    self.player.updatePVP(!!pvpArea);
+    this.player.updatePVP(!!pvpArea);
   }
 
   detectOverlay(x, y) {
-    const self = this;
-    const overlayArea = _.find(self.world.getOverlayAreas(), area => {
+    const overlayArea = _.find(this.world.getOverlayAreas(), area => {
       return area.contains(x, y);
     });
 
-    self.player.updateOverlay(overlayArea);
+    this.player.updateOverlay(overlayArea);
   }
 
   detectCamera(x, y) {
-    const self = this;
-    const cameraArea = _.find(self.world.getCameraAreas(), area => {
+    const cameraArea = _.find(this.world.getCameraAreas(), area => {
       return area.contains(x, y);
     });
 
-    self.player.updateCamera(cameraArea);
+    this.player.updateCamera(cameraArea);
   }
 
   detectLights(x, y) {
-    const self = this;
-
-    _.each(self.map.lights, light => {
+    _.each(this.map.lights, light => {
       if (
-        self.map.nearLight(light, x, y) &&
-        !self.player.hasLoadedLight(light)
+        this.map.nearLight(light, x, y) &&
+        !this.player.hasLoadedLight(light)
       ) {
         // Add a half a tile offset so the light is centered on the tile.
 
-        self.player.lightsLoaded.push(light);
-        self.player.send(
+        this.player.lightsLoaded.push(light);
+        this.player.send(
           new Messages.Overlay(Packets.OverlayOpcode.Lamp, light)
         );
       }
@@ -258,24 +245,21 @@ class Handler {
   }
 
   detectClipping(x, y) {
-    const self = this;
-    const isColliding = self.map.isColliding(x, y);
+    const isColliding = this.map.isColliding(x, y);
 
     if (!isColliding) return;
 
-    self.player.incoming.handleNoClip(x, y);
+    this.player.incoming.handleNoClip(x, y);
   }
 
   handlePoison() {
-    const self = this;
+    if (!this.player.poison) return;
 
-    if (!self.player.poison) return;
-
-    const info = self.player.poison.split(":");
+    const info = this.player.poison.split(":");
     const timeDiff = new Date().getTime() - info[0];
 
     if (timeDiff > info[1]) {
-      self.player.setPoison(false);
+      this.player.setPoison(false);
       return;
     }
 
@@ -283,7 +267,7 @@ class Handler {
 
     hit.poison = true;
 
-    self.player.combat.hit(self.player, self.player, hit.getData());
+    this.player.combat.hit(this.player, this.player, hit.getData());
   }
 
   canEntitySee(entity) {

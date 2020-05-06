@@ -4,76 +4,65 @@ const _ = require("underscore");
 
 class Grids {
   constructor(map) {
-    const self = this;
+    this.map = map;
 
-    self.map = map;
+    this.entityGrid = [];
 
-    self.entityGrid = [];
-
-    self.load();
+    this.load();
   }
 
   load() {
-    const self = this;
+    for (let i = 0; i < this.map.height; i++) {
+      this.entityGrid[i] = [];
 
-    for (let i = 0; i < self.map.height; i++) {
-      self.entityGrid[i] = [];
-
-      for (let j = 0; j < self.map.width; j++) self.entityGrid[i][j] = {};
+      for (let j = 0; j < this.map.width; j++) this.entityGrid[i][j] = {};
     }
   }
 
   updateEntityPosition(entity) {
-    const self = this;
-
     if (entity && entity.oldX === entity.x && entity.oldY === entity.y) return;
 
-    self.removeFromEntityGrid(entity, entity.oldX, entity.oldY);
-    self.addToEntityGrid(entity, entity.x, entity.y);
+    this.removeFromEntityGrid(entity, entity.oldX, entity.oldY);
+    this.addToEntityGrid(entity, entity.x, entity.y);
 
     entity.updatePosition();
   }
 
   addToEntityGrid(entity, x, y) {
-    const self = this;
-
     if (
       entity &&
       x > 0 &&
       y > 0 &&
-      x < self.map.width &&
-      x < self.map.height &&
-      self.entityGrid[y][x]
+      x < this.map.width &&
+      x < this.map.height &&
+      this.entityGrid[y][x]
     ) {
-      self.entityGrid[y][x][entity.instance] = entity;
+      this.entityGrid[y][x][entity.instance] = entity;
     }
   }
 
   removeFromEntityGrid(entity, x, y) {
-    const self = this;
-
     if (
       entity &&
       x > 0 &&
       y > 0 &&
-      x < self.map.width &&
-      y < self.map.height &&
-      self.entityGrid[y][x] &&
-      entity.instance in self.entityGrid[y][x]
+      x < this.map.width &&
+      y < this.map.height &&
+      this.entityGrid[y][x] &&
+      entity.instance in this.entityGrid[y][x]
     ) {
-      delete self.entityGrid[y][x][entity.instance];
+      delete this.entityGrid[y][x][entity.instance];
     }
   }
 
   getSurroundingEntities(entity, radius, include) {
-    const self = this;
     const entities = [];
 
-    if (!self.checkBounds(entity.x, entity.y, radius)) return;
+    if (!this.checkBounds(entity.x, entity.y, radius)) return;
 
     for (let i = -radius; i < radius + 1; i++) {
       for (let j = -radius; j < radius + 1; j++) {
-        const pos = self.entityGrid[entity.y + i][entity.x + j];
+        const pos = this.entityGrid[entity.y + i][entity.x + j];
 
         if (_.size(pos) > 0) {
           _.each(pos, pEntity => {

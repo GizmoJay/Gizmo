@@ -8,67 +8,51 @@ class Log {
    **/
 
   constructor() {
-    const self = this;
-
     // Stream can be used to keep a log of what happened.
-    self.logLevel = config.debugLevel || "all";
-    self.stream = config.fsDebugging
+    this.logLevel = config.debugLevel || "all";
+    this.stream = config.fsDebugging
       ? fs.createWriteStream("runtime.log")
       : null; // Write to a different stream
 
-    self.debugging = config.debug;
+    this.debugging = config.debug;
   }
 
   info(message) {
-    const self = this;
+    if (this.isLoggable("info")) return;
 
-    if (self.isLoggable("info")) return;
-
-    self.send(null, `[${new Date()}] INFO ${message}`);
+    this.send(null, `[${new Date()}] INFO ${message}`);
   }
 
   debug(message) {
-    const self = this;
+    if (!this.debugging) return;
 
-    if (!self.debugging) return;
-
-    self.send("\x1b[36m%s\x1b[0m", `[${new Date()}] DEBUG ${message}`);
+    this.send("\x1b[36m%s\x1b[0m", `[${new Date()}] DEBUG ${message}`);
   }
 
   warning(message) {
-    const self = this;
+    if (this.isLoggable("warning")) return;
 
-    if (self.isLoggable("warning")) return;
-
-    self.send("\x1b[33m%s\x1b[0m", `[${new Date()}] WARNING ${message}`);
+    this.send("\x1b[33m%s\x1b[0m", `[${new Date()}] WARNING ${message}`);
   }
 
   error(message) {
-    const self = this;
+    if (this.isLoggable("error")) return;
 
-    if (self.isLoggable("error")) return;
-
-    self.send("\x1b[31m%s\x1b[0m", `[${new Date()}] ERROR ${message}`);
+    this.send("\x1b[31m%s\x1b[0m", `[${new Date()}] ERROR ${message}`);
   }
 
   notice(message) {
-    const self = this;
+    if (this.isLoggable("notice")) return;
 
-    if (self.isLoggable("notice")) return;
-
-    self.send("\x1b[32m%s\x1b[0m", `[${new Date()}] NOTICE ${message}`);
+    this.send("\x1b[32m%s\x1b[0m", `[${new Date()}] NOTICE ${message}`);
   }
 
   trace(message) {
-    const self = this;
-
-    self.send("\x1b[35m%s\x1b[0m", `[${new Date()}] TRACE ${message}`, true);
+    this.send("\x1b[35m%s\x1b[0m", `[${new Date()}] TRACE ${message}`, true);
   }
 
   send(colour, message, trace) {
-    const self = this;
-
-    if (self.stream) self.stream.write(message + "\n");
+    if (this.stream) this.stream.write(message + "\n");
 
     if (!colour) console.log(message);
     else if (trace) console.trace(colour, message);

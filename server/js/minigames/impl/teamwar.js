@@ -7,62 +7,55 @@ class TeamWar extends Minigame {
   constructor(world) {
     super(0, "TeamWar");
 
-    const self = this;
+    this.world = world;
 
-    self.world = world;
+    this.lobby = [];
+    this.redTeam = [];
+    this.blueTeam = [];
 
-    self.lobby = [];
-    self.redTeam = [];
-    self.blueTeam = [];
+    this.updateInterval = null;
+    this.started = false;
 
-    self.updateInterval = null;
-    self.started = false;
+    this.countdown = 120;
+    this.updateInterval = 1000;
+    this.lastSync = new Date().getTime();
+    this.syncThreshold = 10000;
 
-    self.countdown = 120;
-    self.updateInterval = 1000;
-    self.lastSync = new Date().getTime();
-    self.syncThreshold = 10000;
-
-    self.load();
+    this.load();
   }
 
   load() {
-    const self = this;
+    this.updateInterval = setInterval(() => {
+      if (this.count() < 5 || this.countdown > 0) return;
 
-    self.updateInterval = setInterval(() => {
-      if (self.count() < 5 || self.countdown > 0) return;
+      this.buildTeams();
 
-      self.buildTeams();
-
-      if (new Date().getTime() - self.lastSync > self.syncThreshold) {
-        self.synchronize();
+      if (new Date().getTime() - this.lastSync > this.syncThreshold) {
+        this.synchronize();
       }
 
-      self.started = true;
-    }, self.updateInterval);
+      this.started = true;
+    }, this.updateInterval);
   }
 
   start() {
-    const self = this;
+
   }
 
   add(player) {
-    const self = this;
+    if (this.lobby.indexOf(player) > -1) return;
 
-    if (self.lobby.indexOf(player) > -1) return;
+    this.lobby.push(player);
 
-    self.lobby.push(player);
-
-    player.minigame = self.getState(player);
+    player.minigame = this.getState(player);
   }
 
   remove(player) {
-    const self = this;
-    const index = self.lobby.indexOf(player);
+    const index = this.lobby.indexOf(player);
 
     if (index < 0) return;
 
-    self.lobby.splice(index, 1);
+    this.lobby.splice(index, 1);
   }
 
   /**
@@ -72,14 +65,13 @@ class TeamWar extends Minigame {
    */
 
   buildTeams() {
-    const self = this;
-    const tmp = self.lobby.slice();
+    const tmp = this.lobby.slice();
     const half = Math.ceil(tmp.length / 2);
     const random = Utils.randomInt(0, 1);
 
     if (random === 1) {
-      (self.redTeam = tmp.splice(0, half)), (self.blueTeam = tmp);
-    } else (self.blueTeam = tmp.splice(0, half)), (self.redTeam = tmp);
+      (this.redTeam = tmp.splice(0, half)), (this.blueTeam = tmp);
+    } else (this.blueTeam = tmp.splice(0, half)), (this.redTeam = tmp);
   }
 
   count() {
@@ -87,28 +79,24 @@ class TeamWar extends Minigame {
   }
 
   synchronize() {
-    const self = this;
+    if (this.started) return;
 
-    if (self.started) return;
-
-    _.each(self.lobby, player => {
-      self.sendCountdown(player);
+    _.each(this.lobby, player => {
+      this.sendCountdown(player);
     });
   }
 
   sendCountdown(player) {
-    const self = this;
-
     /**
      * We handle this logic client-sided. If a countdown does not exist,
      * we create one, otherwise we synchronize it with the packets we receive.
      */
 
-    self.world.push(Packets.PushOpcode.Player, {
+    this.world.push(Packets.PushOpcode.Player, {
       player: player,
       message: new Messages.Minigame(Packets.MinigameOpcode.TeamWar, {
         opcode: Packets.MinigameOpcode.TeamWarOpcode.Countdown,
-        countdown: self.countdown
+        countdown: this.countdown
       })
     });
   }
@@ -124,13 +112,11 @@ class TeamWar extends Minigame {
   }
 
   getTeam(player) {
-    const self = this;
+    if (this.redTeam.indexOf(player) > -1) return "red";
 
-    if (self.redTeam.indexOf(player) > -1) return "red";
+    if (this.blueTeam.indexOf(player) > -1) return "blue";
 
-    if (self.blueTeam.indexOf(player) > -1) return "blue";
-
-    if (self.lobby.indexOf(player) > -1) return "lobby";
+    if (this.lobby.indexOf(player) > -1) return "lobby";
 
     return null;
   }
@@ -138,31 +124,26 @@ class TeamWar extends Minigame {
   // Both these spawning areas randomize the spawning to a radius of 4
   // The spawning area for the red team
   getRedTeamSpawn() {
-    const self = this;
-
     return {
-      x: 133 + self.getRandom(),
-      y: 471 + self.getRandom()
+      x: 133 + this.getRandom(),
+      y: 471 + this.getRandom()
     };
   }
 
   // The spawning area for the blue team
   getBlueTeamSpawn() {
-    const self = this;
-
     return {
-      x: 163 + self.getRandom(),
-      y: 499 + self.getRandom()
+      x: 163 + this.getRandom(),
+      y: 499 + this.getRandom()
     };
   }
 
   // Expand on the super `getState()`
   getState(player) {
-    const self = this;
     const state = super.getState();
 
     // Player can only be in team `red`, `blue`, or `lobby`.
-    state.team = self.getTeam(player);
+    state.team = this.getTeam(player);
 
     if (!state.team) return null;
 

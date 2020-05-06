@@ -5,27 +5,25 @@ const Utils = require("../../js/util/utils");
 
 class HealthFlask {
   constructor(id) {
-    const self = this;
+    this.id = id;
 
-    self.id = id;
+    this.healAmount = 0;
+    this.manaAmount = 0;
 
-    self.healAmount = 0;
-    self.manaAmount = 0;
-
-    const customData = Items.getCustomData(self.id);
+    const customData = Items.getCustomData(this.id);
 
     if (customData) {
-      self.healAmount = customData.healAmount ? customData.healAmount : 0;
-      self.manaAmount = customData.manaAmount ? customData.manaAmount : 0;
+      this.healAmount = customData.healAmount ? customData.healAmount : 0;
+      this.manaAmount = customData.manaAmount ? customData.manaAmount : 0;
     }
   }
 
   onUse(character) {
-    const self = this;
+    if (this.healAmount)
+    { character.healHitPoints(this.healAmount); }
 
-    if (self.healAmount) character.healHitPoints(self.healAmount);
-
-    if (self.manaAmount) character.healManaPoints(self.manaAmount);
+    if (this.manaAmount)
+    { character.healManaPoints(this.manaAmount); }
   }
 }
 

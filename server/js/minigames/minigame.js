@@ -2,10 +2,8 @@
 
 class Minigame {
   constructor(id, name) {
-    const self = this;
-
-    self.id = id;
-    self.name = name;
+    this.id = id;
+    this.name = name;
   }
 
   getId() {

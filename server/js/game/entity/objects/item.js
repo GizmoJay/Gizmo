@@ -6,58 +6,50 @@ class Item extends Entity {
   constructor(id, instance, x, y, ability, abilityLevel) {
     super(id, "item", instance, x, y);
 
-    const self = this;
+    this.static = false;
+    this.dropped = false;
+    this.shard = false;
 
-    self.static = false;
-    self.dropped = false;
-    self.shard = false;
+    this.count = 1;
+    this.ability = ability;
+    this.abilityLevel = abilityLevel;
+    this.tier = 1;
 
-    self.count = 1;
-    self.ability = ability;
-    self.abilityLevel = abilityLevel;
-    self.tier = 1;
+    if (isNaN(ability)) this.ability = -1;
 
-    if (isNaN(ability)) self.ability = -1;
+    if (isNaN(abilityLevel)) this.abilityLevel = -1;
 
-    if (isNaN(abilityLevel)) self.abilityLevel = -1;
+    this.respawnTime = 30000;
+    this.despawnDuration = 4000;
+    this.blinkDelay = 20000;
+    this.despawnDelay = 1000;
 
-    self.respawnTime = 30000;
-    self.despawnDuration = 4000;
-    self.blinkDelay = 20000;
-    self.despawnDelay = 1000;
-
-    self.blinkTimeout = null;
-    self.despawnTimeout = null;
+    this.blinkTimeout = null;
+    this.despawnTimeout = null;
   }
 
   destroy() {
-    const self = this;
+    if (this.blinkTimeout) clearTimeout(this.blinkTimeout);
 
-    if (self.blinkTimeout) clearTimeout(self.blinkTimeout);
+    if (this.despawnTimeout) clearTimeout(this.despawnTimeout);
 
-    if (self.despawnTimeout) clearTimeout(self.despawnTimeout);
-
-    if (self.static) self.respawn();
+    if (this.static) this.respawn();
   }
 
   despawn() {
-    const self = this;
+    this.blinkTimeout = setTimeout(() => {
+      if (this.blinkCallback) this.blinkCallback();
 
-    self.blinkTimeout = setTimeout(() => {
-      if (self.blinkCallback) self.blinkCallback();
-
-      self.despawnTimeout = setTimeout(() => {
-        if (self.despawnCallback) self.despawnCallback();
-      }, self.despawnDuration);
-    }, self.blinkDelay);
+      this.despawnTimeout = setTimeout(() => {
+        if (this.despawnCallback) this.despawnCallback();
+      }, this.despawnDuration);
+    }, this.blinkDelay);
   }
 
   respawn() {
-    const self = this;
-
     setTimeout(() => {
-      if (self.respawnCallback) self.respawnCallback();
-    }, self.respawnTime);
+      if (this.respawnCallback) this.respawnCallback();
+    }, this.respawnTime);
   }
 
   getData() {
@@ -65,12 +57,11 @@ class Item extends Entity {
   }
 
   getState() {
-    const self = this;
     const state = super.getState();
 
-    state.count = self.count;
-    state.ability = self.ability;
-    state.abilityLevel = self.abilityLevel;
+    state.count = this.count;
+    state.ability = this.ability;
+    state.abilityLevel = this.abilityLevel;
 
     return state;
   }

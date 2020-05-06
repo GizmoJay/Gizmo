@@ -4,88 +4,73 @@ const Modules = require("../../../../util/modules");
 
 class Trade {
   constructor(player) {
-    const self = this;
+    this.player = player;
+    this.oPlayer = null;
 
-    self.player = player;
-    self.oPlayer = null;
+    this.requestee = null;
 
-    self.requestee = null;
+    this.state = null;
+    this.subState = null;
 
-    self.state = null;
-    self.subState = null;
-
-    self.playerItems = [];
-    self.oPlayerItems = [];
+    this.playerItems = [];
+    this.oPlayerItems = [];
   }
 
   start() {
-    const self = this;
-
-    self.oPlayer = self.requestee;
-    self.state = Modules.Trade.Started;
+    this.oPlayer = this.requestee;
+    this.state = Modules.Trade.Started;
   }
 
   stop() {
-    const self = this;
+    this.oPlayer = null;
+    this.state = null;
+    this.subState = null;
+    this.requestee = null;
 
-    self.oPlayer = null;
-    self.state = null;
-    self.subState = null;
-    self.requestee = null;
-
-    self.playerItems = [];
-    self.oPlayerItems = [];
+    this.playerItems = [];
+    this.oPlayerItems = [];
   }
 
   finalize() {
-    const self = this;
+    if (!this.player.inventory.containsSpaces(this.oPlayerItems.length)) return;
 
-    if (!self.player.inventory.containsSpaces(self.oPlayerItems.length)) return;
-
-    for (const i in self.oPlayerItems) {
-      const item = self.oPlayerItems[i];
+    for (const i in this.oPlayerItems) {
+      const item = this.oPlayerItems[i];
 
       if (!item || item.id === -1) continue;
 
-      self.oPlayer.inventory.remove(item.id, item.count, item.index);
-      self.player.inventory.add(item);
+      this.oPlayer.inventory.remove(item.id, item.count, item.index);
+      this.player.inventory.add(item);
     }
   }
 
   select(slot) {
-    const self = this;
-    const item = self.player.inventory.slots[slot];
+    const item = this.player.inventory.slots[slot];
 
-    if (!item || item.id === -1 || self.playerItems.indexOf(item) < 0) return;
+    if (!item || item.id === -1 || this.playerItems.indexOf(item) < 0) return;
 
-    self.playerItems.push(item);
+    this.playerItems.push(item);
   }
 
   request(oPlayer) {
-    const self = this;
+    this.requestee = oPlayer;
 
-    self.requestee = oPlayer;
-
-    if (oPlayer.trade.getRequestee() === self.player.instance) self.start();
+    if (oPlayer.trade.getRequestee() === this.player.instance) this.start();
   }
 
   accept() {
-    const self = this;
+    this.subState = Modules.Trade.Accepted;
 
-    self.subState = Modules.Trade.Accepted;
-
-    if (self.oPlayer.trade.subState === Modules.Trade.Accepted) {
-      self.finalize();
-      self.oPlayer.trade.finalize();
+    if (this.oPlayer.trade.subState === Modules.Trade.Accepted) {
+      this.finalize();
+      this.oPlayer.trade.finalize();
     }
   }
 
   getRequestee() {
-    const self = this;
+    if (!this.requestee) return null;
 
-    if (!self.requestee) return null;
-
-    return self.requestee.instance;
+    return this.requestee.instance;
   }
 
   decline() {

@@ -7,32 +7,25 @@ class Chest extends Entity {
   constructor(id, instance, x, y) {
     super(id, "chest", instance, x, y);
 
-    const self = this;
+    this.respawnDuration = 25000;
+    this.static = false;
 
-    self.respawnDuration = 25000;
-    self.static = false;
-
-    self.items = [];
+    this.items = [];
   }
 
   openChest() {
-    const self = this;
-
-    if (self.openCallback) self.openCallback();
+    if (this.openCallback) this.openCallback();
   }
 
   respawn() {
-    const self = this;
-
     setTimeout(() => {
-      if (self.respawnCallback) self.respawnCallback();
-    }, self.respawnDuration);
+      if (this.respawnCallback) this.respawnCallback();
+    }, this.respawnDuration);
   }
 
   getItem() {
-    const self = this;
-    const random = Utils.randomInt(0, self.items.length - 1);
-    let item = self.items[random];
+    const random = Utils.randomInt(0, this.items.length - 1);
+    let item = this.items[random];
     let count = 1;
     let probability = 100;
 

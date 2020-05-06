@@ -8,9 +8,7 @@ class Creator {
   }
 
   save(player) {
-    const self = this;
-
-    self.database.getDatabase(database => {
+    this.database.getDatabase(database => {
       /* Handle the player databases */
 
       const playerData = database.collection("player_data");
@@ -23,15 +21,15 @@ class Creator {
       const playerProfessions = database.collection("player_professions");
       const playerInventory = database.collection("player_inventory");
 
-      self.saveData(playerData, player);
-      self.saveEquipment(playerEquipment, player);
-      self.saveQuests(playerQuests, player);
-      self.saveAchievements(playerAchievements, player);
-      self.saveBank(playerBank, player);
-      self.saveRegions(playerRegions, player);
-      self.saveAbilities(playerAbilities, player);
-      self.saveProfessions(playerProfessions, player);
-      self.saveInventory(playerInventory, player, () => {
+      this.saveData(playerData, player);
+      this.saveEquipment(playerEquipment, player);
+      this.saveQuests(playerQuests, player);
+      this.saveAchievements(playerAchievements, player);
+      this.saveBank(playerBank, player);
+      this.saveRegions(playerRegions, player);
+      this.saveAbilities(playerAbilities, player);
+      this.saveProfessions(playerProfessions, player);
+      this.saveInventory(playerInventory, player, () => {
         log.debug(`Successfully saved all data for player ${player.username}.`);
       });
     });
@@ -41,7 +39,7 @@ class Creator {
     Creator.getPlayerData(player, data => {
       collection.updateOne(
         {
-          username: player.username
+          email: player.email
         },
         { $set: data },
         {
@@ -65,7 +63,7 @@ class Creator {
   saveEquipment(collection, player) {
     collection.updateOne(
       {
-        username: player.username
+        email: player.email
       },
       { $set: Creator.getPlayerEquipment(player) },
       {
@@ -88,7 +86,7 @@ class Creator {
   saveQuests(collection, player) {
     collection.updateOne(
       {
-        username: player.username
+        email: player.email
       },
       { $set: player.quests.getQuests() },
       {
@@ -111,7 +109,7 @@ class Creator {
   saveAchievements(collection, player) {
     collection.updateOne(
       {
-        username: player.username
+        email: player.email
       },
       { $set: player.quests.getAchievements() },
       {
@@ -136,7 +134,7 @@ class Creator {
   saveBank(collection, player) {
     collection.updateOne(
       {
-        username: player.username
+        email: player.email
       },
       { $set: player.bank.getArray() },
       {
@@ -159,7 +157,7 @@ class Creator {
   saveRegions(collection, player) {
     collection.updateOne(
       {
-        username: player.username
+        email: player.email
       },
       {
         $set: {
@@ -187,7 +185,7 @@ class Creator {
   saveAbilities(collection, player) {
     collection.updateOne(
       {
-        username: player.username
+        email: player.email
       },
       { $set: player.abilities.getArray() },
       {
@@ -210,7 +208,7 @@ class Creator {
   saveProfessions(collection, player) {
     collection.updateOne(
       {
-        username: player.username
+        email: player.email
       },
       { $set: player.professions.getArray() },
       {
@@ -235,7 +233,7 @@ class Creator {
   saveInventory(collection, player, callback) {
     collection.updateOne(
       {
-        username: player.username
+        email: player.email
       },
       { $set: player.inventory.getArray() },
       {
@@ -269,8 +267,8 @@ class Creator {
     Creator.getPasswordHash(player.password, hash => {
       callback({
         username: player.username,
-        password: hash,
         email: player.email,
+        password: hash,
         x: player.x,
         y: player.y,
         experience: player.experience,
@@ -298,7 +296,7 @@ class Creator {
 
   static getPlayerEquipment(player) {
     return {
-      username: player.username,
+      email: player.email,
       armour: [
         player.armour ? player.armour.getId() : 114,
         player.armour ? player.armour.getCount() : -1,
@@ -342,9 +340,8 @@ class Creator {
     const position = player.getSpawn();
 
     return {
-      username: player.username,
+      email: player.email,
       password: player.password,
-      email: player.email ? player.email : "null",
       x: position.x,
       y: position.y,
       kind: player.kind ? player.kind : 0,

@@ -6,28 +6,24 @@ class Projectile extends Entity {
   constructor(id, instance) {
     super(id, "projectile", instance);
 
-    const self = this;
+    this.startX = -1;
+    this.startY = -1;
 
-    self.startX = -1;
-    self.startY = -1;
+    this.destX = -1;
+    this.destY = -1;
 
-    self.destX = -1;
-    self.destY = -1;
+    this.target = null;
 
-    self.target = null;
+    this.damage = -1;
 
-    self.damage = -1;
+    this.hitType = null;
 
-    self.hitType = null;
-
-    self.owner = null;
+    this.owner = null;
   }
 
   setStart(x, y) {
-    const self = this;
-
-    self.x = x;
-    self.y = y;
+    this.x = x;
+    this.y = y;
   }
 
   /**
@@ -35,42 +31,36 @@ class Projectile extends Entity {
    */
 
   setTarget(target) {
-    const self = this;
+    this.target = target;
 
-    self.target = target;
-
-    self.destX = target.x;
-    self.destY = target.y;
+    this.destX = target.x;
+    this.destY = target.y;
   }
 
   setStaticTarget(x, y) {
-    const self = this;
+    this.static = true;
 
-    self.static = true;
-
-    self.destX = x;
-    self.destY = y;
+    this.destX = x;
+    this.destY = y;
   }
 
   getData() {
-    const self = this;
-
     /**
      * Refrain from creating a projectile unless
      * an owner and a target are available.
      */
 
-    if (!self.owner || !self.target) return;
+    if (!this.owner || !this.target) return;
 
     return {
-      id: self.instance,
-      name: self.owner.projectileName,
-      characterId: self.owner.instance,
-      targetId: self.target.instance,
-      damage: self.damage,
-      special: self.special,
-      hitType: self.hitType,
-      type: self.type
+      id: this.instance,
+      name: this.owner.projectileName,
+      characterId: this.owner.instance,
+      targetId: this.target.instance,
+      damage: this.damage,
+      special: this.special,
+      hitType: this.hitType,
+      type: this.type
     };
   }
 }

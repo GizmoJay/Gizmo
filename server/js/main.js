@@ -1,3 +1,4 @@
+require("dotenv").config();
 const World = require("./game/world");
 const WebSocket = require("./network/websocket");
 const Log = require("./util/log");
@@ -9,16 +10,14 @@ log = new Log();
 
 class Main {
   constructor() {
-    const self = this;
-
     log.info("Initializing " + config.name + " game engine...");
 
-    self.webSocket = new WebSocket(config.host, config.port, config.gver);
-    self.database = new Database(config.database);
-    self.parser = new Parser();
-    self.world = null;
+    this.webSocket = new WebSocket(config.host, config.port, config.gver);
+    this.database = new Database(config.database);
+    this.parser = new Parser();
+    this.world = null;
 
-    self.webSocket.onWebSocketReady(() => {
+    this.webSocket.onWebSocketReady(() => {
       /**
        * Initialize the world after we have finished loading
        * the websocket.
@@ -27,38 +26,37 @@ class Main {
       const onWorldLoad = () => {
         log.notice("World has successfully been created.");
 
-        if (!config.allowConnectionsToggle) self.world.allowConnections = true;
+        if (!config.allowConnectionsToggle) this.world.allowConnections = true;
 
-        let host = config.host === "0.0.0.0" ? "localhost" : config.host;
+        const host = config.host === "0.0.0.0" ? "localhost" : config.host;
         log.notice("Connect locally via http://" + host + ":" + config.port);
       };
 
-      self.world = new World(self.webSocket, self.getDatabase());
+      this.world = new World(this.webSocket, this.getDatabase());
 
-      self.world.load(onWorldLoad);
+      this.world.load(onWorldLoad);
     });
 
-    self.webSocket.onConnect(connection => {
-      if (self.world.allowConnections) {
-        if (self.world.isFull()) {
+    this.webSocket.onConnect(connection => {
+      if (this.world.allowConnections) {
+        if (this.world.isFull()) {
           log.info(
             "All the worlds are currently full. Please try again later."
           );
 
           connection.sendUTF8("full");
           connection.close();
-        } else self.world.playerConnectCallback(connection);
+        } else this.world.playerConnectCallback(connection);
       } else {
         connection.sendUTF8("disallowed");
         connection.close();
       }
     });
 
-    self.loadConsole();
+    this.loadConsole();
   }
 
   loadConsole() {
-    const self = this;
     const stdin = process.openStdin();
 
     stdin.addListener("data", data => {
@@ -77,13 +75,13 @@ class Main {
       switch (command) {
         case "players":
           log.info(
-            `There are a total of ${self.getPopulation()} player(s) logged in.`
+            `There are a total of ${this.getPopulation()} player(s) logged in.`
           );
 
           break;
 
         case "registered":
-          self.world.database.registeredCount(count => {
+          this.world.database.registeredCount(count => {
             log.info(`There are ${count} users registered.`);
           });
 
@@ -92,19 +90,19 @@ class Main {
         case "kill":
           username = blocks.join(" ");
 
-          if (!self.world.isOnline(username)) {
+          if (!this.world.isOnline(username)) {
             log.info("Player is not logged in.");
             return;
           }
 
-          player = self.world.getPlayerByName(username);
+          player = this.world.getPlayerByName(username);
 
           if (!player) {
             log.info("An error has occurred.");
             return;
           }
 
-          self.world.kill(player);
+          this.world.kill(player);
 
           break;
 
@@ -130,16 +128,16 @@ class Main {
            * in.
            */
 
-          self.world.database.resetPositions(newX, newY, result => {
+          this.world.database.resetPositions(newX, newY, result => {
             log.info(result);
           });
 
           break;
 
         case "allowConnections":
-          self.world.allowConnections = !self.world.allowConnections;
+          this.world.allowConnections = !this.world.allowConnections;
 
-          if (self.world.allowConnections) {
+          if (this.world.allowConnections) {
             log.info("Server is now allowing connections.");
           } else log.info("The server is not allowing connections.");
 
@@ -151,7 +149,7 @@ class Main {
 
           username = blocks.join(" ");
 
-          player = self.world.getPlayerByName(username);
+          player = this.world.getPlayerByName(username);
 
           if (!player) return;
 
@@ -178,5 +176,4 @@ class Main {
 
 module.exports = Main;
 
-// eslint-disable-next-line no-new
 new Main();

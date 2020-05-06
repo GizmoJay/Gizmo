@@ -9,23 +9,20 @@ class Cactus extends Combat {
 
     super(character);
 
-    const self = this;
+    this.character = character;
 
-    self.character = character;
+    this.character.onDamaged((damage, attacker) => {
+      if (!attacker || !attacker.armour || attacker.isRanged())
+      { return; }
 
-    self.character.onDamaged((damage, attacker) => {
-      if (!attacker || !attacker.armour || attacker.isRanged()) return;
+      this.damageAttacker(damage, attacker);
 
-      self.damageAttacker(damage, attacker);
-
-      log.debug(
-        `Entity ${self.character.id} damaged ${damage} by ${attacker.instance}.`
-      );
+      log.debug(`Entity ${this.character.id} damaged ${damage} by ${attacker.instance}.`);
     });
 
-    self.character.onDeath(() => {
-      self.forEachAttacker(attacker => {
-        self.damageAttacker(self.character.maxHitPoints, attacker);
+    this.character.onDeath(() => {
+      this.forEachAttacker((attacker) => {
+        this.damageAttacker(this.character.maxHitPoints, attacker);
       });
 
       log.debug("Oh noes, le cactus did a die. :(");
@@ -33,24 +30,24 @@ class Cactus extends Combat {
   }
 
   damageAttacker(damage, attacker) {
-    const self = this;
-
-    if (!attacker || !attacker.armour || attacker.isRanged()) return;
+    if (!attacker || !attacker.armour || attacker.isRanged())
+    { return; }
 
     /**
-     * This is the formula for dealing damage when a player
-     * attacks the cactus. Eventually the damage will cancel out
-     * as the armour gets better.
-     **/
+         * This is the formula for dealing damage when a player
+         * attacks the cactus. Eventually the damage will cancel out
+         * as the armour gets better.
+         **/
 
     const defense = attacker.armour.getDefense();
-    const calculatedDamage = Math.floor(damage / 2 - defense * 5);
+    const calculatedDamage = Math.floor((damage / 2) - (defense * 5));
 
-    if (calculatedDamage < 1) return;
+    if (calculatedDamage < 1)
+    { return; }
 
     const hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 
-    self.hit(self.character, attacker, hitInfo, true);
+    this.hit(this.character, attacker, hitInfo, true);
   }
 }
 

@@ -7,68 +7,59 @@ const _ = require("underscore");
 
 class Quest {
   constructor(player, data) {
-    const self = this;
+    this.player = player;
+    this.data = data;
 
-    self.player = player;
-    self.data = data;
+    this.id = data.id;
+    this.name = data.name;
+    this.description = data.description;
 
-    self.id = data.id;
-    self.name = data.name;
-    self.description = data.description;
-
-    self.stage = 0;
+    this.stage = 0;
   }
 
   load(stage) {
-    const self = this;
-
-    if (!stage) self.update();
-    else self.stage = parseInt(stage);
+    if (!stage) this.update();
+    else this.stage = parseInt(stage);
   }
 
   finish() {
-    const self = this;
-    const item = self.getItemReward();
+    const item = this.getItemReward();
 
     if (item) {
-      if (self.hasInventorySpace(item.id, item.count)) {
-        self.player.inventory.add({
+      if (this.hasInventorySpace(item.id, item.count)) {
+        this.player.inventory.add({
           id: item.id,
           count: item.count,
           ability: -1,
           abilityLevel: -1
         });
       } else {
-        self.player.notify("You do not have enough space in your inventory.");
-        self.player.notify("Please make room prior to finishing the quest.");
+        this.player.notify("You do not have enough space in your inventory.");
+        this.player.notify("Please make room prior to finishing the quest.");
 
         return;
       }
     }
 
-    self.setStage(9999);
+    this.setStage(9999);
 
-    self.player.send(
+    this.player.send(
       new Messages.Quest(Packets.QuestOpcode.Finish, {
-        id: self.id,
+        id: this.id,
         isQuest: true
       })
     );
 
-    self.update();
+    this.update();
   }
 
   setStage(stage) {
-    const self = this;
-
-    self.stage = stage;
-    self.update();
+    this.stage = stage;
+    this.update();
   }
 
   triggerTalk(npc) {
-    const self = this;
-
-    if (self.npcTalkCallback) self.npcTalkCallback(npc);
+    if (this.npcTalkCallback) this.npcTalkCallback(npc);
   }
 
   update() {
@@ -76,34 +67,31 @@ class Quest {
   }
 
   getConversation(id) {
-    const self = this;
-    const conversation = self.data.conversations[id];
+    const conversation = this.data.conversations[id];
 
-    if (!conversation || !conversation[self.stage]) return [""];
+    if (!conversation || !conversation[this.stage]) return [""];
 
-    return conversation[self.stage];
+    return conversation[this.stage];
   }
 
   updatePointers() {
-    const self = this;
+    if (!this.data.pointers) return;
 
-    if (!self.data.pointers) return;
-
-    const pointer = self.data.pointers[self.stage];
+    const pointer = this.data.pointers[this.stage];
 
     if (!pointer) return;
 
     const opcode = pointer[0];
 
     if (opcode === 4) {
-      self.player.send(
+      this.player.send(
         new Messages.Pointer(opcode, {
           id: Utils.generateRandomId(),
           button: pointer[1]
         })
       );
     } else {
-      self.player.send(
+      this.player.send(
         new Messages.Pointer(opcode, {
           id: Utils.generateRandomId(),
           x: pointer[1],
@@ -114,13 +102,11 @@ class Quest {
   }
 
   forceTalk(npc, message) {
-    const self = this;
-
     if (!npc) return;
 
-    self.player.talkIndex = 0;
+    this.player.talkIndex = 0;
 
-    self.player.send(
+    this.player.send(
       new Messages.NPC(Packets.NPCOpcode.Talk, {
         id: npc.instance,
         text: message
@@ -145,11 +131,9 @@ class Quest {
   }
 
   hasMob(mob) {
-    const self = this;
+    if (!this.data.mobs) return;
 
-    if (!self.data.mobs) return;
-
-    return self.data.mobs.indexOf(mob.id) > -1;
+    return this.data.mobs.indexOf(mob.id) > -1;
   }
 
   hasNPC(id) {

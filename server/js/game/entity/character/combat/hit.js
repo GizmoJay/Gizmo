@@ -2,15 +2,13 @@
 
 class Hit {
   constructor(type, damage) {
-    const self = this;
+    this.type = type;
+    this.damage = damage;
 
-    self.type = type;
-    self.damage = damage;
-
-    self.ranged = false;
-    self.aoe = false;
-    self.terror = false;
-    self.poison = false;
+    this.ranged = false;
+    this.aoe = false;
+    this.terror = false;
+    this.poison = false;
   }
 
   isRanged() {

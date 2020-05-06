@@ -5,82 +5,77 @@ const Packets = require("../../../../network/packets");
 
 class MobHandler {
   constructor(mob, world) {
-    const self = this;
+    this.mob = mob;
+    this.combat = mob.combat;
+    this.world = world;
+    this.map = world.map;
 
-    self.mob = mob;
-    self.combat = mob.combat;
-    self.world = world;
-    self.map = world.map;
+    this.roamingInterval = null;
+    this.spawnLocation = mob.spawnLocation;
+    this.maxRoamingDistance = mob.maxRoamingDistance;
 
-    self.roamingInterval = null;
-    self.spawnLocation = mob.spawnLocation;
-    self.maxRoamingDistance = mob.maxRoamingDistance;
-
-    self.load();
-    self.loadCallbacks();
+    this.load();
+    this.loadCallbacks();
   }
 
   load() {
-    const self = this;
+    if (!this.mob.roaming) return;
 
-    if (!self.mob.roaming) return;
-
-    self.roamingInterval = setInterval(() => {
-      if (!self.mob.dead) {
+    this.roamingInterval = setInterval(() => {
+      if (!this.mob.dead) {
         // Calculate a random position near the mobs spawn location.
         const newX =
-          self.spawnLocation[0] +
-          Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance);
+          this.spawnLocation[0] +
+          Utils.randomInt(-this.maxRoamingDistance, this.maxRoamingDistance);
         const newY =
-          self.spawnLocation[1] +
-          Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance);
+          this.spawnLocation[1] +
+          Utils.randomInt(-this.maxRoamingDistance, this.maxRoamingDistance);
         const distance = Utils.getDistance(
-          self.spawnLocation[0],
-          self.spawnLocation[1],
+          this.spawnLocation[0],
+          this.spawnLocation[1],
           newX,
           newY
         );
 
         // Return if the tile is colliding.
-        if (self.map.isColliding(newX, newY)) return;
+        if (this.map.isColliding(newX, newY)) return;
 
         // Prevent movement if the area is empty.
-        if (self.map.isEmpty(newX, newY)) return;
+        if (this.map.isEmpty(newX, newY)) return;
 
         // Don't have mobs block a door.
-        if (self.map.isDoor(newX, newY)) return;
+        if (this.map.isDoor(newX, newY)) return;
 
         // Prevent mobs from going outside of their roaming radius.
-        if (distance < self.mob.maxRoamingDistance) return;
+        if (distance < this.mob.maxRoamingDistance) return;
 
         // No need to move mobs to the same position as theirs.
-        if (newX === self.mob.x && newY === self.mob.y) return;
+        if (newX === this.mob.x && newY === this.mob.y) return;
 
         // We don't want mobs randomly roaming while in combat.
-        if (self.mob.combat.started) return;
+        if (this.mob.combat.started) return;
 
         /**
-         * An expansion of the plateau level present in BrowserQuest.
          * Because the map is far more complex, we will require multiple
          * levels of plateau in order to properly roam entities without
          * them walking into other regions (or clipping).
          */
 
         if (
-          self.mob.getPlateauLevel() !== self.map.getPlateauLevel(newX, newY)
+          this.mob.getPlateauLevel() !== this.map.getPlateauLevel(newX, newY)
         ) {
           return;
         }
 
         // if (config.debug)
-        //    self.forceTalk('Yes hello, I am moving.');
+        //    this.forceTalk('Yes hello, I am moving.');
 
-        self.mob.setPosition(newX, newY);
+        this.mob.setPosition(newX, newY);
 
-        self.world.push(Packets.PushOpcode.Regions, {
-          regionId: self.mob.region,
+        this.world.push(Packets.PushOpcode.Regions, {
+          regionId: this.mob.region,
           message: new Messages.Movement(Packets.MovementOpcode.Move, {
-            id: self.mob.instance,
+            id: this.mob.instance,
             x: newX,
             y: newY
           })
@@ -90,20 +85,18 @@ class MobHandler {
   }
 
   loadCallbacks() {
-    const self = this;
-
     // Combat plugin has its own set of callbacks.
-    if (Mobs.hasCombatPlugin(self.mob.id)) return;
+    if (Mobs.hasCombatPlugin(this.mob.id)) return;
 
-    self.mob.onLoad(() => {
-      if (self.mob.miniboss) self.mob.setMinibossData();
+    this.mob.onLoad(() => {
+      if (this.mob.miniboss) this.mob.setMinibossData();
     });
 
-    self.mob.onDeath(() => {
-      if (!self.mob.miniboss || !self.combat) return;
+    this.mob.onDeath(() => {
+      if (!this.mob.miniboss || !this.combat) return;
 
-      self.combat.forEachAttacker(attacker => {
-        if (attacker) attacker.finishAchievement(self.mob.achievementId);
+      this.combat.forEachAttacker(attacker => {
+        if (attacker) attacker.finishAchievement(this.mob.achievementId);
       });
     });
 
@@ -111,14 +104,12 @@ class MobHandler {
   }
 
   forceTalk(message) {
-    let self = this;
+    if (!this.world) return;
 
-    if (!self.world) return;
-
-    self.world.push(Packets.PushOpcode.Regions, {
-      regionId: self.mob.region,
+    this.world.push(Packets.PushOpcode.Regions, {
+      regionId: this.mob.region,
       message: new Messages.NPC(Packets.NPCOpcode.Talk, {
-        id: self.mob.instance,
+        id: this.mob.instance,
         text: message,
         nonNPC: true
       })

@@ -12,43 +12,41 @@ const Packets = require("../../../../network/packets");
 
 class Combat {
   constructor(character) {
-    const self = this;
+    this.character = character;
+    this.world = null;
 
-    self.character = character;
-    self.world = null;
+    this.attackers = {};
 
-    self.attackers = {};
+    this.retaliate = false;
 
-    self.retaliate = false;
+    this.queue = new CombatQueue();
 
-    self.queue = new CombatQueue();
+    this.attacking = false;
 
-    self.attacking = false;
+    this.attackLoop = null;
+    this.followLoop = null;
+    this.checkLoop = null;
 
-    self.attackLoop = null;
-    self.followLoop = null;
-    self.checkLoop = null;
+    this.first = false;
+    this.started = false;
+    this.lastAction = -1;
+    this.lastHit = -1;
 
-    self.first = false;
-    self.started = false;
-    self.lastAction = -1;
-    self.lastHit = -1;
+    this.lastActionThreshold = 7000;
 
-    self.lastActionThreshold = 7000;
+    this.cleanTimeout = null;
 
-    self.cleanTimeout = null;
-
-    self.character.onSubAoE((radius, hasTerror) => {
-      self.dealAoE(radius, hasTerror);
+    this.character.onSubAoE((radius, hasTerror) => {
+      this.dealAoE(radius, hasTerror);
     });
 
-    self.character.onDamage((target, hitInfo) => {
+    this.character.onDamage((target, hitInfo) => {
       if (
-        self.isPlayer() &&
-        self.character.hasBreakableWeapon() &&
-        Formulas.getWeaponBreak(self.character, target)
+        this.isPlayer() &&
+        this.character.hasBreakableWeapon() &&
+        Formulas.getWeaponBreak(this.character, target)
       ) {
-        self.character.breakWeapon();
+        this.character.breakWeapon();
       }
 
       if (hitInfo.type === Modules.Hits.Stun) {
@@ -64,232 +62,205 @@ class Combat {
   }
 
   begin(attacker) {
-    const self = this;
+    this.start();
 
-    self.start();
+    this.character.setTarget(attacker);
+    this.addAttacker(attacker);
 
-    self.character.setTarget(attacker);
-    self.addAttacker(attacker);
+    attacker.combat.addAttacker(this.character); // For mobs attacking players..
 
-    attacker.combat.addAttacker(self.character); // For mobs attacking players..
-
-    self.attack(attacker);
+    this.attack(attacker);
   }
 
   start() {
-    const self = this;
+    if (this.started) return;
 
-    if (self.started) return;
+    if (this.character.type === "player") log.debug("Starting player attack.");
 
-    if (self.character.type === "player") log.debug("Starting player attack.");
+    this.lastAction = new Date().getTime();
 
-    self.lastAction = new Date().getTime();
+    this.attackLoop = setInterval(() => {
+      this.parseAttack();
+    }, this.character.attackRate);
 
-    self.attackLoop = setInterval(() => {
-      self.parseAttack();
-    }, self.character.attackRate);
-
-    self.followLoop = setInterval(() => {
-      self.parseFollow();
+    this.followLoop = setInterval(() => {
+      this.parseFollow();
     }, 400);
 
-    self.checkLoop = setInterval(() => {
-      self.parseCheck();
+    this.checkLoop = setInterval(() => {
+      this.parseCheck();
     }, 1000);
 
-    self.started = true;
+    this.started = true;
   }
 
   stop() {
-    const self = this;
+    if (!this.started) return;
 
-    if (!self.started) return;
+    if (this.character.type === "player") log.debug("Stopping player attack.");
 
-    if (self.character.type === "player") log.debug("Stopping player attack.");
+    clearInterval(this.attackLoop);
+    clearInterval(this.followLoop);
+    clearInterval(this.checkLoop);
 
-    clearInterval(self.attackLoop);
-    clearInterval(self.followLoop);
-    clearInterval(self.checkLoop);
+    this.attackLoop = null;
+    this.followLoop = null;
+    this.checkLoop = null;
 
-    self.attackLoop = null;
-    self.followLoop = null;
-    self.checkLoop = null;
-
-    self.started = false;
+    this.started = false;
   }
 
   parseAttack() {
-    const self = this;
+    if (!this.world || !this.queue || this.character.stunned) return;
 
-    if (!self.world || !self.queue || self.character.stunned) return;
-
-    if (self.character.hasTarget() && self.inProximity()) {
-      if (self.character.target && !self.character.target.isDead()) {
-        self.attack(self.character.target);
+    if (this.character.hasTarget() && this.inProximity()) {
+      if (this.character.target && !this.character.target.isDead()) {
+        this.attack(this.character.target);
       }
 
-      if (self.queue.hasQueue()) {
-        self.hit(self.character, self.character.target, self.queue.getHit());
+      if (this.queue.hasQueue()) {
+        this.hit(this.character, this.character.target, this.queue.getHit());
       }
 
-      self.sync();
+      this.sync();
 
-      self.lastAction = self.getTime();
-    } else self.queue.clear();
+      this.lastAction = this.getTime();
+    } else this.queue.clear();
   }
 
   parseFollow() {
-    const self = this;
+    if (this.character.frozen || this.character.stunned) return;
 
-    if (self.character.frozen || self.character.stunned) return;
+    if (this.isMob()) {
+      if (!this.character.isRanged()) this.sendFollow();
 
-    if (self.isMob()) {
-      if (!self.character.isRanged()) self.sendFollow();
-
-      if (self.isAttacked() || self.character.hasTarget()) {
-        self.lastAction = self.getTime();
+      if (this.isAttacked() || this.character.hasTarget()) {
+        this.lastAction = this.getTime();
       }
 
-      if (self.onSameTile()) {
-        const newPosition = self.getNewPosition();
+      if (this.onSameTile()) {
+        const newPosition = this.getNewPosition();
 
-        self.move(self.character, newPosition.x, newPosition.y);
+        this.move(this.character, newPosition.x, newPosition.y);
       }
 
-      if (self.character.hasTarget() && !self.inProximity()) {
-        const attacker = self.getClosestAttacker();
+      if (this.character.hasTarget() && !this.inProximity()) {
+        const attacker = this.getClosestAttacker();
 
-        if (attacker) self.follow(self.character, attacker);
+        if (attacker) this.follow(this.character, attacker);
       }
     }
 
-    if (self.isPlayer()) {
-      if (!self.character.hasTarget()) return;
+    if (this.isPlayer()) {
+      if (!this.character.hasTarget()) return;
 
-      if (self.character.target.type !== "player") return;
+      if (this.character.target.type !== "player") return;
 
-      if (!self.inProximity()) {
-        self.follow(self.character, self.character.target);
+      if (!this.inProximity()) {
+        this.follow(this.character, this.character.target);
       }
     }
   }
 
   parseCheck() {
-    const self = this;
+    if (this.getTime() - this.lastAction > this.lastActionThreshold) {
+      this.stop();
 
-    if (self.getTime() - self.lastAction > self.lastActionThreshold) {
-      self.stop();
-
-      self.forget();
+      this.forget();
     }
   }
 
   attack(target) {
-    const self = this;
     let hit;
 
-    if (self.isPlayer()) hit = self.character.getHit(target);
+    if (this.isPlayer()) hit = this.character.getHit(target);
     else {
       hit = new Hit(
         Modules.Hits.Damage,
-        Formulas.getDamage(self.character, target)
+        Formulas.getDamage(this.character, target)
       );
     }
 
     if (!hit) return;
 
-    self.queue.add(hit);
+    this.queue.add(hit);
   }
 
   sync() {
-    const self = this;
+    if (this.character.type !== "mob") return;
 
-    if (self.character.type !== "mob") return;
-
-    self.world.push(Packets.PushOpcode.Regions, {
-      regionId: self.character.region,
+    this.world.push(Packets.PushOpcode.Regions, {
+      regionId: this.character.region,
       message: new Messages.Combat(Packets.CombatOpcode.Sync, {
-        attackerId: self.character.instance, // irrelevant
-        targetId: self.character.instance, // can be the same since we're acting on an entity.
-        x: self.character.x,
-        y: self.character.y
+        attackerId: this.character.instance, // irrelevant
+        targetId: this.character.instance, // can be the same since we're acting on an entity.
+        x: this.character.x,
+        y: this.character.y
       })
     });
   }
 
   dealAoE(radius, hasTerror) {
-    const self = this;
-
     /**
      * TODO - Find a way to implement special effects without hardcoding them.
      */
 
-    if (!self.world) return;
+    if (!this.world) return;
 
-    const entities = self.world
+    const entities = this.world
       .getGrids()
-      .getSurroundingEntities(self.character, radius);
+      .getSurroundingEntities(this.character, radius);
 
     _.each(entities, entity => {
       const hitData = new Hit(
         Modules.Hits.Damage,
-        Formulas.getAoEDamage(self.character, entity)
+        Formulas.getAoEDamage(this.character, entity)
       ).getData();
 
       hitData.isAoE = true;
       hitData.hasTerror = hasTerror;
 
-      self.hit(self.character, entity, hitData);
+      this.hit(this.character, entity, hitData);
     });
   }
 
   forceAttack() {
-    const self = this;
+    if (!this.character.target || !this.inProximity()) return;
 
-    if (!self.character.target || !self.inProximity()) return;
+    // this.stop();
+    this.start();
 
-    // self.stop();
-    self.start();
-
-    self.attackCount(2, self.character.target);
-    self.hit(self.character, self.character.target, self.queue.getHit());
+    this.attackCount(2, this.character.target);
+    this.hit(this.character, this.character.target, this.queue.getHit());
   }
 
   attackCount(count, target) {
-    const self = this;
-
-    for (let i = 0; i < count; i++) self.attack(target);
+    for (let i = 0; i < count; i++) this.attack(target);
   }
 
   addAttacker(character) {
-    const self = this;
+    if (this.hasAttacker(character)) return;
 
-    if (self.hasAttacker(character)) return;
-
-    self.attackers[character.instance] = character;
+    this.attackers[character.instance] = character;
   }
 
   removeAttacker(character) {
-    const self = this;
+    if (this.hasAttacker(character)) delete this.attackers[character.instance];
 
-    if (self.hasAttacker(character)) delete self.attackers[character.instance];
-
-    if (!self.isAttacked()) self.sendToSpawn();
+    if (!this.isAttacked()) this.sendToSpawn();
   }
 
   sendToSpawn() {
-    const self = this;
+    if (!this.isMob()) return;
 
-    if (!self.isMob()) return;
+    this.character.return();
 
-    self.character.return();
-
-    self.world.push(Packets.PushOpcode.Regions, {
-      regionId: self.character.region,
+    this.world.push(Packets.PushOpcode.Regions, {
+      regionId: this.character.region,
       message: new Messages.Movement(Packets.MovementOpcode.Move, {
-        id: self.character.instance,
-        x: self.character.x,
-        y: self.character.y,
+        id: this.character.instance,
+        x: this.character.x,
+        y: this.character.y,
         forced: false,
         teleport: false
       })
@@ -297,21 +268,17 @@ class Combat {
   }
 
   hasAttacker(character) {
-    const self = this;
+    if (!this.isAttacked()) return;
 
-    if (!self.isAttacked()) return;
-
-    return character.instance in self.attackers;
+    return character.instance in this.attackers;
   }
 
   onSameTile() {
-    const self = this;
-
-    if (!self.character.target || self.character.type !== "mob") return;
+    if (!this.character.target || this.character.type !== "mob") return;
 
     return (
-      self.character.x === self.character.target.x &&
-      self.character.y === self.character.target.y
+      this.character.x === this.character.target.x &&
+      this.character.y === this.character.target.y
     );
   }
 
@@ -320,10 +287,9 @@ class Combat {
   }
 
   getNewPosition() {
-    const self = this;
     const position = {
-      x: self.character.x,
-      y: self.character.y
+      x: this.character.x,
+      y: this.character.y
     };
 
     const random = Utils.randomInt(0, 3);
@@ -347,25 +313,22 @@ class Combat {
   }
 
   inProximity() {
-    const self = this;
+    if (!this.character.target) return;
 
-    if (!self.character.target) return;
+    const targetDistance = this.character.getDistance(this.character.target);
+    const range = this.character.attackRange;
 
-    const targetDistance = self.character.getDistance(self.character.target);
-    const range = self.character.attackRange;
+    if (this.character.isRanged()) return targetDistance <= range;
 
-    if (self.character.isRanged()) return targetDistance <= range;
-
-    return self.character.isNonDiagonal(self.character.target);
+    return this.character.isNonDiagonal(this.character.target);
   }
 
   getClosestAttacker() {
-    const self = this;
     let closest = null;
     const lowestDistance = 100;
 
-    self.forEachAttacker(attacker => {
-      const distance = self.character.getDistance(attacker);
+    this.forEachAttacker(attacker => {
+      const distance = this.character.getDistance(attacker);
 
       if (distance < lowestDistance) closest = attacker;
     });
@@ -374,23 +337,17 @@ class Combat {
   }
 
   setWorld(world) {
-    const self = this;
-
-    if (!self.world) self.world = world;
+    if (!this.world) this.world = world;
   }
 
   forget() {
-    const self = this;
+    this.attackers = {};
+    this.character.removeTarget();
 
-    self.attackers = {};
-    self.character.removeTarget();
-
-    if (self.forgetCallback) self.forgetCallback();
+    if (this.forgetCallback) this.forgetCallback();
   }
 
   move(character, x, y) {
-    const self = this;
-
     /**
      * The server and mob types can parse the mob movement
      */
@@ -401,18 +358,17 @@ class Combat {
   }
 
   hit(character, target, hitInfo) {
-    const self = this;
-    const time = self.getTime();
+    const time = this.getTime();
 
-    if (!self.canHit()) return;
+    if (!this.canHit()) return;
 
     if (character.isRanged() || hitInfo.isRanged) {
-      const projectile = self.world.createProjectile(
+      const projectile = this.world.createProjectile(
         [character, target],
         hitInfo
       );
 
-      self.world.push(Packets.PushOpcode.Regions, {
+      this.world.push(Packets.PushOpcode.Regions, {
         regionId: character.region,
         message: new Messages.Projectile(
           Packets.ProjectileOpcode.Create,
@@ -420,7 +376,7 @@ class Combat {
         )
       });
     } else {
-      self.world.push(Packets.PushOpcode.Regions, {
+      this.world.push(Packets.PushOpcode.Regions, {
         regionId: character.region,
         message: new Messages.Combat(Packets.CombatOpcode.Hit, {
           attackerId: character.instance,
@@ -429,12 +385,12 @@ class Combat {
         })
       });
 
-      self.world.handleDamage(character, target, hitInfo.damage);
+      this.world.handleDamage(character, target, hitInfo.damage);
     }
 
     if (character.damageCallback) character.damageCallback(target, hitInfo);
 
-    self.lastHit = self.getTime();
+    this.lastHit = this.getTime();
   }
 
   follow(character, target) {
@@ -460,17 +416,15 @@ class Combat {
   }
 
   sendFollow() {
-    const self = this;
+    if (!this.character.hasTarget() || this.character.target.isDead()) return;
 
-    if (!self.character.hasTarget() || self.character.target.isDead()) return;
+    // let ignores = [this.character.instance, this.character.target.instance];
 
-    // let ignores = [self.character.instance, self.character.target.instance];
-
-    self.world.push(Packets.PushOpcode.Regions, {
-      regionId: self.character.region,
+    this.world.push(Packets.PushOpcode.Regions, {
+      regionId: this.character.region,
       message: new Messages.Movement(Packets.MovementOpcode.Follow, {
-        attackerId: self.character.instance,
-        targetId: self.character.target.instance
+        attackerId: this.character.instance,
+        targetId: this.character.target.instance
       })
     });
   }
@@ -486,16 +440,14 @@ class Combat {
   }
 
   targetOutOfBounds() {
-    const self = this;
+    if (!this.character.hasTarget() || !this.isMob()) return;
 
-    if (!self.character.hasTarget() || !self.isMob()) return;
-
-    const spawnPoint = self.character.spawnLocation;
-    const target = self.character.target;
+    const spawnPoint = this.character.spawnLocation;
+    const target = this.character.target;
 
     return (
       Utils.getDistance(spawnPoint[0], spawnPoint[1], target.x, target.y) >
-      self.character.spawnDistance
+      this.character.spawnDistance
     );
   }
 
@@ -531,12 +483,11 @@ class Combat {
   }
 
   canHit() {
-    const self = this;
     const currentTime = new Date().getTime();
-    const diff = currentTime - self.lastHit;
+    const diff = currentTime - this.lastHit;
 
     // 5 millisecond margin of error.
-    return diff + 5 > self.character.attackRate;
+    return diff + 5 > this.character.attackRate;
   }
 }
 

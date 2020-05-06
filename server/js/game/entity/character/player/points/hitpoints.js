@@ -3,24 +3,20 @@
 const Points = require("./points");
 
 class HitPoints extends Points {
-  constructor(hitPoints, maxHitPoints) {
-    super(hitPoints, maxHitPoints);
-  }
+  // constructor(hitPoints, maxHitPoints) {
+  //   super(hitPoints, maxHitPoints);
+  // }
 
   setHitPoints(hitPoints) {
-    const self = this;
-
     super.setPoints(hitPoints);
 
-    if (self.hitPointsCallback) self.hitPointsCallback();
+    if (this.hitPointsCallback) this.hitPointsCallback();
   }
 
   setMaxHitPoints(maxHitPoints) {
-    const self = this;
-
     super.setMaxPoints(maxHitPoints);
 
-    if (self.maxHitPointsCallback) self.maxHitPointsCallback();
+    if (this.maxHitPointsCallback) this.maxHitPointsCallback();
   }
 
   getHitPoints() {

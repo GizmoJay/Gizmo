@@ -7,95 +7,88 @@ const Modules = require("../../../../util/modules");
 
 class Achievement {
   constructor(id, player) {
-    const self = this;
+    this.id = id;
+    this.player = player;
 
-    self.id = id;
-    self.player = player;
+    this.progress = 0;
 
-    self.progress = 0;
+    this.data = Data[this.id];
 
-    self.data = Data[self.id];
+    this.name = this.data.name;
+    this.description = this.data.description;
 
-    self.name = self.data.name;
-    self.description = self.data.description;
-
-    self.discovered = false;
+    this.discovered = false;
   }
 
   step() {
-    const self = this;
+    if (this.isThreshold()) return;
 
-    if (self.isThreshold()) return;
+    this.progress++;
 
-    self.progress++;
+    this.update();
 
-    self.update();
-
-    self.player.send(
+    this.player.send(
       new Messages.Quest(Packets.QuestOpcode.Progress, {
-        id: self.id,
-        name: self.name,
-        progress: self.progress,
-        count: self.data.count,
+        id: this.id,
+        name: this.name,
+        progress: this.progress,
+        count: this.data.count,
         isQuest: false
       })
     );
   }
 
   converse(npc) {
-    const self = this;
-
-    if (self.isThreshold() || self.hasItem()) self.finish(npc);
+    if (this.isThreshold() || this.hasItem()) this.finish(npc);
     else {
-      self.player.send(
+      this.player.send(
         new Messages.NPC(Packets.NPCOpcode.Talk, {
           id: npc.instance,
-          text: npc.talk(self.data.text, self.player)
+          text: npc.talk(this.data.text, this.player)
         })
       );
 
-      if (!self.isStarted() && self.player.talkIndex === 0) self.step();
+      if (!this.isStarted() && this.player.talkIndex === 0) this.step();
     }
   }
 
   finish(npc) {
-    const self = this;
-    const rewardType = self.data.rewardType;
+    const rewardType = this.data.rewardType;
 
     switch (rewardType) {
       case Modules.Achievements.Rewards.Item:
-        if (!self.player.inventory.hasSpace()) {
-          self.player.notify(
+        if (!this.player.inventory.hasSpace()) {
+          this.player.notify(
             "You do not have enough space in your inventory to finish this achievement."
           );
           return;
         }
 
-        self.player.inventory.add({
-          id: self.data.item,
-          count: self.data.itemCount
+        this.player.inventory.add({
+          id: this.data.item,
+          count: this.data.itemCount
         });
 
         break;
 
       case Modules.Achievements.Rewards.Experience:
-        self.player.addExperience(self.data.reward);
+        this.player.addExperience(this.data.reward);
 
         break;
     }
 
-    self.setProgress(9999);
-    self.update();
+    this.setProgress(9999);
+    this.update();
 
-    self.player.send(
+    this.player.send(
       new Messages.Quest(Packets.QuestOpcode.Finish, {
-        id: self.id,
-        name: self.name,
+        id: this.id,
+        name: this.name,
         isQuest: false
       })
     );
 
-    if (npc && self.player.npcTalkCallback) self.player.npcTalkCallback(npc);
+    if (npc && this.player.npcTalkCallback) this.player.npcTalkCallback(npc);
   }
 
   update() {
@@ -107,13 +100,11 @@ class Achievement {
   }
 
   hasItem() {
-    const self = this;
-
     if (
-      self.data.type === Modules.Achievements.Type.Scavenge &&
-      self.player.inventory.contains(self.data.item)
+      this.data.type === Modules.Achievements.Type.Scavenge &&
+      this.player.inventory.contains(this.data.item)
     ) {
-      self.player.inventory.remove(self.data.item, self.data.itemCount);
+      this.player.inventory.remove(this.data.item, this.data.itemCount);
 
       return true;
     }
@@ -122,12 +113,10 @@ class Achievement {
   }
 
   setProgress(progress, skipRegion) {
-    const self = this;
+    this.progress = parseInt(progress);
 
-    self.progress = parseInt(progress);
-
-    if (self.data.rewardType === "door" && !skipRegion) {
-      self.player.updateRegion();
+    if (this.data.rewardType === "door" && !skipRegion) {
+      this.player.updateRegion();
     }
   }
 

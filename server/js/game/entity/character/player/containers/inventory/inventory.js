@@ -24,10 +24,8 @@ class Inventory extends Container {
   }
 
   add(item) {
-    const self = this;
-
-    if (!self.canHold(item.id, item.count)) {
-      self.owner.send(
+    if (!this.canHold(item.id, item.count)) {
+      this.owner.send(
         new Messages.Notification(
           Packets.NotificationOpcode.Text,
           Constants.InventoryFull
@@ -45,32 +43,30 @@ class Inventory extends Container {
 
     if (!slot) return false;
 
-    self.owner.send(new Messages.Inventory(Packets.InventoryOpcode.Add, slot));
+    this.owner.send(new Messages.Inventory(Packets.InventoryOpcode.Add, slot));
 
-    self.owner.save();
+    this.owner.save();
 
-    if (item.instance) self.owner.world.removeItem(item);
+    if (item.instance) this.owner.world.removeItem(item);
 
     return true;
   }
 
   remove(id, count, index) {
-    const self = this;
-
     if (!id || !count) return false;
 
-    if (!index) index = self.getIndex(id);
+    if (!index) index = this.getIndex(id);
 
     if (!super.remove(index, id, count)) return false;
 
-    self.owner.send(
+    this.owner.send(
       new Messages.Inventory(Packets.InventoryOpcode.Remove, {
         index: parseInt(index),
         count: count
       })
     );
 
-    self.owner.save();
+    this.owner.save();
 
     return true;
   }

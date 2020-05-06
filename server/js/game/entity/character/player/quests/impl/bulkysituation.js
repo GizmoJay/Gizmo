@@ -8,79 +8,72 @@ class BulkySituation extends Quest {
   constructor(player, data) {
     super(player, data);
 
-    const self = this;
+    this.player = player;
+    this.data = data;
 
-    self.player = player;
-    self.data = data;
-
-    self.lastNPC = null;
+    this.lastNPC = null;
   }
 
   load(stage) {
-    const self = this;
-
     super.load(stage);
 
-    if (self.stage > 9998) return;
+    if (this.stage > 9998) return;
 
-    self.loadCallbacks();
+    this.loadCallbacks();
   }
 
   loadCallbacks() {
-    const self = this;
-
-    self.onNPCTalk(npc => {
-      if (self.hasRequirement()) {
-        self.progress("item");
+    this.onNPCTalk(npc => {
+      if (this.hasRequirement()) {
+        this.progress("item");
         return;
       }
 
-      const conversation = self.getConversation(npc.id);
+      const conversation = this.getConversation(npc.id);
 
-      self.lastNPC = npc;
+      this.lastNPC = npc;
 
-      self.player.send(
+      this.player.send(
         new Messages.NPC(Packets.NPCOpcode.Talk, {
           id: npc.instance,
-          text: npc.talk(conversation, self.player)
+          text: npc.talk(conversation, this.player)
         })
       );
 
-      if (self.player.talkIndex === 0) self.progress("talk");
+      if (this.player.talkIndex === 0) this.progress("talk");
     });
   }
 
   progress(type) {
-    const self = this;
-    const task = self.data.task[self.stage];
+    const task = this.data.task[this.stage];
 
     if (!task || task !== type) return;
 
-    if (self.stage === self.data.stages) {
-      self.finish();
+    if (this.stage === this.data.stages) {
+      this.finish();
       return;
     }
 
     switch (type) {
       case "item":
-        self.player.inventory.remove(self.getItem(), 1);
+        this.player.inventory.remove(this.getItem(), 1);
 
         break;
     }
 
-    self.resetTalkIndex();
+    this.resetTalkIndex();
 
-    self.stage++;
+    this.stage++;
 
-    self.player.send(
+    this.player.send(
       new Messages.Quest(Packets.QuestOpcode.Progress, {
-        id: self.id,
-        stage: self.stage,
+        id: this.id,
+        stage: this.stage,
         isQuest: true
       })
     );
 
-    self.update();
+    this.update();
   }
 
   finish() {

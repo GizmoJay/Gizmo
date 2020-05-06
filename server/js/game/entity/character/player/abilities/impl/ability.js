@@ -4,14 +4,12 @@ const Abilities = require("../../../../../../util/abilities");
 
 class Ability {
   constructor(name, type) {
-    const self = this;
+    this.name = name;
+    this.type = type;
 
-    self.name = name;
-    self.type = type;
+    this.level = -1;
 
-    self.level = -1;
-
-    self.data = Abilities.Data[name];
+    this.data = Abilities.Data[name];
   }
 }
 

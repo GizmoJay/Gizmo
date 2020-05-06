@@ -4,73 +4,61 @@ const Items = require("../../../../../util/items");
 
 class Slot {
   constructor(index) {
-    const self = this;
+    this.index = index;
 
-    self.index = index;
+    this.id = -1;
+    this.count = -1;
+    this.ability = -1;
+    this.abilityLevel = -1;
 
-    self.id = -1;
-    self.count = -1;
-    self.ability = -1;
-    self.abilityLevel = -1;
-
-    self.string = null;
+    this.string = null;
   }
 
   load(id, count, ability, abilityLevel) {
-    const self = this;
+    this.id = parseInt(id);
+    this.count = parseInt(count);
+    this.ability = parseInt(ability);
+    this.abilityLevel = parseInt(abilityLevel);
 
-    self.id = parseInt(id);
-    self.count = parseInt(count);
-    self.ability = parseInt(ability);
-    self.abilityLevel = parseInt(abilityLevel);
+    this.string = Items.idToString(this.id);
+    this.edible = Items.isEdible(this.id);
+    this.equippable = Items.isEquippable(this.string);
 
-    self.string = Items.idToString(self.id);
-    self.edible = Items.isEdible(self.id);
-    self.equippable = Items.isEquippable(self.string);
-
-    self.verify();
+    this.verify();
   }
 
   empty() {
-    const self = this;
+    this.id = -1;
+    this.count = -1;
+    this.ability = -1;
+    this.abilityLevel = -1;
 
-    self.id = -1;
-    self.count = -1;
-    self.ability = -1;
-    self.abilityLevel = -1;
-
-    self.string = null;
+    this.string = null;
   }
 
   increment(amount) {
-    const self = this;
+    this.count += parseInt(amount);
 
-    self.count += parseInt(amount);
-
-    self.verify();
+    this.verify();
   }
 
   decrement(amount) {
-    const self = this;
+    this.count -= parseInt(amount);
 
-    self.count -= parseInt(amount);
-
-    if (self.count < 1) {
+    if (this.count < 1) {
       log.error(
         "[Slot] Item " +
-          self.id +
+          this.id +
           " has a count below 1 -> count: " +
-          self.count
+          this.count
       );
     }
 
-    self.verify();
+    this.verify();
   }
 
   verify() {
-    const self = this;
-
-    if (isNaN(self.count) || self.count < 1) self.count = 1;
+    if (isNaN(this.count) || this.count < 1) this.count = 1;
   }
 
   getData() {

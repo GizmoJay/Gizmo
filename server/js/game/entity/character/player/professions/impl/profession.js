@@ -2,17 +2,15 @@ const Modules = require("../../../../../../util/modules");
 
 class Profession {
   constructor(id, player) {
-    const self = this;
+    this.id = id;
+    this.player = player;
 
-    self.id = id;
-    self.player = player;
+    this.world = player.world;
 
-    self.world = player.world;
+    this.map = this.world.map;
+    this.region = this.world.region;
 
-    self.map = self.world.map;
-    self.region = self.world.region;
-
-    self.experience = 0;
+    this.experience = 0;
   }
 
   load(data) {

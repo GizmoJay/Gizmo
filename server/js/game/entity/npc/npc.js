@@ -10,13 +10,11 @@ class NPC extends Entity {
   }
 
   talk(messages, player) {
-    const self = this;
-
     if (!player) return;
 
-    if (player.npcTalk !== self.id) {
+    if (player.npcTalk !== this.id) {
       player.talkIndex = 0;
-      player.npcTalk = self.id;
+      player.npcTalk = this.id;
     }
 
     const message = messages[player.talkIndex];

@@ -17,9 +17,7 @@ class API {
    */
 
   constructor(world) {
-    const self = this;
-
-    self.world = world;
+    this.world = world;
 
     if (!config.apiEnabled) return;
 
@@ -30,7 +28,7 @@ class API {
 
     const router = express.Router();
 
-    self.handle(router);
+    this.handle(router);
 
     app.use("/", router);
 
@@ -40,36 +38,32 @@ class API {
   }
 
   handle(router) {
-    const self = this;
-
     router.get("/", (request, response) => {
       response.json({
         name: config.name,
         port: config.port, // Sends the server port.
         gameVersion: config.gver,
         maxPlayers: config.maxPlayers,
-        playerCount: self.world.getPopulation()
+        playerCount: this.world.getPopulation()
       });
     });
 
     router.post("/player", (request, response) => {
-      self.handlePlayer(request, response);
+      this.handlePlayer(request, response);
     });
 
     router.post("/chat", (request, response) => {
-      self.handleChat(request, response);
+      this.handleChat(request, response);
     });
 
     router.get("/players", (request, response) => {
-      self.handlePlayers(request, response);
+      this.handlePlayers(request, response);
     });
   }
 
   handlePlayer(request, response) {
-    const self = this;
-
-    if (!self.verifyToken(request.body.accessToken)) {
-      self.returnError(
+    if (!this.verifyToken(request.body.accessToken)) {
+      this.returnError(
         response,
         APIConstants.MALFORMED_PARAMETERS,
         "Invalid `accessToken` specified for /player POST request."
@@ -80,7 +74,7 @@ class API {
     const username = request.body.username;
 
     if (!username) {
-      self.returnError(
+      this.returnError(
         response,
         APIConstants.MALFORMED_PARAMETERS,
         "No `username` variable received."
@@ -88,8 +82,8 @@ class API {
       return;
     }
 
-    if (!self.world.isOnline(username)) {
-      self.returnError(
+    if (!this.world.isOnline(username)) {
+      this.returnError(
         response,
         APIConstants.PLAYER_NOT_ONLINE,
         `Player ${username} is not online.`
@@ -97,16 +91,14 @@ class API {
       return;
     }
 
-    const player = self.world.getPlayerByName(username);
+    const player = this.world.getPlayerByName(username);
 
-    response.json(self.getPlayerData(player));
+    response.json(this.getPlayerData(player));
   }
 
   handleChat(request, response) {
-    const self = this;
-
-    if (!self.verifyToken(request.body.accessToken)) {
-      self.returnError(
+    if (!this.verifyToken(request.body.accessToken)) {
+      this.returnError(
         response,
         APIConstants.MALFORMED_PARAMETERS,
         "Invalid `accessToken` specified for /chat POST request."
@@ -120,7 +112,7 @@ class API {
     const username = request.body.username;
 
     if (username) {
-      const player = self.world.getPlayerByName(username);
+      const player = this.world.getPlayerByName(username);
 
       if (player) player.chat(source, text, colour);
 
@@ -129,16 +121,14 @@ class API {
       return;
     }
 
-    self.world.globalMessage(source, text, colour);
+    this.world.globalMessage(source, text, colour);
 
     response.json({ status: "success" });
   }
 
   handlePlayers(request, response) {
-    const self = this;
-
-    if (!self.verifyToken(request.query.accessToken)) {
-      self.returnError(
+    if (!this.verifyToken(request.query.accessToken)) {
+      this.returnError(
         response,
         APIConstants.MALFORMED_PARAMETERS,
         "Invalid `accessToken` specified for /players GET request."
@@ -148,16 +138,15 @@ class API {
 
     const players = {};
 
-    _.each(self.world.players, player => {
-      players[player.username] = self.getPlayerData(player);
+    _.each(this.world.players, player => {
+      players[player.email] = this.getPlayerData(player);
     });
 
     response.json(players);
   }
 
   pingHub() {
-    const self = this;
-    const url = self.getUrl("ping");
+    const url = this.getUrl("ping");
     const data = {
       form: {
         serverId: config.serverId,
@@ -172,21 +161,20 @@ class API {
         const data = JSON.parse(body);
 
         if (data.status === "success") {
-          if (!self.hubConnected) {
+          if (!this.hubConnected) {
             log.notice("Connected to Gizmo Hub successfully!");
-            self.hubConnected = true;
+            this.hubConnected = true;
           }
         }
       } catch (e) {
-        log.error("Could not connect to Gizmo Hub.");
-        self.hubConnected = false;
+        log.error("Could not connect to Gizmo Hub.", error);
+        this.hubConnected = false;
       }
     });
   }
 
   sendChat(source, text, withArrow) {
-    const self = this;
-    const url = self.getUrl("chat");
+    const url = this.getUrl("chat");
     const data = {
       form: {
         hubAccessToken: config.hubAccessToken,
@@ -201,18 +189,17 @@ class API {
       try {
         const data = JSON.parse(body);
 
-        if (data.status === "error") console.log(data);
+        if (data.status === "error") console.error(data, error);
 
         // TODO - Do something with this?
       } catch (e) {
-        log.error("Could not send message to hub.");
+        log.error("Could not send message to hub.", error);
       }
     });
   }
 
   sendPrivateMessage(source, target, text) {
-    const self = this;
-    const url = self.getUrl("privateMessage");
+    const url = this.getUrl("privateMessage");
     const data = {
       form: {
         hubAccessToken: config.hubAccessToken,
@@ -236,7 +223,7 @@ class API {
         // TODO - Add chat colours/format to config.
         source.chat(`[To ${target}]`, text, "aquamarine");
       } catch (e) {
-        log.error("Could not send privateMessage to hub.");
+        log.error("Could not send privateMessage to hub.", error);
       }
     });
   }
@@ -246,8 +233,6 @@ class API {
   }
 
   getPlayerData(player) {
-    const self = this;
-
     if (!player) return {};
 
     return {

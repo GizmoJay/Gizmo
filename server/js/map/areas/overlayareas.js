@@ -6,15 +6,12 @@ const map = require("../../../data/map/world_server");
 
 class OverlayAreas {
   constructor() {
-    const self = this;
+    this.overlayAreas = [];
 
-    self.overlayAreas = [];
-
-    self.load();
+    this.load();
   }
 
   load() {
-    const self = this;
     const list = map.overlayAreas;
 
     _.each(list, o => {
@@ -25,10 +22,10 @@ class OverlayAreas {
 
       if (o.fog) overlayArea.fog = o.fog;
 
-      self.overlayAreas.push(overlayArea);
+      this.overlayAreas.push(overlayArea);
     });
 
-    log.info("Loaded " + self.overlayAreas.length + " overlay areas.");
+    log.info("Loaded " + this.overlayAreas.length + " overlay areas.");
   }
 }
 

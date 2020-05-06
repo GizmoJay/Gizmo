@@ -6,15 +6,12 @@ const map = require("../../../data/map/world_server");
 
 class CameraAreas {
   constructor() {
-    const self = this;
+    this.cameraAreas = [];
 
-    self.cameraAreas = [];
-
-    self.load();
+    this.load();
   }
 
   load() {
-    const self = this;
     const list = map.cameraAreas;
 
     _.each(list, o => {
@@ -22,10 +19,10 @@ class CameraAreas {
 
       cameraArea.type = o.type;
 
-      self.cameraAreas.push(cameraArea);
+      this.cameraAreas.push(cameraArea);
     });
 
-    log.info("Loaded " + self.cameraAreas.length + " camera areas.");
+    log.info("Loaded " + this.cameraAreas.length + " camera areas.");
   }
 }
 

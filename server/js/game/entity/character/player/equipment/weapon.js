@@ -8,14 +8,12 @@ class Weapon extends Equipment {
   constructor(name, id, count, ability, abilityLevel) {
     super(name, id, count, ability, abilityLevel);
 
-    const self = this;
+    this.level = Items.getWeaponLevel(name);
+    this.ranged = Items.isArcherWeapon(name);
 
-    self.level = Items.getWeaponLevel(name);
-    self.ranged = Items.isArcherWeapon(name);
+    log.debug(`weapon level: ${this.level}`);
 
-    log.debug(`weapon level: ${self.level}`);
-
-    self.breakable = false;
+    this.breakable = false;
   }
 
   getBaseAmplifier() {

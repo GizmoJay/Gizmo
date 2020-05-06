@@ -3,99 +3,60 @@ const Packets = require("../../../../../../network/packets");
 const Messages = require("../../../../../../network/messages");
 const Profession = require("./profession");
 const Modules = require("../../../../../../util/modules");
+const Utils = require("../../../../../../util/utils");
+const Trees = require("../../../../../../../data/trees");
 
 class Lumberjacking extends Profession {
   constructor(id, player) {
     super(id, player);
 
-    const self = this;
+    this.tick = 1000;
 
-    /**
-     * We save trees we are about to destroy
-     * to the `self.trees` and once they are destroyed
-     * we pluck them into the `self.destroyedTrees`.
-     * We run a tick that re-spawns them after a while
-     * using the data from `self.trees`.
-     */
+    this.cuttingInterval = null;
+    this.started = false;
+  }
 
-    self.trees = {};
-    self.destroyedTrees = {};
+  start() {
+    if (this.started) return;
+
+    this.cuttingInterval = setInterval(() => {
+      if (this.world.isTreeCut(this.treeObjectId)) {
+        this.stop();
+        return;
+      }
+
+      if (!this.treeId || !this.treeObjectId) return;
+
+      this.player.sendToRegion(
+        new Messages.Animation(this.player.instance, {
+          action: Modules.Actions.Attack
+        })
+      );
+
+      if (Utils.randomInt(0, Trees.Chances[this.treeId]) === 4)
+      { this.world.destroyTree(this.treeObjectId, Modules.Trees[this.treeId]); }
+    }, this.tick);
+
+    this.started = true;
+  }
+
+  stop() {
+    if (!this.started) return;
+
+    this.treeId = null;
+    this.treeObjectId = null;
+
+    clearInterval(this.cuttingInterval);
+    this.cuttingInterval = null;
+
+    this.started = false;
   }
 
   handle(id, treeId) {
-    const self = this;
+    this.treeId = treeId;
+    this.treeObjectId = id;
 
-    log.debug("Handling tree: " + id);
-    log.debug("treeId: " + treeId);
-
-    self.destroyTree(id, Modules.Trees[treeId]);
-  }
-
-  destroyTree(id, treeId) {
-    const self = this;
-    const position = self.idToPosition(id);
-
-    if (!(id in self.trees)) self.trees[id] = {};
-
-    self.searchTree(position.x, position.y, id);
-
-    _.each(self.trees[id], tile => {
-      const tiles = self.map.clientMap.data[tile.index];
-
-      if (tiles instanceof Array) tiles.splice(tiles.indexOf(tile.treeTile), 1);
-    });
-
-    // TODO - Update only players within the region instead of globally.
-
-    self.region.updateRegions();
-
-    self.destroyedTrees[id] = self.trees[id];
-
-    self.trees[id] = {};
-  }
-
-  /**
-   * We recursively look for a tree at a position, find all the
-   * tiles that are part of the tree, and remove those trees.
-   * Though this system is still quite rigid, it should function
-   * for the time being. The downside is that if trees are too
-   * close together, the recursive function will 'leak' into
-   * the tree not being removed.
-   * `refId` refers to the tree we are clicking. We use this
-   * variable to help organize trees that are queued.
-   */
-
-  searchTree(x, y, refId) {
-    const self = this;
-    const treeTile = self.map.getTree(x, y);
-
-    if (!treeTile) return false;
-
-    const id = x + "-" + y;
-
-    if (id in self.trees[refId]) return false;
-
-    self.trees[refId][id] = {
-      index: self.map.gridPositionToIndex(x, y) - 1,
-      treeTile: treeTile
-    };
-
-    if (self.searchTree(x + 1, y, refId)) return true;
-
-    if (self.searchTree(x - 1, y, refId)) return true;
-
-    if (self.searchTree(x, y + 1, refId)) return true;
-
-    if (self.searchTree(x, y - 1, refId)) return true;
-
-    return false;
-  }
-
-  // Transforms an object's `instance` or `id` into position
-  idToPosition(id) {
-    const split = id.split("-");
-
-    return { x: parseInt(split[0]), y: parseInt(split[1]) };
+    this.start();
   }
 
   getQueueCount() {
