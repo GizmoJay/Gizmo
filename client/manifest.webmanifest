@@ -1,0 +1,15 @@
+{
+  "dir": "ltr",
+  "lang": "en-US",
+  "name": "Gizmo",
+  "short_name": "Gizmo",
+  "scope": "/",
+  "start_url": "/?utm_source=a2hs",
+  "display": "fullscreen",
+  "orientation": "any",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "prefer_related_applications": false,
+  "categories": ["games"],
+  "icons": []
+}

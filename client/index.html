@@ -4,17 +4,15 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge; chrome=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="SameSite" content="None; Secure" />
+    <meta http-equiv="SameSite" content="io=1; Strict" />
+    <!-- None; Secure -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"
     />
 
     <!-- Meta -->
-    <meta
-      name="description"
-      content="A 2D HTML5 adventure based off BrowserQuest (BQ). Gizmo is created to help those interested in game development, and to provide a fun experience."
-    />
+    <meta name="description" content="Gizmo Game Engine Description." />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="GizmoJay" />
     <meta name="image" content="<%= htmlWebpackPlugin.options.favicon %>" />
@@ -33,10 +31,7 @@
       property="og:site_name"
       content="<%= htmlWebpackPlugin.options.title %>"
     />
-    <meta
-      property="og:description"
-      content="A 2D HTML5 adventure based off BrowserQuest (BQ). Gizmo is created to help those interested in game development, and to provide a fun experience."
-    />
+    <meta property="og:description" content="Gizmo Game Engine Description." />
     <meta
       property="og:image"
       content="<%= htmlWebpackPlugin.options.favicon %>"
@@ -48,10 +43,7 @@
 
     <!-- Google -->
     <meta itemprop="name" content="<%= htmlWebpackPlugin.options.title %>" />
-    <meta
-      itemprop="description"
-      content="A 2D HTML5 adventure based off BrowserQuest (BQ). Gizmo is created to help those interested in game development, and to provide a fun experience."
-    />
+    <meta itemprop="description" content="Gizmo Game Engine Description." />
     <meta itemprop="image" content="<%= htmlWebpackPlugin.options.favicon %>" />
 
     <!-- Twitter -->
@@ -60,10 +52,7 @@
       name="twitter:title"
       content="<%= htmlWebpackPlugin.options.title %>"
     />
-    <meta
-      name="twitter:description"
-      content="A 2D HTML5 adventure based off BrowserQuest (BQ). Gizmo is created to help those interested in game development, and to provide a fun experience."
-    />
+    <meta name="twitter:description" content="Gizmo Game Engine Description." />
     <meta
       name="twitter:image:src"
       content="<%= htmlWebpackPlugin.options.favicon %>"
@@ -277,7 +266,7 @@
         "alternateName": "<%= htmlWebpackPlugin.options.title %>",
         "url": "https://gizmo.com/",
         "image": "<%= htmlWebpackPlugin.options.favicon %>",
-        "description": "A 2D HTML5 adventure based off BrowserQuest (BQ). Gizmo is created to help those interested in game development, and to provide a fun experience.",
+        "description": "Gizmo Game Engine Description.",
         "inLanguage": ["English"],
         "operatingSystem": "ANY",
         "applicationCategory": "https://schema.org/VideoGame",
@@ -314,18 +303,13 @@
 
     <base href="<%= htmlWebpackPlugin.options.base %>" />
 
-    <!--  TODO: Bundling CSS
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="<%= htmlWebpackPlugin.options.css %>"
-      /> -->
-
-    <link rel="stylesheet" type="text/css" href="css/animations.css" />
-    <link rel="stylesheet" type="text/css" href="css/game.css" />
-    <link rel="stylesheet" type="text/css" href="css/main.css" />
-    <link rel="stylesheet" type="text/css" href="css/vars.css" />
-    <link rel="stylesheet" type="text/css" href="css/interface.css" />
+    <% if (htmlWebpackPlugin.files.css) { %>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="<%= htmlWebpackPlugin.files.css %>"
+    />
+    <% } %>
 
     <script src="./js/lib/modernizr.js" type="text/javascript"></script>
   </head>
@@ -348,23 +332,29 @@
               <span class="right-ornament"></span>
             </h1>
             <form method="get" accept-charset="utf-8">
+              <label for="loginEmailInput">
+                Email
+              </label>
               <input
-                type="text"
-                id="loginNameInput"
+                type="email"
+                id="loginEmailInput"
                 class="stroke"
-                name="player-name"
-                placeholder="Username"
+                name="loginEmailInput"
+                placeholder="Email"
                 tabindex="0"
-                maxlength="32"
+                maxlength="128"
                 autocomplete="off"
                 readonly
                 autofocus
               />
+              <label for="loginPasswordInput">
+                Password
+              </label>
               <input
                 type="password"
                 id="loginPasswordInput"
                 class="stroke"
-                name="player-password"
+                name="loginPasswordInput"
                 placeholder="Password"
                 tabindex="0"
                 maxlength="64"
@@ -375,11 +365,8 @@
             <div id="rememberMe" class="check" tabindex="0">
               <div id="rememberMeText">Remember Me</div>
             </div>
-            <div id="guest" class="check" tabindex="0">
-              <div id="guestText">Play as a guest</div>
-            </div>
-            <div id="login" tabindex="0"></div>
-            <div id="newCharacter" tabindex="0"></div>
+            <div id="login" tabindex="0"> </div>
+            <div id="newCharacter" tabindex="0"> </div>
             <div class="validation-summary"></div>
           </article>
           <article id="createCharacter">
@@ -389,42 +376,41 @@
               <span class="right-ornament"></span>
             </h1>
             <form method="get" accept-charset="utf-8">
+              <label for="registerEmailInput">
+                Email
+              </label>
               <input
-                type="text"
-                id="registerNameInput"
+                type="email"
+                id="registerEmailInput"
                 class="stroke"
-                name="player-name"
-                placeholder="Username"
+                name="registerEmailInput"
+                placeholder="Email Address"
                 tabindex="0"
-                maxlength="32"
+                maxlength="64"
                 autocomplete="off"
               />
+              <label for="registerPasswordInput">
+                Password
+              </label>
               <input
                 type="password"
                 id="registerPasswordInput"
                 class="stroke"
-                name="player-password"
+                name="registerPasswordInput"
                 placeholder="Password"
                 tabindex="0"
                 maxlength="64"
                 autocomplete="off"
               />
+              <label for="registerPasswordConfirmationInput">
+                Confirm Password
+              </label>
               <input
                 type="password"
                 id="registerPasswordConfirmationInput"
                 class="stroke"
-                name="player-password2"
+                name="registerPasswordConfirmationInput"
                 placeholder="Confirm Password"
-                tabindex="0"
-                maxlength="64"
-                autocomplete="off"
-              />
-              <input
-                type="email"
-                id="registerEmailInput"
-                class="stroke"
-                name="player-email"
-                placeholder="Email Address"
                 tabindex="0"
                 maxlength="64"
                 autocomplete="off"
@@ -435,28 +421,7 @@
             <div id="play" tabindex="0"></div>
             <div class="validation-summary" tabindex="0"></div>
           </article>
-          <article id="clientUpdated">
-            <h1>
-              <span class="left-ornament"></span>
-              <span class="title">Client Updated</span>
-              <span class="right-ornament"></span>
-            </h1>
-            <p id="cuDescription">
-              <br />
-              The client has been updated. You must clear your browser's cache
-              in order to be able to play.
-              <br />
-              Try one of the following methods:
-              <br />
-              <br />
-              1) Hold SHIFT key and press the reload button in your browser.
-              <br />
-              2) Windows + Linux: CTRL + SHIFT + R or SHIFT + F5
-              <br />
-              3) Mac: CMD + SHIFT + R
-            </p>
-          </article>
-          <article id="credits">
+          <!-- <article id="credits">
             <h1>
               <span class="left-ornament"></span>
               <span class="title">Credits</span>
@@ -471,20 +436,23 @@
               <a
                 class="clickable"
                 target="_blank"
+                rel="noopener noreferrer"
                 href="http://soundcloud.com/gyrowolf"
                 >Terrel O'Brien</a
               >,
-              <a class="clickable" target="_blank" href="http://blog.dayjo.org"
+              <a class="clickable" target="_blank" rel="noopener noreferrer" href="http://blog.dayjo.org"
                 >Joel Day</a
               >,
               <a
                 class="clickable"
                 target="_blank"
+                rel="noopener noreferrer"
                 href="http://www.dantilden.com"
                 >Dan Tilden</a
               >, &amp;
               <a
                 target="_blank"
+                rel="noopener noreferrer"
                 class="clickable"
                 href="http://soundcloud.com/aaron-anderson-11"
                 >Aaron Krogh</a
@@ -493,7 +461,7 @@
             <div class="close-about">
               <span>-- Click anywhere to close --</span>
             </div>
-          </article>
+          </article> -->
           <article id="about">
             <h1>
               <span class="left-ornament"></span>
@@ -503,10 +471,7 @@
               <span class="right-ornament"></span>
             </h1>
             <p id="aDescription">
-              Gizmo is a 2D open-source experiment. The game is still very early
-              in development, so please be wary of that. If you would like to
-              check out the source code, visit our
-              <a href="https://github.com/GizmoJay/Gizmo">GitHub Repository</a>.
+              Gizmo Game Engine Description.
             </p>
             <div class="close-about">
               <span>-- Click anywhere to close --</span>
@@ -743,6 +708,9 @@
                 type="text"
                 maxlength="256"
                 autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
                 data-lpignore="true"
               />
             </form>
@@ -763,10 +731,10 @@
       <div id="about-link" class="clickable">
         <span id="toggle-about">About</span>
       </div>
-      <span class="dash">&ndash;</span>
+      <!-- <span class="dash">&ndash;</span>
       <div id="credits-link" class="clickable">
         <span id="toggle-credits">Credits</span>
-      </div>
+      </div> -->
       <span class="dash">&ndash;</span>
       <div id="discord-link" class="clickable">
         <span id="toggle-discord">Discord</span>
@@ -793,6 +761,25 @@
       type="text/javascript"
     ></script>
 
-    <script src="./lib/pwa.js" type="text/javascript"></script>
+    <!-- <%= htmlWebpackPlugin.files.manifest %> -->
+    <!-- <pwa-install></pwa-install> -->
+    <pwa-update
+      updatemessage="An update for Gizmo is available!"
+      swpath="sw.js"
+      forceupdate="true"
+    ></pwa-update>
+
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall@1.6.3/dist/pwa-install.js"
+      integrity="sha256-1a1yV4QqQGgzscEOL7x0Scmkhbrljq9jIVSmH8ZD09Q="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate@0.1.0/dist/pwa-update.js"
+      integrity="sha256-2ydiLPXqtwlgqENH527Div0mRFp3PHXUdN5JxcPjMUw="
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
