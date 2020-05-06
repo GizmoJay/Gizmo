@@ -4,27 +4,40 @@ const Log = require("../../server/js/util/log");
 const worldClient = require("../../server/data/map/world_client");
 const worldServer = require("../../server/data/map/world_server");
 
+config = {
+  debug: true,
+  debugLevel: "all"
+};
+
 class Helper {
   constructor() {
-    const self = this;
+    const This = this;
 
-    self.width = worldServer.width;
-    self.height = worldServer.height;
+    This.width = worldServer.width;
+    This.height = worldServer.height;
 
-    self.getTileData(884, 103);
+    // Palm Tree Stump
+    This.getTileData(45, 132);
+    This.getTileData(46, 132);
+    This.getTileData(45, 133);
+    This.getTileData(46, 133);
 
-    self.getTileData(883, 104);
-    self.getTileData(884, 104);
-    self.getTileData(885, 104);
+    log.debug("-----------");
+
+    // Cut Palm Stump
+    This.getTileData(49, 136);
+    This.getTileData(50, 136);
+    This.getTileData(49, 137);
+    This.getTileData(50, 137);
 
     // for (let i = 1; i < 5; i++)
     //    for (let j = 1; j < 5; j++)
-    //        self.getTileData(9 + i, 91 + j);
+    //        This.getTileData(9 + i, 91 + j);
   }
 
   getTileData(x, y) {
-    const self = this;
-    const index = self.gridPositionToIndex(x, y);
+    const This = this;
+    const index = This.gridPositionToIndex(x, y);
 
     console.log(
       `"${index}": { "data": [${worldClient.data[index]}], "isColliding": ${
@@ -39,12 +52,12 @@ class Helper {
   }
 
   indexToGridPosition(tileIndex) {
-    const self = this;
+    const This = this;
 
     tileIndex -= 1;
 
-    const x = self.getX(tileIndex + 1, self.width);
-    const y = Math.floor(tileIndex / self.width);
+    const x = This.getX(tileIndex + 1, This.width);
+    const y = Math.floor(tileIndex / This.width);
 
     return {
       x: x,

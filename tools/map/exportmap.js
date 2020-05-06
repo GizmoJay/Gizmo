@@ -11,49 +11,43 @@ log = new Log();
 
 class ExportMap {
   constructor() {
-    const self = this;
+    this.source = process.argv[2];
 
-    self.source = process.argv[2];
+    if (!this.source) this.source = "data/map-refactor.json";
 
-    if (!self.source) self.source = "data/map-refactor.json";
-
-    fs.exists(self.source, exists => {
-      if (!exists) {
-        log.error(`The file ${source} could not be found.`);
+    fs.access(this.source, error => {
+      if (error) {
+        log.error(`The file ${source} could not be found.`, error);
         return;
       }
 
-      fs.readFile(self.source, (error, file) => {
-        self.handleMap(JSON.parse(file.toString()));
+      fs.readFile(this.source, (error, file) => {
+        if (error) log.error(`Could not read source file ${source}.`, error);
+
+        this.handleMap(JSON.parse(file.toString()));
       });
     });
   }
 
   handleMap(data) {
-    const self = this;
     const worldClientJSON = "../../server/data/map/world_client.json";
     const worldServerJSON = "../../server/data/map/world_server.json";
     const clientMapJSON = "../../client/data/maps/map.json";
-    const clientMapJS = "../../client/data/maps/map.js";
 
-    const worldClient = self.parse(data, worldClientJSON, "client");
+    const worldClient = this.parse(data, worldClientJSON, "client");
 
-    self.parse(data, worldServerJSON, "server");
-    self.parse(data, clientMapJSON, "info", worldClient);
-    self.parse(data, clientMapJS, "info", worldClient, true);
+    this.parse(data, worldServerJSON, "server");
+    this.parse(data, clientMapJSON, "info", worldClient);
 
-    self.copyTilesets();
+    this.copyTilesets();
   }
 
-  parse(data, destination, mode, worldClient, isJS) {
-    const self = this;
+  parse(data, destination, mode, worldClient) {
     const map = processMap(data, { mode: mode });
 
     if (worldClient) map.depth = worldClient.depth;
 
-    let mapString = JSON.stringify(map);
-
-    if (isJS) mapString = "let mapData = " + mapString;
+    const mapString = JSON.stringify(map);
 
     fs.writeFile(destination, mapString, (error, file) => {
       if (error) log.error("An error has occurred while writing map files.");
@@ -64,7 +58,6 @@ class ExportMap {
   }
 
   copyTilesets() {
-    const self = this;
     const source = "./data";
     const destination = "../../client/img/tilesets";
 

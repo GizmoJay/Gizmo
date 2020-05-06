@@ -11,12 +11,10 @@ let map;
 let mode;
 
 module.exports = function parse(json, options) {
-  const self = this;
+  this.json = json;
+  this.options = options;
 
-  self.json = json;
-  self.options = options;
-
-  mode = self.options.mode;
+  mode = this.options.mode;
 
   map = {
     width: 0,
@@ -49,6 +47,7 @@ module.exports = function parse(json, options) {
       map.objects = [];
       map.cursors = {};
       map.trees = {};
+      map.treeIndexes = [];
 
       map.tilesets = [];
       map.pvpAreas = [];
@@ -69,10 +68,10 @@ module.exports = function parse(json, options) {
       break;
   }
 
-  map.width = self.json.width;
-  map.height = self.json.height;
+  map.width = this.json.width;
+  map.height = this.json.height;
 
-  map.tilesize = self.json.tilewidth;
+  map.tilesize = this.json.tilewidth;
 
   const handleProperty = function(property, value, id) {
     if (property === "c" || property === "o") collisions[id] = true;
@@ -115,8 +114,8 @@ module.exports = function parse(json, options) {
     map.animations[id - 1] = animationData;
   };
 
-  if (self.json.tilesets instanceof Array) {
-    _.each(self.json.tilesets, function(tileset) {
+  if (this.json.tilesets instanceof Array) {
+    _.each(this.json.tilesets, function(tileset) {
       const name = tileset.name.toLowerCase();
 
       if (mode === "info" || mode === "server") {
@@ -145,7 +144,7 @@ module.exports = function parse(json, options) {
         });
       }
 
-      _.each(tileset.tiles, function(tile) {
+      _.each(tileset.tiles, function(tile, index) {
         const id = parseInt(tileset.firstgid) + parseInt(tile.id);
 
         if (tile.animation && mode === "info") {
@@ -165,7 +164,7 @@ module.exports = function parse(json, options) {
     });
   }
 
-  _.each(self.json.layers, function(layer) {
+  _.each(this.json.layers, function(layer) {
     const name = layer.name.toLowerCase();
 
     if (mode === "server") {
@@ -341,8 +340,8 @@ module.exports = function parse(json, options) {
     }
   });
 
-  for (let i = self.json.layers.length; i > 0; i--) {
-    parseLayer(self.json.layers[i - 1]);
+  for (let i = this.json.layers.length; i > 0; i--) {
+    parseLayer(this.json.layers[i - 1]);
   }
 
   if (mode === "client") {
@@ -432,6 +431,8 @@ const parseLayer = function(layer) {
       }
 
       if (tGid in collisions) map.collisions.push(k);
+
+      if (mode === "server" && tGid in map.trees) map.treeIndexes.push(k);
     }
   }
 };
