@@ -108,6 +108,7 @@ html {
 #container {
   z-index: 100;
   background: rgba(0, 0, 0, 0.2);
+  visibility: hidden;
   -webkit-transition: 1s opacity linear 0.5s;
   transition: 1s opacity linear 0.5s;
 }
@@ -136,7 +137,7 @@ footer {
 }
 
 #about-link span:hover,
-#credits-link span:hover,
+// #credits-link span:hover,
 #discord-link span:hover,
 .sub-forum-link:hover {
   color: #fcda5c;
@@ -233,6 +234,10 @@ footer div {
   border-color: #f84444;
 }
 
+#parchment label {
+  display: none;
+}
+
 #parchment select {
   width: 25%;
   background: rgba(0, 0, 0, 0.05);
@@ -289,30 +294,28 @@ footer div {
   width: 80%;
 }
 
-#credits,
+// #credits,
 #git,
 #about,
 #loadCharacter,
 #createCharacter,
 #death,
 #ask,
-#error,
-#clientUpdated {
+#error {
   opacity: 0;
   pointer-events: none;
   -webkit-transition: none;
   transition: none;
 }
 
-#credits,
+// #credits,
 #about,
 #git,
 #death,
 #ask,
 #error,
 #loadCharacter,
-#createCharacter,
-#clientUpdated {
+#createCharacter {
   position: absolute;
   left: 50%;
   text-align: center;
@@ -320,22 +323,21 @@ footer div {
   z-index: 1000;
 }
 
-.credits #credits,
+// .credits #credits,
 .about #about,
 .git #git,
 .death #death,
 .ask #ask,
 .error #error,
 .createCharacter #createCharacter,
-.loadCharacter #loadCharacter,
-.clientUpdated #clientUpdated {
+.loadCharacter #loadCharacter {
   opacity: 1;
   pointer-events: auto;
   -webkit-transition: 0.5s opacity linear;
   transition: 0.5s opacity linear;
 }
 
-#credits,
+// #credits,
 #about,
 #death,
 #ask,
@@ -415,7 +417,7 @@ footer div {
     font-size: 28px;
   }
 
-  #credits,
+  // #credits,
   #about,
   #death,
   #ask,
@@ -467,8 +469,7 @@ footer div {
   #parchment,
   #createCharacter,
   #loadCharacter,
-  #error,
-  #clientUpdated {
+  #error {
     width: 1266px;
     height: 546px;
     position: absolute;
@@ -543,7 +544,7 @@ footer div {
 
 @media only screen and (max-width: 1500px),
   only screen and (max-height: 870px) {
-  #credits,
+  // #credits,
   #about,
   #death,
   #git {
@@ -602,8 +603,7 @@ footer div {
   #parchment,
   #createCharacter,
   #loadCharacter,
-  #error,
-  #clientUpdated {
+  #error {
     width: 844px;
     height: 364px;
     position: absolute;
@@ -677,7 +677,7 @@ footer div {
     margin-top: 34%;
   }
 
-  #credits,
+  // #credits,
   #about,
   #death,
   #git {
@@ -724,8 +724,7 @@ footer div {
   #parchment,
   #createCharacter,
   #loadCharacter,
-  #error,
-  #clientUpdated {
+  #error {
     width: 422px;
     height: 182px;
     position: absolute;
