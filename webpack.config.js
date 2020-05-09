@@ -2,14 +2,9 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 
-/**
- * === MAKE THE PERFORMANCE CHECKS ===
- */
-
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-// const ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const WebpackPwaManifest = require("webpack-pwa-manifest");
 const WorkboxPlugin = require("workbox-webpack-plugin");
@@ -17,7 +12,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const { version, description } = require("./package.json");
 
-const manifest = JSON.parse(fs.readFileSync("./client/manifest.webmanifest", "utf8"));
+const manifest = JSON.parse(
+  fs.readFileSync("./client/manifest.webmanifest", "utf8")
+);
 
 const inProduction = process.env.NODE_ENV === "production";
 
@@ -31,7 +28,7 @@ module.exports = {
   // watch: !inProduction,
   context: path.join(__dirname, "client"),
   entry: ["./js/lib/home.js", "./scss/home.scss"],
-  devtool: inProduction ? "" : "inline-source-map", // ? "source-map"
+  devtool: inProduction ? "" : "inline-source-map", // ? "source-map" // If we want source maps in production
   output: {
     path: path.join(__dirname, "client-dist"),
     filename: "js/[name].[hash:8].js",
@@ -42,8 +39,13 @@ module.exports = {
   devServer: {
     contentBase: "./client-dist",
     historyApiFallback: true,
+    port: process.env.PORT,
     hot: true,
-    inline: true
+    inline: true,
+    host: "localhost"
+  },
+  optimization: {
+    noEmitOnErrors: true
   },
   module: {
     rules: [
@@ -73,11 +75,14 @@ module.exports = {
         test: /\.s?[ac]ss$/i,
         use: [
           inProduction
-            ? {
-              loader: MiniCssExtractPlugin.loader
-            }
+            ? MiniCssExtractPlugin.loader
             : "style-loader",
-          "css-loader",
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: !inProduction
+            }
+          },
           "postcss-loader",
           {
             loader: "sass-loader",
@@ -91,7 +96,6 @@ module.exports = {
         test: /\.(png|svg|jpe?g|gif)$/i,
         loader: "file-loader",
         options: {
-          // name: "[name].[ext]",
           outputPath: "img",
           publicPath: "img"
         }
@@ -115,35 +119,26 @@ module.exports = {
       // {
       //   test: /(manifest\.webmanifest|browserconfig\.xml)$/,
       //   use: [
-      //     {
-      //       loader: "file-loader"
-      //     },
-      //     {
-      //       loader: "app-manifest-loader"
-      //     }
+      //     "file-loader",
+      //     "app-manifest-loader"
       //   ]
       // }
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(
-      { copyUnmodified: !inProduction }
-    ),
+    new webpack.HotModuleReplacementPlugin({
+      multiStep: true
+    }),
+    new CleanWebpackPlugin({
+      copyUnmodified: !inProduction
+    }),
     new CopyPlugin([
       { from: "lib", to: "lib" },
       { from: "js/lib", to: "js/lib" },
       { from: "js/utils", to: "js/utils" },
-      // "browserconfig.xml",
+      "browserconfig.xml",
       "favicon.ico"
     ]),
-    new webpack.HotModuleReplacementPlugin({
-      multiStep: true
-    }),
-    // new ChunkManifestPlugin({
-    //   filename: "manifest.json",
-    //   manifestVariable: "manifest",
-    //   inlineManifest: false
-    // }),
     new HtmlWebpackPlugin({
       title: "Gizmo",
       base: "./",
@@ -166,71 +161,72 @@ module.exports = {
       chunkFilename: "[name].[chunkhash].css"
     }),
     new WebpackPwaManifest(
-      Object.assign(manifest,
-        {
-          inject: true,
-          fingerprints: false,
-          filename: "[name].[ext]",
-          version,
-          description,
-          icons: [
-            {
-              src: path.resolve(
-                __dirname,
-                "client/img/icons/android-chrome-36x36.png"
-              ),
-              sizes: "36x36",
-              destination: path.join("img", "icons"),
-              type: "image/png"
-            },
-            {
-              src: path.resolve(
-                __dirname,
-                "client/img/icons/android-chrome-48x48.png"
-              ),
-              sizes: "48x48",
-              destination: path.join("img", "icons"),
-              type: "image/png"
-            },
-            {
-              src: path.resolve(
-                __dirname,
-                "client/img/icons/android-chrome-72x72.png"
-              ),
-              sizes: "72x72",
-              destination: path.join("img", "icons"),
-              type: "image/png"
-            },
-            {
-              src: path.resolve(
-                __dirname,
-                "client/img/icons/android-chrome-96x96.png"
-              ),
-              sizes: "96x96",
-              destination: path.join("img", "icons"),
-              type: "image/png"
-            },
-            {
-              src: path.resolve(
-                __dirname,
-                "client/img/icons/android-chrome-144x144.png"
-              ),
-              sizes: "144x144",
-              destination: path.join("img", "icons"),
-              type: "image/png"
-            },
-            {
-              src: path.resolve(
-                __dirname,
-                "client/img/icons/android-chrome-192x192.png"
-              ),
-              sizes: "192x192",
-              destination: path.join("img", "icons"),
-              type: "image/png"
-            }
-          ]
-        }
-      )
+      Object.assign(manifest, {
+        inject: true,
+        fingerprints: true,
+        filename: "[name].[ext]",
+        version,
+        description,
+        clientsClaim: true,
+        skipWaiting: true,
+        crossorigin: "use-credentials",
+        icons: [
+          {
+            src: path.resolve(
+              __dirname,
+              "client/img/icons/android-chrome-36x36.png"
+            ),
+            sizes: "36x36",
+            destination: path.join("img", "icons"),
+            type: "image/png"
+          },
+          {
+            src: path.resolve(
+              __dirname,
+              "client/img/icons/android-chrome-48x48.png"
+            ),
+            sizes: "48x48",
+            destination: path.join("img", "icons"),
+            type: "image/png"
+          },
+          {
+            src: path.resolve(
+              __dirname,
+              "client/img/icons/android-chrome-72x72.png"
+            ),
+            sizes: "72x72",
+            destination: path.join("img", "icons"),
+            type: "image/png"
+          },
+          {
+            src: path.resolve(
+              __dirname,
+              "client/img/icons/android-chrome-96x96.png"
+            ),
+            sizes: "96x96",
+            destination: path.join("img", "icons"),
+            type: "image/png"
+          },
+          {
+            src: path.resolve(
+              __dirname,
+              "client/img/icons/android-chrome-144x144.png"
+            ),
+            sizes: "144x144",
+            destination: path.join("img", "icons"),
+            type: "image/png"
+          },
+          {
+            src: path.resolve(
+              __dirname,
+              "client/img/icons/android-chrome-192x192.png"
+            ),
+            sizes: "192x192",
+            destination: path.join("img", "icons"),
+            type: "image/png"
+          }
+        ]
+      })
     ),
     new WorkboxPlugin.InjectManifest({
       swSrc: "./sw.js",

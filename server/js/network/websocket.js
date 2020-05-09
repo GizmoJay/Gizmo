@@ -6,6 +6,9 @@ const connect = require("connect");
 const serve = require("serve-static");
 const request = require("request");
 const SocketIO = require("socket.io");
+const webpack = require("webpack");
+const webpackConfig = require("../../../webpack.config");
+const compiler = webpack(webpackConfig);
 const http = require("http");
 const https = require("https");
 const Utils = require("../util/utils");
@@ -20,6 +23,14 @@ class WebSocket extends Socket {
     this.ips = {};
 
     const app = connect();
+    if (webpackConfig.mode === "development") {
+      app.use(
+        require("webpack-dev-middleware")(compiler, {
+          noInfo: true,
+          publicPath: webpackConfig.output.publicPath
+        })
+      );
+    }
     app.use(serve("client-dist", { index: ["index.html"] }), null);
 
     const readyWebSocket = port => {
@@ -34,7 +45,9 @@ class WebSocket extends Socket {
       readyWebSocket(port);
     });
 
-    this.io = new SocketIO(this.httpServer);
+    this.io = new SocketIO(this.httpServer, {
+      cookie: false
+    });
     this.io.on("connection", socket => {
       if (socket.handshake.headers["cf-connecting-ip"]) {
         socket.conn.remoteAddress =
