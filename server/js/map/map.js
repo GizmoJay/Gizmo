@@ -344,7 +344,7 @@ class Map {
          */
 
     for (const id in this.tilesets) {
-      if (this.tilesets.hasOwnProperty(id)) {
+      if (Object.prototype.hasOwnProperty.call(this.tilesets, id)) {
         if (
           tileIndex > this.tilesets[id].firstGID - 1 &&
           tileIndex < this.tilesets[id].lastGID + 1

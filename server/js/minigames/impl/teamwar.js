@@ -38,9 +38,7 @@ class TeamWar extends Minigame {
     }, this.updateInterval);
   }
 
-  start() {
-
-  }
+  start() {}
 
   add(player) {
     if (this.lobby.indexOf(player) > -1) return;
@@ -70,8 +68,10 @@ class TeamWar extends Minigame {
     const random = Utils.randomInt(0, 1);
 
     if (random === 1) {
-      (this.redTeam = tmp.splice(0, half)), (this.blueTeam = tmp);
-    } else (this.blueTeam = tmp.splice(0, half)), (this.redTeam = tmp);
+      this.redTeam = tmp.splice(0, half);
+      this.blueTeam = tmp;
+    } else this.blueTeam = tmp.splice(0, half);
+    this.redTeam = tmp;
   }
 
   count() {

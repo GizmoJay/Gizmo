@@ -107,12 +107,13 @@ class Bot {
 
         break;
 
-      case 2:
+      case 2: {
         const info = message.shift();
 
         this.bots.push(new Entity(info.instance, info.x, info.y, connection));
 
         break;
+      }
 
       case 14: // Combat
         break;

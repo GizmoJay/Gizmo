@@ -32,9 +32,9 @@ class QueenAnt extends Combat {
 
     this.character.onDeath(() => {
       /**
-             * This is to prevent the boss from dealing
-             * any powerful AoE attack after dying.
-             */
+       * This is to prevent the boss from dealing
+       * any powerful AoE attack after dying.
+       */
 
       this.lastSpawn = 0;
 
@@ -45,8 +45,9 @@ class QueenAnt extends Combat {
 
       const listCopy = this.minions.slice();
 
-      for (let i = 0; i < listCopy.length; i++)
-      { this.world.kill(listCopy[i]); }
+      for (let i = 0; i < listCopy.length; i++) {
+        this.world.kill(listCopy[i]);
+      }
     });
 
     this.character.onReturn(() => {
@@ -62,29 +63,32 @@ class QueenAnt extends Combat {
   }
 
   hit(attacker, target, hitInfo) {
-    if (this.frozen)
-    { return; }
+    if (this.frozen) {
+      return;
+    }
 
     if (this.canCastAoE()) {
       this.doAoE();
       return;
     }
 
-    if (this.canSpawn())
-    { this.spawnMinions(); }
+    if (this.canSpawn()) {
+      this.spawnMinions();
+    }
 
-    if (this.isAttacked())
-    { this.beginMinionAttack(); }
+    if (this.isAttacked()) {
+      this.beginMinionAttack();
+    }
 
     super.hit(attacker, target, hitInfo);
   }
 
   doAoE() {
     /**
-         * The reason this function does not use its superclass
-         * representation is because of the setTimeout function
-         * which does not allow us to call super().
-         */
+     * The reason this function does not use its superclass
+     * representation is because of the setTimeout function
+     * which does not allow us to call super().
+     */
 
     this.resetAoE();
 
@@ -104,34 +108,41 @@ class QueenAnt extends Combat {
   spawnMinions() {
     this.lastSpawn = new Date().getTime();
 
-    for (let i = 0; i < this.minionCount; i++)
-    { this.minions.push(this.world.spawnMob(13, this.character.x, this.character.y)); }
+    for (let i = 0; i < this.minionCount; i++) {
+      this.minions.push(
+        this.world.spawnMob(13, this.character.x, this.character.y)
+      );
+    }
 
-    _.each(this.minions, (minion) => {
+    _.each(this.minions, minion => {
       minion.aggressive = true;
       minion.spawnDistance = 12;
 
       minion.onDeath(() => {
-        if (this.isLast())
-        { this.lastSpawn = new Date().getTime(); }
+        if (this.isLast()) {
+          this.lastSpawn = new Date().getTime();
+        }
 
         this.minions.splice(this.minions.indexOf(minion), 1);
       });
 
-      if (this.isAttacked())
-      { this.beginMinionAttack(); }
+      if (this.isAttacked()) {
+        this.beginMinionAttack();
+      }
     });
   }
 
   beginMinionAttack() {
-    if (!this.hasMinions())
-    { return; }
+    if (!this.hasMinions()) {
+      return;
+    }
 
-    _.each(this.minions, (minion) => {
+    _.each(this.minions, minion => {
       const randomTarget = this.getRandomTarget();
 
-      if (!minion.hasTarget() && randomTarget)
-      { minion.combat.begin(randomTarget); }
+      if (!minion.hasTarget() && randomTarget) {
+        minion.combat.begin(randomTarget);
+      }
     });
   }
 
@@ -142,14 +153,18 @@ class QueenAnt extends Combat {
   getRandomTarget() {
     if (this.isAttacked()) {
       const keys = Object.keys(this.attackers);
-      const randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
+      const randomAttacker = this.attackers[
+        keys[Utils.randomInt(0, keys.length)]
+      ];
 
-      if (randomAttacker)
-      { return randomAttacker; }
+      if (randomAttacker) {
+        return randomAttacker;
+      }
     }
 
-    if (this.character.hasTarget())
-    { return this.character.target; }
+    if (this.character.hasTarget()) {
+      return this.character.target;
+    }
 
     return null;
   }
@@ -186,7 +201,11 @@ class QueenAnt extends Combat {
   }
 
   canSpawn() {
-    return new Date().getTime() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked();
+    return (
+      new Date().getTime() - this.lastSpawn > 45000 &&
+      !this.hasMinions() &&
+      this.isAttacked()
+    );
   }
 }
 

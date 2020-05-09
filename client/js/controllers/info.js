@@ -14,7 +14,7 @@ class Info {
     switch (type) {
       case Modules.Hits.Damage:
       case Modules.Hits.Stun:
-      case Modules.Hits.Critical:
+      case Modules.Hits.Critical: {
         let damage = data.shift();
         const isTarget = data.shift();
         const dId = this.generateId(this.game.time, damage, x, y);
@@ -33,11 +33,12 @@ class Info {
         this.addInfo(hitSplat);
 
         break;
+      }
 
       case Modules.Hits.Heal:
       case Modules.Hits.Mana:
       case Modules.Hits.Experience:
-      case Modules.Hits.Poison:
+      case Modules.Hits.Poison: {
         const amount = data.shift();
         const id = this.generateId(this.game.time, amount, x, y);
         let text = "+";
@@ -72,8 +73,9 @@ class Info {
         this.addInfo(splat);
 
         break;
+      }
 
-      case Modules.Hits.LevelUp:
+      case Modules.Hits.LevelUp: {
         const lId = this.generateId(this.game.time, "-1", x, y);
         const levelSplat = new Splat(lId, type, "Level Up!", x, y, false);
         const lColour = Modules.DamageColours.exp;
@@ -83,8 +85,9 @@ class Info {
         this.addInfo(levelSplat);
 
         break;
+      }
 
-      case Modules.Info.Countdown:
+      case Modules.Info.Countdown: {
         /**
          * We only allow the creation of one countdown timer.
          */
@@ -99,6 +102,7 @@ class Info {
         this.addInfo(countdown);
 
         break;
+      }
     }
   }
 

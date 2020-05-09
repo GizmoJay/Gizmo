@@ -45,7 +45,8 @@ class Audio {
   }
 
   parse(path, name, channels, callback) {
-    const fullPath = require(`../../audio/${path}/${name}.${this.format}`).default;
+    const fullPath = require(`../../audio/${path}/${name}.${this.format}`)
+      .default;
     const sound = document.createElement("audio");
 
     function event() {
@@ -96,7 +97,7 @@ class Audio {
     }
 
     switch (type) {
-      case Modules.AudioTypes.Music:
+      case Modules.AudioTypes.Music: {
         this.fadeOut(this.song, () => {
           this.reset(this.song);
         });
@@ -116,8 +117,9 @@ class Audio {
         this.song = song;
 
         break;
+      }
 
-      case Modules.AudioTypes.SFX:
+      case Modules.AudioTypes.SFX: {
         if (!this.sounds[name]) {
           this.parse("sounds", name, 4);
         }
@@ -133,6 +135,7 @@ class Audio {
         sound.play();
 
         break;
+      }
     }
   }
 

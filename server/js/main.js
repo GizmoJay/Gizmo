@@ -106,7 +106,7 @@ class Main {
 
           break;
 
-        case "resetPositions":
+        case "resetPositions": {
           const newX = parseInt(blocks.shift());
           const newY = parseInt(blocks.shift());
 
@@ -133,6 +133,7 @@ class Main {
           });
 
           break;
+        }
 
         case "allowConnections":
           this.world.allowConnections = !this.world.allowConnections;
@@ -143,7 +144,7 @@ class Main {
 
           break;
 
-        case "give":
+        case "give": {
           const itemId = blocks.shift();
           const itemCount = parseInt(blocks.shift());
 
@@ -161,6 +162,7 @@ class Main {
           });
 
           break;
+        }
       }
     });
   }

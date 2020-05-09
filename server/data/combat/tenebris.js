@@ -15,18 +15,20 @@ class Tenebris extends Combat {
     this.respawnDelay = 95000;
 
     character.onDeath(() => {
-      if (this.isIllusion())
-      { if (!this.firstIllusionKilled)
-      { this.spawnTenbris(); }
-      else {
-        this.removeIllusions();
+      if (this.isIllusion()) {
+        if (!this.firstIllusionKilled) {
+          this.spawnTenbris();
+        } else {
+          this.removeIllusions();
 
-        this.reset();
-      } }
+          this.reset();
+        }
+      }
     });
 
-    if (!this.isIllusion())
-    { this.forceTalk("Who dares summon Tenebris!"); }
+    if (!this.isIllusion()) {
+      this.forceTalk("Who dares summon Tenebris!");
+    }
   }
 
   reset() {
@@ -41,11 +43,13 @@ class Tenebris extends Combat {
   }
 
   hit(attacker, target, hitInfo) {
-    if (this.isAttacked())
-    { this.beginIllusionAttack(); }
+    if (this.isAttacked()) {
+      this.beginIllusionAttack();
+    }
 
-    if (this.canSpawn())
-    { this.spawnIllusions(); }
+    if (this.canSpawn()) {
+      this.spawnIllusions();
+    }
 
     super.hit(attacker, target, hitInfo);
   }
@@ -55,19 +59,25 @@ class Tenebris extends Combat {
   }
 
   spawnIllusions() {
-    this.illusions.push(this.world.spawnMob(105, this.character.x + 1, this.character.y + 1));
-    this.illusions.push(this.world.spawnMob(105, this.character.x - 1, this.character.y + 1));
+    this.illusions.push(
+      this.world.spawnMob(105, this.character.x + 1, this.character.y + 1)
+    );
+    this.illusions.push(
+      this.world.spawnMob(105, this.character.x - 1, this.character.y + 1)
+    );
 
-    _.each(this.illusions, (illusion) => {
+    _.each(this.illusions, illusion => {
       illusion.onDeath(() => {
-        if (this.isLast())
-        { this.lastIllusion = new Date().getTime(); }
+        if (this.isLast()) {
+          this.lastIllusion = new Date().getTime();
+        }
 
         this.illusions.splice(this.illusions.indexOf(illusion), 1);
       });
 
-      if (this.isAttacked())
-      { this.beginIllusionAttack(); }
+      if (this.isAttacked()) {
+        this.beginIllusionAttack();
+      }
     });
 
     this.character.setPosition(62, 343);
@@ -88,40 +98,48 @@ class Tenebris extends Combat {
 
     const listCopy = this.illusions.slice();
 
-    for (let i = 0; i < listCopy.length; i++)
-    { this.world.kill(listCopy[i]); }
+    for (let i = 0; i < listCopy.length; i++) {
+      this.world.kill(listCopy[i]);
+    }
   }
 
   beginIllusionAttack() {
-    if (!this.hasIllusions())
-    { return; }
+    if (!this.hasIllusions()) {
+      return;
+    }
 
-    _.each(this.illusions, (illusion) => {
+    _.each(this.illusions, illusion => {
       const target = this.getRandomTarget();
 
-      if (!illusion.hasTarget && target)
-      { illusion.combat.begin(target); }
+      if (!illusion.hasTarget && target) {
+        illusion.combat.begin(target);
+      }
     });
   }
 
   getRandomTarget() {
     if (this.isAttacked()) {
       const keys = Object.keys(this.attackers);
-      const randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
+      const randomAttacker = this.attackers[
+        keys[Utils.randomInt(0, keys.length)]
+      ];
 
-      if (randomAttacker)
-      { return randomAttacker; }
+      if (randomAttacker) {
+        return randomAttacker;
+      }
     }
 
-    if (this.character.hasTarget())
-    { return this.character.target; }
+    if (this.character.hasTarget()) {
+      return this.character.target;
+    }
 
     return null;
   }
 
   forceTalk(instance, message) {
-    if (!this.world)
-    { return; }
+    if (!this.world) {
+      return;
+    }
 
     this.world.push(Packets.PushOpcode.Regions, {
       regionId: this.character.region,
@@ -138,7 +156,12 @@ class Tenebris extends Combat {
   }
 
   canSpawn() {
-    return !this.isIllusion() && !this.hasIllusions && new Date().getTime() - this.lastIllusion === 45000 && Utils.randomInt(0, 4) === 2;
+    return (
+      !this.isIllusion() &&
+      !this.hasIllusions &&
+      new Date().getTime() - this.lastIllusion === 45000 &&
+      Utils.randomInt(0, 4) === 2
+    );
   }
 
   isIllusion() {

@@ -40,17 +40,19 @@ class Doors {
     if (config.offlineMode) return true;
 
     switch (door.requirement) {
-      case "quest":
+      case "quest": {
         const quest = this.player.quests.getQuest(door.questId);
 
         return quest && quest.hasDoorUnlocked(door) ? "open" : "closed";
+      }
 
-      case "achievement":
+      case "achievement": {
         const achievement = this.player.quests.getAchievement(
           door.achievementId
         );
 
         return achievement && achievement.isFinished() ? "open" : "closed";
+      }
 
       case "level":
         return this.player.level >= door.level ? "open" : "closed";
@@ -124,7 +126,7 @@ class Doors {
 
   getDoor(x, y, callback) {
     for (const i in this.doors) {
-      if (this.doors.hasOwnProperty(i)) {
+      if (Object.prototype.hasOwnProperty.call(this.doors, i)) {
         if (this.doors[i].x === x && this.doors[i].y === y) {
           return this.doors[i];
         }

@@ -19,11 +19,13 @@ class HealthFlask {
   }
 
   onUse(character) {
-    if (this.healAmount)
-    { character.healHitPoints(this.healAmount); }
+    if (this.healAmount) {
+      character.healHitPoints(this.healAmount);
+    }
 
-    if (this.manaAmount)
-    { character.healManaPoints(this.manaAmount); }
+    if (this.manaAmount) {
+      character.healManaPoints(this.manaAmount);
+    }
   }
 }
 

@@ -34,17 +34,19 @@ class PirateCaptain extends Combat {
   }
 
   hit(character, target, hitInfo) {
-    if (this.canTeleport())
-    { this.teleport(); }
-    else
-    { super.hit(character, target, hitInfo); }
+    if (this.canTeleport()) {
+      this.teleport();
+    } else {
+      super.hit(character, target, hitInfo);
+    }
   }
 
   teleport() {
     const position = this.getRandomPosition();
 
-    if (!position)
-    { return; }
+    if (!position) {
+      return;
+    }
 
     this.stop();
 
@@ -53,31 +55,34 @@ class PirateCaptain extends Combat {
 
     this.character.setPosition(position.x, position.y);
 
-    if (this.world)
-    { this.world.push(Packets.PushOpcode.Regions, {
-      regionId: this.character.region,
-      message: new Messages.Teleport({
-        id: this.character.instance,
-        x: this.character.x,
-        y: this.character.y,
-        withAnimation: true
-      })
-    }); }
+    if (this.world) {
+      this.world.push(Packets.PushOpcode.Regions, {
+        regionId: this.character.region,
+        message: new Messages.Teleport({
+          id: this.character.instance,
+          x: this.character.x,
+          y: this.character.y,
+          withAnimation: true
+        })
+      });
+    }
 
-    this.forEachAttacker((attacker) => {
+    this.forEachAttacker(attacker => {
       attacker.removeTarget();
     });
 
-    if (this.character.hasTarget())
-    { this.begin(this.character.target); }
+    if (this.character.hasTarget()) {
+      this.begin(this.character.target);
+    }
   }
 
   getRandomPosition() {
     const random = Utils.randomInt(0, this.teleportLocations.length - 1);
     const position = this.teleportLocations[random];
 
-    if (!position || random === this.lastTeleportIndex)
-    { return null; }
+    if (!position || random === this.lastTeleportIndex) {
+      return null;
+    }
 
     return {
       x: position.x,
@@ -88,12 +93,17 @@ class PirateCaptain extends Combat {
 
   canTeleport() {
     // Just randomize the teleportation for shits and giggles.
-    return new Date().getTime() - this.lastTeleport > 10000 && Utils.randomInt(0, 4) === 2;
+    return (
+      new Date().getTime() - this.lastTeleport > 10000 &&
+      Utils.randomInt(0, 4) === 2
+    );
   }
 
   getHealthPercentage() {
     // Floor it to avoid random floats
-    return Math.floor((this.character.hitPoints / this.character.maxHitPoints) * 100);
+    return Math.floor(
+      (this.character.hitPoints / this.character.maxHitPoints) * 100
+    );
   }
 }
 
