@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge; chrome=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="SameSite" content="io=1; Strict" />
     <!-- None; Secure -->
     <meta
       name="viewport"
@@ -254,8 +255,8 @@
     <!-- Theme Colors -->
     <meta name="theme-color" content="#000000" />
     <meta name="msapplication-TileColor" content="#000000" />
-
     <meta name="msapplication-navbutton-color" content="#000000" />
+
     <!-- JSON-LD -->
     <script type="application/ld+json">
       {
@@ -314,10 +315,10 @@
   </head>
   <body class="intro">
     <noscript>
-      <strong class="alert">
+      <div class="alert">
         You must enable JavaScript to play <%= htmlWebpackPlugin.options.title
         %>.
-      </strong>
+      </div>
     </noscript>
     <div id="intro">
       <!-- <h1 id="logo"></h1> -->
@@ -364,15 +365,8 @@
             <div id="rememberMe" class="check" tabindex="0">
               <div id="rememberMeText">Remember Me</div>
             </div>
-            <button id="login" type="submit" aria-label="Login" tabindex="0">
-            </button>
-            <button
-              id="newCharacter"
-              type="submit"
-              aria-label="New Character"
-              tabindex="0"
-            >
-            </button>
+            <div id="login" tabindex="0"> </div>
+            <div id="newCharacter" tabindex="0"> </div>
             <div class="validation-summary"></div>
           </article>
           <article id="createCharacter">
@@ -423,18 +417,8 @@
               />
             </form>
             <!-- <p></p> -->
-            <button
-              id="cancelButton"
-              type="submit"
-              aria-label="Cancel"
-              tabindex="0"
-            ></button>
-            <button
-              id="play"
-              type="submit"
-              aria-label="Play"
-              tabindex="0"
-            ></button>
+            <div id="cancelButton" tabindex="0"></div>
+            <div id="play" tabindex="0"></div>
             <div class="validation-summary" tabindex="0"></div>
           </article>
           <!-- <article id="credits">
@@ -507,7 +491,7 @@
           ><span class="loader__dot">.</span><span class="loader__dot">.</span>
         </div>
 
-        <button id="worlds-switch" type="button" title="Click to change worlds">
+        <button id="worlds-switch" title="Click to change worlds">
           <b>World&nbsp;<span id="current-world-index">...</span></b>
           |
           <small id="current-world-count">0</small>
@@ -537,33 +521,11 @@
         </div>
         <div id="buttons">
           <ul>
-            <li
-              ><button
-                id="inventoryButton"
-                type="button"
-                aria-label="Inventory"
-              ></button
-            ></li>
-            <li
-              ><button
-                id="profileButton"
-                type="button"
-                aria-label="Profile"
-              ></button
-            ></li>
-            <li
-              ><button id="warpButton" type="button" aria-label="Warp"></button
-            ></li>
-            <li
-              ><button id="chatButton" type="button" aria-label="Chat"></button
-            ></li>
-            <li
-              ><button
-                id="settingsButton"
-                type="button"
-                aria-label="Settings"
-              ></button
-            ></li>
+            <li><div id="inventoryButton"></div></li>
+            <li><div id="profileButton"></div></li>
+            <li><div id="warpButton"></div></li>
+            <li><div id="chatButton"></div></li>
+            <li><div id="settingsButton"></div></li>
           </ul>
         </div>
         <div id="actionContainer">
@@ -801,7 +763,6 @@
 
     <!-- <%= htmlWebpackPlugin.files.manifest %> -->
     <!-- <pwa-install></pwa-install> -->
-
     <pwa-update
       updatemessage="An update for Gizmo is available!"
       swpath="sw.js"

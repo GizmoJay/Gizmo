@@ -77,11 +77,7 @@ Utils.getCurrentEpoch = () => {
 };
 
 Utils.formatUsername = username => {
-  return username
-    // Decode username characters
-    .normalize()
-    .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec));
-
+  return username.toString();
   // .replace(/\w\S*/g, string => {
   //   return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
   // });

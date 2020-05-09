@@ -69,7 +69,7 @@ class Enchant {
 
         break;
 
-      case "shards": {
+      case "shards":
         this.selectedShards.css(
           "background-image",
           image.css("background-image")
@@ -86,12 +86,13 @@ class Enchant {
         }
 
         break;
-      }
     }
 
     image.css("background-image", "");
 
-    this.getSlot(index).find(`#inventoryItemCount${index}`).text("");
+    this.getSlot(index)
+      .find(`#inventoryItemCount${index}`)
+      .text("");
   }
 
   moveBack(type, index) {

@@ -12,19 +12,16 @@ class Cactus extends Combat {
     this.character = character;
 
     this.character.onDamaged((damage, attacker) => {
-      if (!attacker || !attacker.armour || attacker.isRanged()) {
-        return;
-      }
+      if (!attacker || !attacker.armour || attacker.isRanged())
+      { return; }
 
       this.damageAttacker(damage, attacker);
 
-      log.debug(
-        `Entity ${this.character.id} damaged ${damage} by ${attacker.instance}.`
-      );
+      log.debug(`Entity ${this.character.id} damaged ${damage} by ${attacker.instance}.`);
     });
 
     this.character.onDeath(() => {
-      this.forEachAttacker(attacker => {
+      this.forEachAttacker((attacker) => {
         this.damageAttacker(this.character.maxHitPoints, attacker);
       });
 
@@ -33,22 +30,20 @@ class Cactus extends Combat {
   }
 
   damageAttacker(damage, attacker) {
-    if (!attacker || !attacker.armour || attacker.isRanged()) {
-      return;
-    }
+    if (!attacker || !attacker.armour || attacker.isRanged())
+    { return; }
 
     /**
-     * This is the formula for dealing damage when a player
-     * attacks the cactus. Eventually the damage will cancel out
-     * as the armour gets better.
-     **/
+         * This is the formula for dealing damage when a player
+         * attacks the cactus. Eventually the damage will cancel out
+         * as the armour gets better.
+         **/
 
     const defense = attacker.armour.getDefense();
-    const calculatedDamage = Math.floor(damage / 2 - defense * 5);
+    const calculatedDamage = Math.floor((damage / 2) - (defense * 5));
 
-    if (calculatedDamage < 1) {
-      return;
-    }
+    if (calculatedDamage < 1)
+    { return; }
 
     const hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 

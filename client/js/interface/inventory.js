@@ -162,7 +162,7 @@ class Inventory {
 
         break;
 
-      case "drop": {
+      case "drop":
         const item = this.selectedItem;
 
         if (item.count > 1) {
@@ -180,9 +180,8 @@ class Inventory {
         }
 
         break;
-      }
 
-      case "dropAccept": {
+      case "dropAccept":
         const count = $("#dropCount").val();
 
         if (isNaN(count) || count < 1) {
@@ -198,7 +197,6 @@ class Inventory {
         this.clearSelection();
 
         break;
-      }
 
       case "dropCancel":
         this.actions.hideDrop();

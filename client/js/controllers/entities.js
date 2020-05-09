@@ -55,7 +55,7 @@ class Entities {
     }
 
     switch (info.type) {
-      case "chest": {
+      case "chest":
         /**
          * Here we will parse the different types of chests..
          * We can go Dark Souls style and implement mimics
@@ -67,17 +67,15 @@ class Entities {
         entity = chest;
 
         break;
-      }
 
-      case "npc": {
+      case "npc":
         const npc = new NPC(info.id, info.string);
 
         entity = npc;
 
         break;
-      }
 
-      case "item": {
+      case "item":
         const item = new Item(
           info.id,
           info.string,
@@ -89,9 +87,8 @@ class Entities {
         entity = item;
 
         break;
-      }
 
-      case "mob": {
+      case "mob":
         const mob = new Mob(info.id, info.string);
 
         mob.setHitPoints(info.hitPoints);
@@ -105,9 +102,8 @@ class Entities {
         entity = mob;
 
         break;
-      }
 
-      case "projectile": {
+      case "projectile":
         const attacker = this.get(info.characterId);
         const target = this.get(info.targetId);
 
@@ -175,9 +171,8 @@ class Entities {
         attacker.triggerHealthBar();
 
         return;
-      }
 
-      case "player": {
+      case "player":
         const player = new Player();
 
         player.setId(info.id);
@@ -229,7 +224,6 @@ class Entities {
         this.addEntity(player);
 
         return;
-      }
     }
 
     if (!entity) {
@@ -404,9 +398,7 @@ class Entities {
   }
 
   forEachEntityAround(x, y, radius, callback) {
-    // eslint-disable-next-line camelcase
     for (let i = x - radius, max_i = x + radius; i <= max_i; i++) {
-      // eslint-disable-next-line camelcase
       for (let j = y - radius, max_j = y + radius; j <= max_j; j++) {
         if (this.map.isOutOfBounds(i, j)) {
           continue;

@@ -43,7 +43,7 @@ class Updater {
           if (entity.hasPath() && !entity.movement.inProgress) {
             switch (entity.orientation) {
               case Modules.Orientation.Left:
-              case Modules.Orientation.Right: {
+              case Modules.Orientation.Right:
                 const isLeft = entity.orientation === Modules.Orientation.Left;
 
                 entity.movement.start(
@@ -63,10 +63,9 @@ class Updater {
                 );
 
                 break;
-              }
 
               case Modules.Orientation.Up:
-              case Modules.Orientation.Down: {
+              case Modules.Orientation.Down:
                 const isUp = entity.orientation === Modules.Orientation.Up;
 
                 entity.movement.start(
@@ -86,7 +85,6 @@ class Updater {
                 );
 
                 break;
-              }
             }
           }
         } else if (entity.type === "projectile") {

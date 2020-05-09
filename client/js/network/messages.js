@@ -98,7 +98,10 @@ class Messages {
         break;
 
       case "userexists":
-        this.app.sendError(null, "The email you have used already exists.");
+        this.app.sendError(
+          null,
+          "The email you have used already exists."
+        );
         break;
 
       case "emailexists":

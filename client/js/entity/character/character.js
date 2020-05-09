@@ -110,11 +110,10 @@ class Character extends Entity {
     this.spriteFlipY = false;
 
     if (o.indexOf(animation) > -1) {
-      animation += `_${
-        orientation === Modules.Orientation.Left
+      animation +=
+        `_${orientation === Modules.Orientation.Left
           ? "right"
-          : this.orientationToString(orientation)
-      }`;
+          : this.orientationToString(orientation)}`;
       this.spriteFlipX = this.orientation === Modules.Orientation.Left;
     }
 

@@ -21,7 +21,7 @@ class Pointer {
 
         break;
 
-      default: {
+      default:
         const element = $(`<div id="${id}" class="pointer"></div>`);
 
         this.setSize(element);
@@ -31,14 +31,13 @@ class Pointer {
         this.pointers[id] = new Pointer(id, element, type);
 
         break;
-      }
     }
   }
 
   resize() {
     _.each(this.pointers, pointer => {
       switch (pointer.type) {
-        case Modules.Pointers.Relative: {
+        case Modules.Pointers.Relative:
           const scale = this.getScale();
           const x = pointer.x;
           const y = pointer.y;
@@ -49,7 +48,6 @@ class Pointer {
           pointer.element.css("top", y * scale - offsetY + "px");
 
           break;
-        }
       }
     });
   }
@@ -177,7 +175,7 @@ class Pointer {
   update() {
     _.each(this.pointers, pointer => {
       switch (pointer.type) {
-        case Modules.Pointers.Entity: {
+        case Modules.Pointers.Entity:
           const entity = this.game.entities.get(pointer.id);
 
           if (entity) {
@@ -187,7 +185,6 @@ class Pointer {
           }
 
           break;
-        }
 
         case Modules.Pointers.Position:
           if (pointer.x !== -1 && pointer.y !== -1) {

@@ -33,9 +33,8 @@ class Lumberjacking extends Profession {
         })
       );
 
-      if (Utils.randomInt(0, Trees.Chances[this.treeId]) === 4) {
-        this.world.destroyTree(this.treeObjectId, Modules.Trees[this.treeId]);
-      }
+      if (Utils.randomInt(0, Trees.Chances[this.treeId]) === 4)
+      { this.world.destroyTree(this.treeObjectId, Modules.Trees[this.treeId]); }
     }, this.tick);
 
     this.started = true;

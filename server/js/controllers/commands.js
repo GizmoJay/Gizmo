@@ -27,7 +27,7 @@ class Commands {
 
   handlePlayerCommands(command, blocks) {
     switch (command) {
-      case "players": {
+      case "players":
         const population = this.world.getPopulation();
         const singular = population === 1;
 
@@ -44,7 +44,6 @@ class Commands {
         );
 
         return;
-      }
 
       case "tutstage":
         log.info(this.player.getTutorial().stage);
@@ -61,7 +60,7 @@ class Commands {
 
         return;
 
-      case "progress": {
+      case "progress":
         const tutorialQuest = this.player.getTutorial();
 
         this.player.send(
@@ -72,7 +71,6 @@ class Commands {
         );
 
         return;
-      }
 
       case "global":
         this.world.globalMessage(
@@ -93,7 +91,7 @@ class Commands {
         log.info(this.player.quests.getQuest(0).getStage());
         return;
 
-      case "resetintro": {
+      case "resetintro":
         const introduction = this.player.quests.getQuest(0);
 
         introduction.setStage(0);
@@ -105,17 +103,15 @@ class Commands {
         this.player.save();
 
         return;
-      }
 
       case "pm":
-      case "msg": {
+      case "msg":
         const otherPlayer = blocks.shift();
         const message = blocks.join(" ");
 
         this.player.sendMessage(otherPlayer, message);
 
         return;
-      }
 
       case "ping":
         this.player.pingTime = new Date().getTime();
@@ -123,7 +119,7 @@ class Commands {
 
         break;
 
-      case "setname": {
+      case "setname":
         const newName = blocks.shift();
 
         if (!newName) return;
@@ -131,14 +127,13 @@ class Commands {
         this.player.username = newName;
 
         break;
-      }
     }
   }
 
   handleModeratorCommands(command, blocks) {
     switch (command) {
       case "mute":
-      case "ban": {
+      case "ban":
         let duration = blocks.shift();
         const targetName = blocks.join(" ");
         const user = this.world.getPlayerByName(targetName);
@@ -161,9 +156,8 @@ class Commands {
         user.save();
 
         return;
-      }
 
-      case "unmute": {
+      case "unmute":
         const uTargetName = blocks.join(" ");
         const uUser = this.world.getPlayerByName(uTargetName);
 
@@ -172,7 +166,6 @@ class Commands {
         uUser.mute = new Date().getTime() - 3600;
 
         uUser.save();
-      }
     }
   }
 
@@ -181,7 +174,7 @@ class Commands {
     let player;
 
     switch (command) {
-      case "spawn": {
+      case "spawn":
         const spawnId = parseInt(blocks.shift());
         const count = parseInt(blocks.shift());
         const ability = parseInt(blocks.shift());
@@ -197,7 +190,6 @@ class Commands {
         });
 
         return;
-      }
 
       case "maxhealth":
         this.player.notify(
@@ -209,7 +201,7 @@ class Commands {
       case "ipban":
         return;
 
-      case "drop": {
+      case "drop":
         const id = parseInt(blocks.shift());
         let dCount = parseInt(blocks.shift());
 
@@ -220,7 +212,6 @@ class Commands {
         this.world.dropItem(id, dCount, this.player.x, this.player.y);
 
         return;
-      }
 
       case "ghost":
         this.player.equip("ghost", 1, -1, -1);
@@ -232,7 +223,7 @@ class Commands {
 
         return;
 
-      case "teleport": {
+      case "teleport":
         const x = parseInt(blocks.shift());
         const y = parseInt(blocks.shift());
         const withAnimation = parseInt(blocks.shift());
@@ -240,7 +231,6 @@ class Commands {
         if (x && y) this.player.teleport(x, y, false, withAnimation);
 
         return;
-      }
 
       case "teletome":
         username = blocks.join(" ");
@@ -265,13 +255,12 @@ class Commands {
 
         return;
 
-      case "mob": {
+      case "mob":
         const npcId = parseInt(blocks.shift());
 
         this.world.spawnMob(npcId, this.player.x, this.player.y);
 
         return;
-      }
 
       case "pointer":
         if (blocks.length > 1) {
@@ -308,7 +297,7 @@ class Commands {
 
         return;
 
-      case "attackaoe": {
+      case "attackaoe":
         let radius = parseInt(blocks.shift());
 
         if (!radius) radius = 1;
@@ -316,9 +305,8 @@ class Commands {
         this.player.combat.dealAoE(radius);
 
         return;
-      }
 
-      case "addexp": {
+      case "addexp":
         const exp = parseInt(blocks.shift());
 
         if (!exp) return;
@@ -326,9 +314,8 @@ class Commands {
         this.player.addExperience(exp);
 
         return;
-      }
 
-      case "region": {
+      case "region":
         const tileX = parseInt(blocks.shift());
         const tileY = parseInt(blocks.shift());
         const tileInfo = parseInt(blocks.shift());
@@ -351,9 +338,8 @@ class Commands {
         });
 
         return;
-      }
 
-      case "gettile": {
+      case "gettile":
         const getTileX = parseInt(blocks.shift());
         const getTileY = parseInt(blocks.shift());
 
@@ -372,7 +358,6 @@ class Commands {
         log.info("Tree? " + this.world.map.getTree(getTileX, getTileY));
 
         return;
-      }
 
       case "instance":
         this.world.region.createInstance(this.player, this.player.region);
@@ -427,7 +412,7 @@ class Commands {
 
         break;
 
-      case "resetAchievement": {
+      case "resetAchievement":
         const achievementId = parseInt(blocks.shift());
 
         if (!achievementId) {
@@ -441,7 +426,6 @@ class Commands {
         this.player.updateRegion();
 
         break;
-      }
 
       case "clear":
         this.player.inventory.forEachSlot(slot => {
@@ -469,7 +453,7 @@ class Commands {
 
         break;
 
-      case "ms": {
+      case "ms":
         let movementSpeed = parseInt(blocks.shift());
 
         if (!movementSpeed) {
@@ -487,7 +471,6 @@ class Commands {
         this.player.sync();
 
         break;
-      }
 
       case "toggleheal":
         this.player.send(

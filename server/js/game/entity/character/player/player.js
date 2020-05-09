@@ -446,11 +446,11 @@ class Player extends Character {
   }
 
   eat(id) {
-    const Item = Items.getPlugin(id);
+    const item = Items.getPlugin(id);
 
-    if (!Item) return;
+    if (!item) return;
 
-    new Item(id).onUse(this);
+    new item(id).onUse(this);
   }
 
   equip(string, count, ability, abilityLevel) {
@@ -586,7 +586,7 @@ class Player extends Character {
     let data;
 
     switch (info.type) {
-      case "sign": {
+      case "sign":
         data = this.globalObjects.getSignData(id);
 
         if (!data) return;
@@ -605,9 +605,8 @@ class Player extends Character {
         });
 
         break;
-      }
 
-      case "lumberjacking": {
+      case "lumberjacking":
         const lumberjacking = this.professions.getProfession(
           Modules.Professions.Lumberjacking
         );
@@ -615,7 +614,6 @@ class Player extends Character {
         if (lumberjacking) lumberjacking.handle(id, info.tree);
 
         break;
-      }
     }
   }
 
@@ -769,12 +767,11 @@ class Player extends Character {
       tiles.data.push(this.map.clientMap.data[index]);
       tiles.collisions.push(this.map.collisions.indexOf(index) > -1);
 
-      if (objectId) {
-        tiles.objectData[index] = {
-          isObject: !!objectId,
-          cursor: cursor
-        };
-      }
+      if (objectId)
+      { tiles.objectData[index] = {
+        isObject: !!objectId,
+        cursor: cursor
+      }; }
     });
 
     return tiles;
@@ -903,7 +900,7 @@ class Player extends Character {
 
     if (this.orientationCallback) {
       // Will be necessary in the future.
-      this.orientationCallback();
+      this.orientationCallback;
     }
   }
 
@@ -1050,7 +1047,7 @@ class Player extends Character {
     }
 
     switch (this.weapon.ability) {
-      case Modules.Enchantment.Critical: {
+      case Modules.Enchantment.Critical:
         /**
          * Still experimental, not sure how likely it is that you're
          * gonna do a critical strike. I just do not want it getting
@@ -1061,7 +1058,6 @@ class Player extends Character {
         const damage = defaultDamage * multiplier;
 
         return new Hit(Modules.Hits.Critical, damage);
-      }
 
       case Modules.Enchantment.Stun:
         return new Hit(Modules.Hits.Stun, defaultDamage);

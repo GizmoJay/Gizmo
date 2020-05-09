@@ -41,7 +41,9 @@ class Regions {
    * to the player
    */
 
-  getDynamicRegions(player) {}
+  getDynamicRegions(player) {
+
+  }
 
   // y y x y y
   // y y x y y
@@ -126,7 +128,7 @@ class Regions {
 
   forEachRegion(callback) {
     for (let x = 0; x < this.regionWidth; x++) {
-      for (let y = 0; y < this.regionHeight; y++) callback(`${x}-${y}`);
+      for (let y = 0; y < this.regionHeight; y++) callback(x + "-" + y);
     }
   }
 
@@ -134,7 +136,7 @@ class Regions {
     if (!regionId) return;
 
     _.each(this.getSurroundingRegions(regionId, offset), region => {
-      callback(`${region.x}-${region.y}`);
+      callback(region.x + "-" + region.y);
     });
   }
 
@@ -142,7 +144,7 @@ class Regions {
     if (!regionId) return;
 
     _.each(this.getAdjacentRegions(regionId, offset), region => {
-      callback(`${region.x}-${region.y}`);
+      callback(region.x + "-" + region.y);
     });
   }
 

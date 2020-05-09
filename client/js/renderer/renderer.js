@@ -38,8 +38,8 @@ class Renderer {
 
     if (!Detect.supportsWebGL()) {
       this.backContext = this.background.getContext("2d");
-    } else {
-      // Background
+    } // Background
+    else {
       this.backContext =
         this.background.getContext("webgl") ||
         this.background.getContext("experimental-webgl");
@@ -730,7 +730,14 @@ class Renderer {
       const y = entity.y - 10;
 
       if (this.drawNames && entity instanceof Character) {
-        this.drawText(entity.name, x, y + 30, true, colour, "#000");
+        this.drawText(
+          entity.name,
+          x,
+          y + 30,
+          true,
+          colour,
+          "#000"
+        );
       }
 
       if (
@@ -747,9 +754,7 @@ class Renderer {
 
         if (entity.ability > -1) {
           this.drawText(
-            `${Modules.EnchantmentNames[entity.ability]} [+${
-              entity.abilityLevel
-            }]`,
+            `${Modules.EnchantmentNames[entity.ability]} [+${entity.abilityLevel}]`,
             x,
             entity.y + 20,
             true,
@@ -1057,24 +1062,21 @@ class Renderer {
         case ROT_180_DEG:
           context.translate(-cell.width, -cell.height);
 
-          dx = -dx;
-          dy = -dy;
+          (dx = -dx), (dy = -dy);
 
           break;
 
         case ROT_90_DEG:
           context.translate(0, -cell.height);
 
-          dx = dy;
-          dy = -temp;
+          (dx = dy), (dy = -temp);
 
           break;
 
         case ROT_NEG_90_DEG:
           context.translate(-cell.width, 0);
 
-          dx = -dy;
-          dy = temp;
+          (dx = -dy), (dy = temp);
 
           break;
       }

@@ -152,7 +152,7 @@ class Quests {
     let count = 0;
 
     for (const id in this.quests) {
-      if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
+      if (this.quests.hasOwnProperty(id)) {
         if (this.quests[id].isFinished()) count++;
       }
     }
@@ -164,7 +164,7 @@ class Quests {
     let count = 0;
 
     for (const id in this.achievements) {
-      if (Object.prototype.hasOwnProperty.call(this.achievements, id)) {
+      if (this.achievements.hasOwnProperty(id)) {
         if (this.achievements[id].isFinished()) count++;
       }
     }
@@ -188,7 +188,7 @@ class Quests {
      */
 
     for (const id in this.quests) {
-      if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
+      if (this.quests.hasOwnProperty(id)) {
         const quest = this.quests[id];
 
         if (quest.hasNPC(npc.id)) return quest;
@@ -200,7 +200,7 @@ class Quests {
 
   getAchievementByNPC(npc) {
     for (const id in this.achievements) {
-      if (Object.prototype.hasOwnProperty.call(this.achievements, id)) {
+      if (this.achievements.hasOwnProperty(id)) {
         if (
           this.achievements[id].data.npc === npc.id &&
           !this.achievements[id].isFinished()
@@ -215,7 +215,7 @@ class Quests {
 
   getAchievementByMob(mob) {
     for (const id in this.achievements) {
-      if (Object.prototype.hasOwnProperty.call(this.achievements, id)) {
+      if (this.achievements.hasOwnProperty(id)) {
         if (this.achievements[id].data.mob === mob.id) {
           return this.achievements[id];
         }
@@ -229,7 +229,7 @@ class Quests {
     if (mob.type !== "mob") return false;
 
     for (const id in this.quests) {
-      if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
+      if (this.quests.hasOwnProperty(id)) {
         const quest = this.quests[id];
 
         if (!quest.isFinished() && quest.hasMob(mob.id)) return true;
@@ -243,7 +243,7 @@ class Quests {
     if (mob.type !== "mob") return false;
 
     for (const id in this.achievements) {
-      if (Object.prototype.hasOwnProperty.call(this.achievements, id)) {
+      if (this.achievements.hasOwnProperty(id)) {
         if (
           this.achievements[id].data.mob === mob.id &&
           !this.achievements[id].isFinished()
@@ -260,7 +260,7 @@ class Quests {
     if (npc.type !== "npc") return false;
 
     for (const id in this.quests) {
-      if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
+      if (this.quests.hasOwnProperty(id)) {
         const quest = this.quests[id];
 
         if (!quest.isFinished() && quest.hasNPC(npc.id)) return true;
@@ -274,7 +274,7 @@ class Quests {
     if (npc.type !== "npc") return false;
 
     for (const id in this.achievements) {
-      if (Object.prototype.hasOwnProperty.call(this.achievements, id)) {
+      if (this.achievements.hasOwnProperty(id)) {
         if (
           this.achievements[id].data.npc === npc.id &&
           !this.achievements[id].isFinished()

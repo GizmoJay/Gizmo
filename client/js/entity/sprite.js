@@ -68,7 +68,7 @@ class Sprite {
     const animations = {};
 
     for (const name in this.animationData) {
-      if (Object.prototype.hasOwnProperty.call(this.animationData, name)) {
+      if (this.animationData.hasOwnProperty(name)) {
         if (name === "death") {
           // Check if sprite has a death animation
           this.hasDeathAnimation = true;

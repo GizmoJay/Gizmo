@@ -1,7 +1,7 @@
 module.exports = {
-  root: true,
   env: {
-    // REVIEW: Server Conversion?
+    // TODO: Conversion
+    amd: false, // ✅
     commonjs: true,
 
     browser: true,
@@ -26,16 +26,53 @@ module.exports = {
     semi: ["warn", "always"],
     quotes: ["warn", "double"],
 
+    /**
+     * TODO: The Big Linting.
+     * Fix these by uncommenting the line or changing the value from "off", and linting each file.
+     */
+    "no-tabs": "off",
     "no-unused-vars": "off",
+    "no-unused-expressions": "off",
+    "no-sequences": "off",
     "no-undef": "off",
+    "no-useless-escape": "off",
+    "no-redeclare": "off",
+    "no-mixed-operators": "off",
+    "no-cond-assign": "off",
+    "no-prototype-builtins": "off",
+    "no-extend-native": "off",
+    "new-cap": "off",
+    camelcase: "off",
+    eqeqeq: "off",
+    "no-void": "off",
+    "no-labels": "off",
+    "accessor-pairs": "off",
+    "brace-style": "off",
+    "no-mixed-operators": "off",
+    "no-return-assign": "off",
+    "no-use-before-define": "off",
+    "no-useless-call": "off",
     "standard/no-callback-literal": "off",
+    "no-mixed-spaces-and-tabs": "off",
+    "no-use-before-define": "off",
+    "no-new-func": "off",
+    "no-self-compare": "off",
+    "no-caller": "off",
+    "no-eval": "off",
+    "no-new-wrappers": "off",
+    "no-useless-call": "off",
+    "no-new-wrappers": "off",
+    "valid-typeof": "off",
+    "no-self-assign": "off",
+    "no-lone-blocks": "off",
+    "no-self-compare": "off",
+    "no-useless-call": "off",
+    "no-control-regex": "off",
+    "no-caller": "off",
+    "no-fallthrough": "off",
+    "no-case-declarations": "off",
 
     // Just styling; unimportant
-    "new-cap": "warn",
-    camelcase: "warn",
-    "brace-style": "warn",
-    "block-spacing": "warn",
-    "space-before-blocks": "warn",
     "no-trailing-spaces": "warn",
     "space-before-function-paren": ["warn", "never"],
     indent: [

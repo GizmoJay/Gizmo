@@ -169,7 +169,7 @@ module.exports = function parse(json, options) {
 
     if (mode === "server") {
       switch (name) {
-        case "doors": {
+        case "doors":
           const doors = layer.objects;
 
           _.each(doors, function(door) {
@@ -185,9 +185,8 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
 
-        case "chestareas": {
+        case "chestareas":
           const cAreas = layer.objects;
 
           _.each(cAreas, function(area) {
@@ -206,9 +205,8 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
 
-        case "chests": {
+        case "chests":
           const chests = layer.objects;
 
           _.each(chests, function(chest) {
@@ -227,9 +225,8 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
 
-        case "lights": {
+        case "lights":
           const lights = layer.objects;
 
           _.each(lights, function(lightObject) {
@@ -246,9 +243,8 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
 
-        case "music": {
+        case "music":
           const mAreas = layer.objects;
 
           _.each(mAreas, function(area) {
@@ -267,9 +263,8 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
 
-        case "pvp": {
+        case "pvp":
           const pAreas = layer.objects;
 
           _.each(pAreas, function(area) {
@@ -284,9 +279,8 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
 
-        case "overlays": {
+        case "overlays":
           const overlayAreas = layer.objects;
 
           _.each(overlayAreas, function(area) {
@@ -308,9 +302,8 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
 
-        case "camera": {
+        case "camera":
           const cameraAreas = layer.objects;
 
           _.each(cameraAreas, function(area) {
@@ -327,9 +320,8 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
 
-        case "games": {
+        case "games":
           const gAreas = layer.objects;
 
           _.each(gAreas, function(area) {
@@ -344,7 +336,6 @@ module.exports = function parse(json, options) {
           });
 
           break;
-        }
       }
     }
   });
@@ -446,17 +437,17 @@ const parseLayer = function(layer) {
   }
 };
 
-// if (typeof String.prototype.startsWith !== "function") {
-//   String.prototype.startsWith = function(str) {
-//     return str.length > 0 && this.substring(0, str.length) === str;
-//   };
-// }
+if (typeof String.prototype.startsWith !== "function") {
+  String.prototype.startsWith = function(str) {
+    return str.length > 0 && this.substring(0, str.length) === str;
+  };
+}
 
-// if (typeof String.prototype.endsWith !== "function") {
-//   String.prototype.endsWith = function(str) {
-//     return (
-//       str.length > 0 &&
-//       this.substring(this.length - str.length, this.length) === str
-//     );
-//   };
-// }
+if (typeof String.prototype.endsWith !== "function") {
+  String.prototype.endsWith = function(str) {
+    return (
+      str.length > 0 &&
+      this.substring(this.length - str.length, this.length) === str
+    );
+  };
+}

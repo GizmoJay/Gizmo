@@ -11,17 +11,13 @@ class Snek extends Combat {
     this.character = character;
 
     this.character.onDamage((target, hitInfo) => {
-      if (!target || target.type !== "player") {
-        return;
-      }
+      if (!target || target.type !== "player")
+      { return; }
 
-      if (this.canPoison()) {
-        target.setPoison(this.getPoisonData());
-      }
+      if (this.canPoison())
+      { target.setPoison(this.getPoisonData()); }
 
-      log.info(
-        `Entity ${this.character.id} hit ${target.instance} - damage ${hitInfo.damage}.`
-      );
+      log.info(`Entity ${this.character.id} hit ${target.instance} - damage ${hitInfo.damage}.`);
     });
   }
 

@@ -1,9 +1,3 @@
-button {
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
 #buttons {
   position: absolute;
   bottom: 0;
@@ -662,28 +656,25 @@ button {
   border-color: #555 transparent transparent transparent;
 }
 
-#worlds-popup > table {
-  th {
-    border-bottom: 2px solid #eee;
-  }
-  td {
-    padding: 12px 24px 10px 16px;
-    border-left: 2px solid #fff;
-  }
-  tr:hover {
-    background: #333a;
-
-    &::after {
-      content: "Join";
-    }
-  }
+#worlds-popup > table th {
+  border-bottom: 2px solid #eee;
+}
+#worlds-popup > table td {
+  padding: 12px 24px 10px 16px;
+  border-left: 2px solid #fff;
+}
+#worlds-popup > table tr:hover {
+  background: #333a;
+}
+#worlds-popup > table tr:hover::after {
+  content: "Join";
 }
 
-pwa-update::part(updateToast) {
-  // cursor: pointer;
+pwa-update div::part(updateToast) button {
+  cursor: pointer;
   border-radius: 4px;
   z-index: 9999;
-  // text-transform: capitalize;
+  text-transform: capitalize;
 }
 
 @media only screen and (min-width: 1501px) {
@@ -692,15 +683,14 @@ pwa-update::part(updateToast) {
     width: 42px;
     height: 45px;
     background: url("../img/3/maintwo.png") no-repeat -588px -942px;
+  }
 
-    &:hover {
-      background: url("../img/3/maintwo.png") no-repeat -630px -942px;
-    }
+  #chatButton:hover {
+    background: url("../img/3/maintwo.png") no-repeat -630px -942px;
+  }
 
-    &:active,
-    &.active {
-      background: url("../img/3/maintwo.png") no-repeat -672px -942px;
-    }
+  #chatButton.active {
+    background: url("../img/3/maintwo.png") no-repeat -672px -942px;
   }
 
   #inventoryButton {
@@ -708,15 +698,14 @@ pwa-update::part(updateToast) {
     width: 42px;
     height: 45px;
     background: url("../img/3/main.png") no-repeat -588px -942px;
+  }
 
-    &:hover {
-      background: url("../img/3/main.png") no-repeat -630px -942px;
-    }
+  #inventoryButton:hover {
+    background: url("../img/3/main.png") no-repeat -630px -942px;
+  }
 
-    &:active,
-    &.active {
-      background: url("../img/3/main.png") no-repeat -672px -942px;
-    }
+  #inventoryButton.active {
+    background: url("../img/3/main.png") no-repeat -672px -942px;
   }
 
   #profileButton {
@@ -724,15 +713,14 @@ pwa-update::part(updateToast) {
     width: 42px;
     height: 45px;
     background: url("../img/3/main.png") no-repeat -714px -942px;
+  }
 
-    &:hover {
-      background: url("../img/3/main.png") no-repeat -756px -942px;
-    }
+  #profileButton:hover {
+    background: url("../img/3/main.png") no-repeat -756px -942px;
+  }
 
-    &:active,
-    &.active {
-      background: url("../img/3/main.png") no-repeat -798px -942px;
-    }
+  #profileButton.active {
+    background: url("../img/3/main.png") no-repeat -798px -942px;
   }
 
   #settingsButton {
@@ -740,15 +728,14 @@ pwa-update::part(updateToast) {
     width: 42px;
     height: 45px;
     background: url("../img/3/main.png") no-repeat -1218px -942px;
+  }
 
-    &:hover {
-      background: url("../img/3/main.png") no-repeat -1260px -942px;
-    }
+  #settingsButton:hover {
+    background: url("../img/3/main.png") no-repeat -1260px -942px;
+  }
 
-    &:active,
-    &.active {
-      background: url("../img/3/main.png") no-repeat -1302px -942px;
-    }
+  #settingsButton.active {
+    background: url("../img/3/main.png") no-repeat -1302px -942px;
   }
 
   #warpButton {
@@ -756,15 +743,14 @@ pwa-update::part(updateToast) {
     width: 42px;
     height: 45px;
     background: url("../img/3/main.png") no-repeat -966px -942px;
+  }
 
-    &:hover {
-      background: url("../img/3/main.png") no-repeat -1008px -942px;
-    }
+  #warpButton:hover {
+    background: url("../img/3/main.png") no-repeat -1008px -942px;
+  }
 
-    &:active,
-    &.active {
-      background: url("../img/3/main.png") no-repeat -1050px -942px;
-    }
+  #warpButton.active {
+    background: url("../img/3/main.png") no-repeat -1050px -942px;
   }
 
   #abilityShortcut {

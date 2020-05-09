@@ -128,7 +128,6 @@ class Input {
           case Modules.Keys.Slash:
             this.chatHandler.input.val("/");
 
-          // eslint-disable-next-line no-fallthrough
           case Modules.Keys.Enter:
             this.chatHandler.toggle();
 
@@ -461,9 +460,7 @@ class Input {
   }
 
   setCursor(cursor) {
-    cursor
-      ? (this.newCursor = cursor)
-      : log.error(`Cursor: ${cursor} could not be found.`);
+    cursor ? this.newCursor = cursor : log.error(`Cursor: ${cursor} could not be found.`);
   }
 
   setAttackTarget() {

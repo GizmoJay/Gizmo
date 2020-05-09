@@ -42,9 +42,7 @@ class Container {
       scale = 2;
     }
 
-    return `url("${
-      require(`../../../img/${scale}/item-${name}.png`).default
-    }")`;
+    return `url("${require(`../../../img/${scale}/item-${name}.png`).default}")`;
   }
 }
 

@@ -804,7 +804,7 @@ class World {
 
   isOnline(email) {
     for (const id in this.players) {
-      if (Object.prototype.hasOwnProperty.call(this.players, id)) {
+      if (this.players.hasOwnProperty(id)) {
         if (this.players[id].email.toLowerCase() === email.toLowerCase()) {
           return true;
         }
@@ -816,7 +816,7 @@ class World {
 
   getPlayerByName(name) {
     for (const id in this.players) {
-      if (Object.prototype.hasOwnProperty.call(this.players, id)) {
+      if (this.players.hasOwnProperty(id)) {
         if (this.players[id].username.toLowerCase() === name.toLowerCase()) {
           return this.players[id];
         }
