@@ -176,9 +176,18 @@ class App {
 
       this.body.focus();
 
-      if (key === Modules.Keys.Enter && !this.game.started) {
-        this.login();
-        return;
+      if (!this.game.started) {
+        switch (key) {
+          case Modules.Keys.Enter:
+            this.login();
+            return;
+
+          case Modules.Keys.Spacebar:
+            if (!$("input:focus")[0]) {
+              this.rememberMe.click();
+            }
+            break;
+        }
       }
 
       if (this.game.started) {
@@ -330,7 +339,7 @@ class App {
     }
 
     switch (activeForm) {
-      case "loadCharacter":
+      case "loadCharacter": {
         const emailInput = $("#loginEmailInput");
         const passwordInput = $("#loginPasswordInput");
 
@@ -349,8 +358,9 @@ class App {
         }
 
         break;
+      }
 
-      case "createCharacter":
+      case "createCharacter": {
         const email = $("#registerEmailInput");
         const registerPassword = $("#registerPasswordInput");
         const registerPasswordConfirmation = $(
@@ -384,13 +394,14 @@ class App {
         }
 
         break;
+      }
     }
 
     return true;
   }
 
   verifyEmail(email) {
-    return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+    return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
       email
     );
   }

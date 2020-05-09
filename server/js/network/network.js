@@ -36,7 +36,10 @@ class Network {
      */
 
     for (const id in this.packets) {
-      if (this.packets[id].length > 0 && this.packets.hasOwnProperty(id)) {
+      if (
+        this.packets[id].length > 0 &&
+        Object.prototype.hasOwnProperty.call(this.packets, id)
+      ) {
         const conn = this.socket.getConnection(id);
 
         if (conn) {

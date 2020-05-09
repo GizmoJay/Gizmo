@@ -327,23 +327,22 @@ class Game {
     }
 
     this.stop();
-    this.renderer.stop();
-    this.interface.stop();
 
     this.unload();
 
     this.app.showMenu();
-
-    if (noError) {
-      this.app.sendError(null, "You have been disconnected from the server");
-      this.app.statusMessage = null;
-    }
 
     this.loadRenderer();
     this.loadControllers();
 
     this.app.toggleLogin(false);
     this.app.updateLoader("");
+
+    this.renderer.stop();
+    this.interface.stop();
+
+    this.app.sendError(null, "You have been disconnected from the server.");
+    this.app.statusMessage = null;
   }
 
   respawn() {

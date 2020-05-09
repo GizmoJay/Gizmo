@@ -34,7 +34,9 @@ class Page {
       return "";
     }
 
-    return `url("${require(`../../../img/${scale}/item-${name}.png`).default}")`;
+    return `url("${
+      require(`../../../img/${scale}/item-${name}.png`).default
+    }")`;
   }
 }
 

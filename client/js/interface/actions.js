@@ -42,7 +42,7 @@ class Actions {
     }
 
     switch (this.activeClass) {
-      case "inventory":
+      case "inventory": {
         this.body.css({
           bottom: "10%",
           left: "10%"
@@ -53,6 +53,7 @@ class Actions {
         this.add(dropButton);
 
         break;
+      }
 
       case "player":
         this.add(this.getFollowButton());

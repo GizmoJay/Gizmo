@@ -84,7 +84,7 @@ class Storage {
   setPlayer(option, value) {
     const pData = this.getPlayer();
 
-    if (pData.hasOwnProperty(option)) {
+    if (Object.prototype.hasOwnProperty.call(pData, option)) {
       pData[option] = value;
     }
 
@@ -94,7 +94,7 @@ class Storage {
   setSettings(option, value) {
     const sData = this.getSettings();
 
-    if (sData.hasOwnProperty(option)) {
+    if (Object.prototype.hasOwnProperty.call(sData, option)) {
       sData[option] = value;
     }
 
@@ -132,6 +132,7 @@ class Storage {
 
   getCursorTiles() {
     return this.data.map.cursorTiles;
-  }}
+  }
+}
 
 export default Storage;

@@ -78,13 +78,13 @@ class ExportMap {
   }
 }
 
-String.prototype.format = function() {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
+// String.prototype.format = function() {
+//   return this.charAt(0).toUpperCase() + this.slice(1);
+// };
 
-String.prototype.startsWith = function(str) {
-  return str.length > 0 && this.substring(0, str.length) === str;
-};
+// String.prototype.startsWith = function(str) {
+//   return str.length > 0 && this.substring(0, str.length) === str;
+// };
 
 module.exports = ExportMap;
 
