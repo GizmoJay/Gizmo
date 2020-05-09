@@ -26,7 +26,7 @@
       "name": "Launch Edge",
       "type": "msedge",
       "request": "launch",
-      "version": "beta",
+      "version": "dev",
       "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}/client",
       "sourceMaps": true
