@@ -341,6 +341,7 @@ class Creator {
 
     return {
       email: player.email,
+      username: player.username,
       password: player.password,
       x: position.x,
       y: position.y,
