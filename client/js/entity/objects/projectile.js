@@ -1,6 +1,21 @@
 import Entity from "../entity";
 
+/**
+ *
+ *
+ * @class Projectile
+ * @extends {Entity}
+ */
 class Projectile extends Entity {
+  /**
+   * Creates an instance of Projectile.
+   *
+   * @param {number} id
+   * @param {number} kind
+   * @param {string} owner
+   *
+   * @memberof Projectile
+   */
   constructor(id, kind, owner) {
     super(id, kind);
 
@@ -37,7 +52,7 @@ class Projectile extends Entity {
   }
 
   setStart(x, y) {
-    this.setGridPosition(Math.floor(x / 16), Math.floor(y / 16));
+    this.setGridPosition(Math.floor(x / 32), Math.floor(y / 32));
 
     this.startX = x;
     this.startY = y;

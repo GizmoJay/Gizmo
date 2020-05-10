@@ -1,3 +1,4 @@
+import Game from "../game";
 import Grids from "../renderer/grids";
 import Chest from "../entity/objects/chest";
 import Character from "../entity/character/character";
@@ -8,7 +9,19 @@ import Mob from "../entity/character/mob/mob";
 import NPC from "../entity/character/npc/npc";
 import Projectile from "../entity/objects/projectile";
 
+/**
+ *
+ *
+ * @class Entities
+ */
 class Entities {
+  /**
+   * Creates an instance of Entities.
+   *
+   * @param {Game} game
+   *
+   * @memberof Entities
+   */
   constructor(game) {
     this.game = game;
     this.renderer = game.renderer;

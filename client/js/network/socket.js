@@ -1,7 +1,20 @@
 import Packets from "./packets";
 import Messages from "./messages";
+import Game from "../game";
 
+/**
+ *
+ *
+ * @class Socket
+ */
 class Socket {
+  /**
+   * Creates an instance of Socket.
+   *
+   * @param {Game} game
+   *
+   * @memberof Socket
+   */
   constructor(game) {
     this.game = game;
     this.config = this.game.app.config;
@@ -18,8 +31,9 @@ class Socket {
    * Asks the hub for a server to connect to.
    * The connection assumes it is a hub, if it's not,
    * we default to normal server connection.
+   *
+   * @memberof Socket
    */
-
   getServer(callback) {
     let url = "http://" + this.config.ip + ":" + this.config.port + "/server";
 

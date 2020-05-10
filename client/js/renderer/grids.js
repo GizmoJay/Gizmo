@@ -1,4 +1,18 @@
+import Map from "../map/map";
+
+/**
+ *
+ *
+ * @class Grids
+ */
 class Grids {
+  /**
+   * Creates an instance of Grids.
+   *
+   * @param {Map} map
+   *
+   * @memberof Grids
+   */
   constructor(map) {
     this.map = map;
 

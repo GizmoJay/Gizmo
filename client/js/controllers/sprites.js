@@ -1,11 +1,21 @@
+import Renderer from "../renderer/renderer";
 import Sprite from "../entity/sprite";
 import Animation from "../entity/animation";
 import sprites from "../../data/sprites.json";
 
 /**
  * Class responsible for loading all the necessary sprites from the JSON.
+ *
+ * @class Sprites
  */
 class Sprites {
+  /**
+   * Creates an instance of Sprites.
+   *
+   * @param {Renderer} renderer
+   *
+   * @memberof Sprites
+   */
   constructor(renderer) {
     this.renderer = renderer;
 
@@ -33,7 +43,7 @@ class Sprites {
   }
 
   loadAnimations() {
-    this.sparksAnimation = new Animation("idle_down", 6, 0, 16, 16);
+    this.sparksAnimation = new Animation("idle_down", 6, 0, 32, 32);
     this.sparksAnimation.setSpeed(120);
   }
 

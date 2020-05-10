@@ -1,4 +1,20 @@
+import Map from "../map/map";
+
+/**
+ *
+ *
+ * @class Tile
+ */
 class Tile {
+  /**
+   * Creates an instance of Tile.
+   *
+   * @param {number} id
+   * @param {number} index
+   * @param {Map} map
+   *
+   * @memberof Tile
+   */
   constructor(id, index, map) {
     this.id = id;
     this.index = index;

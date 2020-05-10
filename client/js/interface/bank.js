@@ -1,6 +1,21 @@
 import Container from "./container/container";
+import Game from "../game";
 
+/**
+ *
+ *
+ * @class Bank
+ */
 class Bank {
+  /**
+   * Creates an instance of Bank.
+   *
+   * @param {Game} game
+   * @param {Container} inventoryContainer
+   * @param {number} size
+   *
+   * @memberof Bank
+   */
   constructor(game, inventoryContainer, size) {
     this.game = game;
     this.inventoryContainer = inventoryContainer;

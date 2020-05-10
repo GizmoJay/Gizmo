@@ -1,7 +1,23 @@
-var Logger = function (level) {
+/**
+ *
+ *
+ * @param {string} level
+ *
+ * @module
+ */
+const Logger = function (level) {
   this.level = level;
 };
 
+/**
+ *
+ *
+ * @param {string} message
+ *
+ * @function info
+ * @memberof Logger
+ * @instance
+ */
 Logger.prototype.info = function (message) {
   if (this.level === "debug" || this.level === "info") {
     if (window.console) {
@@ -10,6 +26,15 @@ Logger.prototype.info = function (message) {
   }
 };
 
+/**
+ *
+ *
+ * @param {string} message
+ *
+ * @function debug
+ * @memberof Logger
+ * @instance
+ */
 Logger.prototype.debug = function (message) {
   if (this.level === "debug") {
     if (window.console) {
@@ -18,6 +43,15 @@ Logger.prototype.debug = function (message) {
   }
 };
 
+/**
+ *
+ *
+ * @param {string} message
+ *
+ * @function error
+ * @memberof Logger
+ * @instance
+ */
 Logger.prototype.error = function (message, stacktrace) {
   if (window.console) {
     console.error(message);
@@ -29,4 +63,7 @@ Logger.prototype.error = function (message, stacktrace) {
   }
 };
 
+/**
+ * @global
+ */
 log = new Logger("debug");

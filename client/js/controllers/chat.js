@@ -1,4 +1,18 @@
+import Game from "../game";
+
+/**
+ *
+ *
+ * @class Chat
+ */
 class Chat {
+  /**
+   * Creates an instance of Chat.
+   *
+   * @param {Game} game
+   *
+   * @memberof Chat
+   */
   constructor(game) {
     this.game = game;
 

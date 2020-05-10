@@ -1,6 +1,17 @@
 import Page from "../page";
 
+/**
+ *
+ *
+ * @class Quest
+ * @extends {Page}
+ */
 class Quest extends Page {
+  /**
+   * Creates an instance of Quest.
+   *
+   * @memberof Quest
+   */
   constructor() {
     super("#questPage");
 

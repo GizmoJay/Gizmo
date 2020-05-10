@@ -1,6 +1,19 @@
+import Entity from "./entity";
 import Character from "./character/character";
 
+/**
+ *
+ *
+ * @class EntityHandler
+ */
 class EntityHandler {
+  /**
+   * Creates an instance of EntityHandler.
+   *
+   * @param {Entity} entity
+   *
+   * @memberof EntityHandler
+   */
   constructor(entity) {
     this.entity = entity;
     this.game = null;

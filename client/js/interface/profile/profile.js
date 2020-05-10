@@ -3,8 +3,21 @@ import Ability from "./pages/ability";
 import Settings from "./pages/settings";
 import Quest from "./pages/quest";
 import Guild from "./pages/guild";
+import Game from "../../game";
 
+/**
+ *
+ *
+ * @class Profile
+ */
 class Profile {
+  /**
+   * Creates an instance of Profile.
+   *
+   * @param {Game} game
+   *
+   * @memberof Profile
+   */
   constructor(game) {
     this.game = game;
 

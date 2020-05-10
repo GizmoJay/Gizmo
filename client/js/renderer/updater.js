@@ -1,5 +1,19 @@
 import Character from "../entity/character/character";
+import Game from "../game";
+
+/**
+ *
+ *
+ * @class Updater
+ */
 class Updater {
+  /**
+   * Creates an instance of Updater.
+   *
+   * @param {Game} game
+   *
+   * @memberof Updater
+   */
   constructor(game) {
     this.game = game;
     this.map = game.map;
@@ -58,7 +72,7 @@ class Updater {
                     entity.nextStep();
                   },
                   entity.x + (isLeft ? -1 : 1),
-                  entity.x + (isLeft ? -16 : 16),
+                  entity.x + (isLeft ? -32 : 32),
                   entity.movementSpeed
                 );
 
@@ -81,7 +95,7 @@ class Updater {
                     entity.nextStep();
                   },
                   entity.y + (isUp ? -1 : 1),
-                  entity.y + (isUp ? -16 : 16),
+                  entity.y + (isUp ? -32 : 32),
                   entity.movementSpeed
                 );
 

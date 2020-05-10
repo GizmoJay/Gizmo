@@ -1,6 +1,9 @@
+/**
+ *
+ *
+ * @class TeamWar
+ */
 class TeamWar {
-  // constructor(game) {}
-
   handle(info) {
     log.info(info);
   }

@@ -1,6 +1,20 @@
 import Container from "./container/container";
+import Game from "../game";
 
+/**
+ *
+ *
+ * @class Inventory
+ */
 class Inventory {
+  /**
+   * Creates an instance of Inventory.
+   *
+   * @param {Game} game
+   * @param {number} size
+   *
+   * @memberof Inventory
+   */
   constructor(game, size) {
     this.game = game;
     this.actions = game.interface.actions;

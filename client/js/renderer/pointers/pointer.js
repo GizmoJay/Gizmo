@@ -1,4 +1,18 @@
+/**
+ *
+ *
+ * @class Pointers
+ */
 class Pointers {
+  /**
+   * Creates an instance of Pointers.
+   *
+   * @param {number} id
+   * @param {string} element
+   * @param {number} type
+   *
+   * @memberof Pointers
+   */
   constructor(id, element, type) {
     this.id = id;
     this.element = element;

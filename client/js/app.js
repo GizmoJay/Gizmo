@@ -2,7 +2,17 @@
 import install from "../lib/pwa";
 import config from "../data/config.json";
 
+/**
+ *
+ *
+ * @class App
+ */
 class App {
+  /**
+   * Creates an instance of App.
+   *
+   * @memberof App
+   */
   constructor() {
     this.config = null;
 

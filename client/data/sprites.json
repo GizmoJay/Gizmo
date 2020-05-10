@@ -2375,6 +2375,60 @@
   },
 
   {
+    "id": "naked",
+    "width": 24,
+    "height": 64,
+    "animations": {
+      "atk_right": {
+        "length": 2,
+        "row": 0,
+        "column": 3.5
+      },
+      "walk_right": {
+        "length": 2,
+        "row": 0,
+        "column": 3.5
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 0,
+        "column": 3.5
+      },
+      "atk_up": {
+        "length": 2,
+        "row": 0,
+        "column": 2.5
+      },
+      "walk_up": {
+        "length": 2,
+        "row": 0,
+        "column": 2.5
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 0,
+        "column": 2.5
+      },
+      "atk_down": {
+        "length": 2,
+        "row": 0,
+        "column": 1.5
+      },
+      "walk_down": {
+        "length": 2,
+        "row": 0,
+        "column": 1.5
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 0,
+        "column": 1.5
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -24
+  },
+  {
     "id": "clotharmor",
     "width": 32,
     "height": 32,
@@ -7830,6 +7884,19 @@
   },
   {
     "id": "item-christmasarmor",
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-naked",
     "width": 16,
     "height": 16,
     "animations": {

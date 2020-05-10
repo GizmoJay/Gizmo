@@ -1,4 +1,18 @@
+import Input from "./input";
+
+/**
+ *
+ *
+ * @class Overlay
+ */
 class Overlay {
+  /**
+   * Creates an instance of Overlay.
+   *
+   * @param {Input} input
+   *
+   * @memberof Overlay
+   */
   constructor(input) {
     this.input = input;
     this.hovering = null;

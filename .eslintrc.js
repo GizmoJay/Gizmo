@@ -29,6 +29,7 @@ module.exports = {
     "no-unused-vars": "off",
     "no-undef": "off",
     "standard/no-callback-literal": "off",
+    "no-var": "error",
 
     // Just styling; unimportant
     "new-cap": "warn",

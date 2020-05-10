@@ -1,6 +1,20 @@
 import Character from "../character";
 
+/**
+ *
+ *
+ * @class Mob
+ * @extends {Character}
+ */
 class Mob extends Character {
+  /**
+   * Creates an instance of Mob.
+   *
+   * @param {number} id
+   * @param {number} kind
+   *
+   *  @memberof Mob
+   */
   constructor(id, kind) {
     super(id, kind);
 

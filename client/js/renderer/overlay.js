@@ -1,4 +1,18 @@
+import Game from "../game";
+
+/**
+ *
+ *
+ * @class Overlay
+ */
 class Overlay {
+  /**
+   * Creates an instance of Overlay.
+   *
+   * @param {Game} game
+   *
+   * @memberof Overlay
+   */
   constructor(game) {
     this.game = game;
 

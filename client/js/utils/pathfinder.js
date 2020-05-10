@@ -1,6 +1,19 @@
 import AStar from "../lib/astar";
 
+/**
+ *
+ *
+ * @class Pathfinder
+ */
 class Pathfinder {
+  /**
+   * Creates an instance of Pathfinder.
+   *
+   * @param {number} width
+   * @param {number} height
+   *
+   * @memberof Pathfinder
+   */
   constructor(width, height) {
     this.width = width;
     this.height = height;

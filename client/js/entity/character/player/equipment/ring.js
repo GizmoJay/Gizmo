@@ -1,9 +1,11 @@
 import Equipment from "./equipment";
 
-class Ring extends Equipment {
-  // constructor(name, string, count, ability, abilityLevel, power) {
-  //   super(name, string, count, ability, abilityLevel, power);
-  // }
-}
+/**
+ *
+ *
+ * @class Ring
+ * @extends {Equipment}
+ */
+class Ring extends Equipment {}
 
 export default Ring;

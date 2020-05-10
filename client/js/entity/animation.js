@@ -1,8 +1,25 @@
+/**
+ *
+ *
+ * @class Animation
+ */
 class Animation {
-  constructor(name, length, row, width, height) {
+  /**
+   * Creates an instance of Animation.
+   *
+   * @param {string} name
+   * @param {number} column
+   * @param {number} row
+   * @param {number} width
+   * @param {number} height
+   *
+   * @memberof Animation
+   */
+  constructor(name, column, row, width, height) {
     this.name = name;
     this.length = length;
     this.row = row;
+    this.column = column;
     this.width = width;
     this.height = height;
 
@@ -24,7 +41,7 @@ class Animation {
       }
     }
 
-    this.currentFrame.x = this.width * i;
+    this.currentFrame.x = this.width * this.column;
     this.currentFrame.y = this.height * this.row;
 
     this.currentFrame.index = i;
@@ -58,6 +75,10 @@ class Animation {
     this.row = row;
   }
 
+  setColumn(column) {
+    this.column = column;
+  }
+
   readyToAnimate(time) {
     return time - this.lastTime > this.speed;
   }
@@ -66,7 +87,7 @@ class Animation {
     this.lastTime = 0;
     this.currentFrame = {
       index: 0,
-      x: 0,
+      x: this.column * this.width,
       y: this.row * this.height
     };
   }

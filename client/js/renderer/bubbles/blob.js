@@ -1,6 +1,22 @@
 import Timer from "../../utils/timer";
 
+/**
+ *
+ *
+ * @class Blob
+ */
 class Blob {
+  /**
+   * Creates an instance of Blob.
+   *
+   * @param {number} id
+   * @param {string} element
+   * @param {number} duration
+   * @param {boolean} isObject
+   * @param {Object} info
+   *
+   * @memberof Blob
+   */
   constructor(id, element, duration, isObject, info) {
     this.id = id;
     this.element = element;

@@ -1,6 +1,18 @@
 import Slot from "./slot";
 
+/**
+ *
+ *
+ * @class Container
+ */
 class Container {
+  /**
+   * Creates an instance of Container.
+   *
+   * @param {number} size
+   *
+   * @memberof Container
+   */
   constructor(size) {
     this.size = size;
 

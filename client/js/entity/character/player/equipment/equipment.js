@@ -3,9 +3,22 @@
  * clear and concise ways of organizing stats of weapons
  * in the client side. This does not dictate the damage,
  * defense or bonus stats, it's just for looks.
+ *
+ * @class Equipment
  */
-
 class Equipment {
+  /**
+   * Creates an instance of Equipment.
+   *
+   * @param {string} name
+   * @param {string} string
+   * @param {number} count
+   * @param {number} ability
+   * @param {number} abilityLevel
+   * @param {number} power
+   *
+   * @memberof Equipment
+   */
   constructor(name, string, count, ability, abilityLevel, power) {
     this.name = name;
     this.string = string;

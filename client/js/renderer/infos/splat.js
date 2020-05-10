@@ -1,4 +1,21 @@
+/**
+ *
+ *
+ * @class Splat
+ */
 class Splat {
+  /**
+   * Creates an instance of Splat.
+   *
+   * @param {number} id
+   * @param {number} type
+   * @param {string} text
+   * @param {number} x
+   * @param {number} y
+   * @param {boolean} statique
+   *
+   * @memberof Splat
+   */
   constructor(id, type, text, x, y, statique) {
     this.id = id;
     this.type = type;

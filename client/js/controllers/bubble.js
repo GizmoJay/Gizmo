@@ -1,6 +1,19 @@
+import Game from "../game";
 import Blob from "../renderer/bubbles/blob";
 
+/**
+ *
+ *
+ * @class Bubble
+ */
 class Bubble {
+  /**
+   * Creates an instance of Bubble.
+   *
+   * @param {Game} game
+   *
+   * @memberof Bubble
+   */
   constructor(game) {
     this.game = game;
     this.bubbles = {};
@@ -42,7 +55,7 @@ class Bubble {
     }
 
     const scale = this.game.renderer.getScale();
-    const tileSize = 16 * scale;
+    const tileSize = 32 * scale;
     const x = (info.x - this.game.getCamera().x) * scale;
     const width = parseInt(bubble.element.css("width")) + 24;
     const offset = width / 2 - tileSize / 2;
