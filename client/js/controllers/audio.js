@@ -1,4 +1,18 @@
+import Game from "../game";
+
+/**
+ *
+ *
+ * @class Audio
+ */
 class Audio {
+  /**
+   * Creates an instance of Audio.
+   *
+   * @param {Game} game
+   *
+   * @memberof Audio
+   */
   constructor(game) {
     this.game = game;
 

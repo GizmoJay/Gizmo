@@ -5,7 +5,18 @@ import Pendant from "./equipment/pendant";
 import Boots from "./equipment/boots";
 import Ring from "./equipment/ring";
 
+/**
+ *
+ *
+ * @class Player
+ * @extends {Character}
+ */
 class Player extends Character {
+  /**
+   * Creates an instance of Player.
+   *
+   * @memberof Player
+   */
   constructor() {
     super(-1, Modules.Types.Player);
 
@@ -108,7 +119,7 @@ class Player extends Character {
   }
 
   getSpriteName() {
-    return this.armour ? this.armour.string : "clotharmor";
+    return this.armour ? this.armour.string : "naked";
   }
 
   setMana(mana) {
@@ -278,7 +289,7 @@ class Player extends Character {
   unequip(type) {
     switch (type) {
       case "armour":
-        this.armour.update("Cloth Armour", "clotharmor", 1, -1, -1);
+        this.armour.update("Naked", "naked", 1, -1, -1);
         break;
 
       case "weapon":

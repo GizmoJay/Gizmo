@@ -23,7 +23,7 @@ class Grids {
     if (entity && entity.oldX === entity.x && entity.oldY === entity.y) return;
 
     this.removeFromEntityGrid(entity, entity.oldX, entity.oldY);
-    this.addToEntityGrid(entity, entity.x, entity.y);
+    // this.addToEntityGrid(entity, entity.x, entity.y);
 
     entity.updatePosition();
   }

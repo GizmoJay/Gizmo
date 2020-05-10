@@ -1,4 +1,18 @@
+import Interface from "../controllers/interface";
+
+/**
+ *
+ *
+ * @class Actions
+ */
 class Actions {
+  /**
+   * Creates an instance of Actions.
+   *
+   * @param {Interface} intrface
+   *
+   * @memberof Actions
+   */
   constructor(intrface) {
     this.interface = intrface;
 

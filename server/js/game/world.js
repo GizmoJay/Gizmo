@@ -627,7 +627,7 @@ class World {
     if (entity.type !== "projectile") this.region.handle(entity, region);
 
     if (entity.x > 0 && entity.y > 0) {
-      this.getGrids().addToEntityGrid(entity, entity.x, entity.y);
+      // this.getGrids().addToEntityGrid(entity, entity.x, entity.y);
     }
 
     entity.onSetPosition(() => {

@@ -1,4 +1,18 @@
+import Game from "../game";
+
+/**
+ *
+ *
+ * @class Zoning
+ */
 class Zoning {
+  /**
+   * Creates an instance of Zoning.
+   *
+   * @param {Game} game
+   *
+   * @memberof Zoning
+   */
   constructor(game) {
     this.game = game;
     this.renderer = game.renderer;

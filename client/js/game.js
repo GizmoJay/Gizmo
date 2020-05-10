@@ -1,3 +1,4 @@
+import App from "./app";
 import Renderer from "./renderer/renderer";
 import LocalStorage from "./utils/storage";
 import Map from "./map/map";
@@ -20,7 +21,19 @@ import Connection from "./network/connection";
 import "./utils/modules";
 import "./network/packets";
 
+/**
+ *
+ *
+ * @class Game
+ */
 class Game {
+  /**
+   * Creates an instance of Game.
+   *
+   * @param {App} app
+   *
+   * @memberof Game
+   */
   constructor(app) {
     this.app = app;
 

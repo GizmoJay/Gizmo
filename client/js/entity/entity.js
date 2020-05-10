@@ -1,6 +1,19 @@
 import EntityHandler from "./entityhandler";
 
+/**
+ *
+ *
+ * @class Entity
+ */
 class Entity {
+  /**
+   * Creates an instance of Entity.
+   *
+   * @param {number} id
+   * @param {number} kind
+   *
+   * @memberof Entity
+   */
   constructor(id, kind) {
     this.id = id;
     this.kind = kind;
@@ -18,7 +31,7 @@ class Entity {
 
     this.animations = null;
     this.currentAnimation = null;
-    this.idleSpeed = 450;
+    this.idleSpeed = 450; // 450
 
     this.shadowOffsetY = 0;
     this.hidden = false;
@@ -128,7 +141,7 @@ class Entity {
     this.gridX = x;
     this.gridY = y;
 
-    this.setPosition(x * 16, y * 16);
+    this.setPosition(x * 32, y * 32);
   }
 
   setAnimation(name, speed, count, onEndCount) {

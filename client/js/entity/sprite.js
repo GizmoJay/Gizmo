@@ -1,6 +1,29 @@
 import Animation from "./animation";
 
+/**
+ * @typedef {{ [animation]: { length: string, row: number, column: number } }} SpriteAnimation
+ */
+
+/**
+ *
+ *
+ * @class Sprite
+ */
 class Sprite {
+  /**
+   * Creates an instance of Sprite.
+   *
+   * @param {Object} sprite
+   * @param {string} sprite.id
+   * @param {number} sprite.width
+   * @param {number} sprite.height
+   * @param {SpriteAnimation} sprite.animation
+   * @param {number} sprite.offsetX
+   * @param {number} sprite.offsetY
+   * @param {number} scale
+   *
+   * @memberof Sprite
+   */
   constructor(sprite, scale) {
     this.sprite = sprite;
     this.scale = scale;
@@ -49,8 +72,8 @@ class Sprite {
     this.width = sprite.width;
     this.height = sprite.height;
 
-    this.offsetX = sprite.offsetX !== undefined ? sprite.offsetX : -16;
-    this.offsetY = sprite.offsetY !== undefined ? sprite.offsetY : -16;
+    this.offsetX = sprite.offsetX !== undefined ? sprite.offsetX : -32;
+    this.offsetY = sprite.offsetY !== undefined ? sprite.offsetY : -32;
     this.offfsetAngle =
       sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
 
@@ -78,7 +101,7 @@ class Sprite {
 
         animations[name] = new Animation(
           name,
-          a.length,
+          a.column,
           a.row,
           this.width,
           this.height

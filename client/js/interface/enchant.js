@@ -1,4 +1,20 @@
+import Game from "../game";
+import Interface from "../controllers/interface";
+
+/**
+ *
+ *
+ * @class Enchant
+ */
 class Enchant {
+  /**
+   * Creates an instance of Enchant.
+   *
+   * @param {Game} game
+   * @param {Interface} intrface
+   *
+   * @memberof Enchant
+   */
   constructor(game, intrface) {
     this.game = game;
     this.interface = intrface;

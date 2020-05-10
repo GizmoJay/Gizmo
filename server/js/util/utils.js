@@ -58,7 +58,7 @@ Utils.generateClientId = () => {
 };
 
 Utils.generateInstance = () => {
-  return ++Utils.instanceSeed + "" + Utils.randomInt(0, 25000);
+  return `${++Utils.instanceSeed}${Utils.randomInt(0, 25000)}`;
 };
 
 Utils.validPacket = packet => {

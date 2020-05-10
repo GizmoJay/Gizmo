@@ -1,12 +1,11 @@
 const fs = require("fs");
 
+/**
+ * Simple logging file that serves to be used globally
+ * and to neatly display logs, errors, warnings, and notices.
+ * Can be adapted and expanded, without using megabytes of npm repos.
+ */
 class Log {
-  /**
-   * Simple logging file that serves to be used globally
-   * and to neatly display logs, errors, warnings, and notices.
-   * Can be adapted and expanded, without using megabytes of npm repos.
-   **/
-
   constructor() {
     // Stream can be used to keep a log of what happened.
     this.logLevel = config.debugLevel || "all";

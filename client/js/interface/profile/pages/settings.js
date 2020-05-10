@@ -1,8 +1,21 @@
 import Page from "../page";
+import Game from "../../../game";
 
+/**
+ *
+ *
+ * @class Settings
+ */
 class Settings {
-  // TODO - Hide crpyto mining option on mobiles and completely disable it.
+  // TODO - Hide crypto mining option on mobiles and completely disable it.
 
+  /**
+   * Creates an instance of Settings.
+   *
+   * @param {Game} game
+   *
+   * @memberof Settings
+   */
   constructor(game) {
     this.game = game;
     this.audio = game.audio;

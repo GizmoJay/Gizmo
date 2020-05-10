@@ -1,3 +1,4 @@
+import Game from "../game";
 import Inventory from "../interface/inventory";
 import Profile from "../interface/profile/profile";
 import Actions from "../interface/actions";
@@ -7,7 +8,19 @@ import Warp from "../interface/warp";
 import Shop from "../interface/shop";
 import Header from "../interface/header";
 
+/**
+ *
+ *
+ * @class Interface
+ */
 class Interface {
+  /**
+   * Creates an instance of Interface.
+   *
+   * @param {Game} game
+   *
+   * @memberof Interface
+   */
   constructor(game) {
     this.game = game;
 
@@ -16,6 +29,11 @@ class Interface {
     this.message = $("#message");
     this.fade = $("#notifyFade");
     this.done = $("#notifyDone");
+
+    this.notification = $("#notification");
+    this.title = $("#notificationTextTitle"); // notification title
+    this.description = $("#notificationTextDescription"); // notification description
+    this.notificationTimeout = null;
 
     this.inventory = null;
     this.profile = null;
@@ -58,6 +76,8 @@ class Interface {
     if (this.header) {
       this.header.resize();
     }
+
+    // FIXME: this.resizeNotification();
   }
 
   loadInventory(size, data) {
@@ -235,6 +255,53 @@ class Interface {
 
   removeInventory(info) {
     this.bank.removeInventory(info);
+  }
+
+  resizeNotification() {
+    if (this.isNotificationVisible()) {
+      this.notification.css(
+        "top",
+        window.innerHeight - this.notification.height() + "px"
+      );
+    }
+  }
+
+  showNotification(title, message, colour) {
+    const top = window.innerHeight - this.notification.height();
+
+    if (this.isNotificationVisible()) {
+      this.hideNotification();
+
+      setTimeout(function() {
+        this.showNotification(title, message, colour);
+      }, 700);
+
+      return;
+    }
+
+    this.title.css("colour", colour);
+
+    this.title.text(title);
+    this.description.text(message);
+
+    this.notification.addClass("active");
+    this.notification.css("top", top + "px");
+
+    if (this.notificationTimeout) return;
+
+    this.notificationTimeout = setTimeout(function() {
+      this.hideNotification();
+    }, 4000);
+  }
+
+  hideNotification() {
+    if (!this.isNotificationVisible()) return;
+
+    clearTimeout(this.notificationTimeout);
+    this.notificationTimeout = null;
+
+    this.notification.removeClass("active");
+    this.notification.css("top", "100%");
   }
 
   displayNotify(message) {

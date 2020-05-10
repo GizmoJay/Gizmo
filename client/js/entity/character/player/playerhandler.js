@@ -1,4 +1,20 @@
+import Game from "../../../game";
+import Player from "./player";
+
+/**
+ *
+ *
+ * @class PlayerHandler
+ */
 class PlayerHandler {
+  /**
+   * Creates an instance of PlayerHandler.
+   *
+   * @param {Game} game
+   * @param {Player} player
+   *
+   * @memberof PlayerHandler
+   */
   constructor(game, player) {
     this.game = game;
     this.map = game.map;

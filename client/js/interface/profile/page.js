@@ -1,4 +1,16 @@
+/**
+ *
+ *
+ * @class Page
+ */
 class Page {
+  /**
+   * Creates an instance of Page.
+   *
+   * @param {string} element
+   *
+   * @memberof Page
+   */
   constructor(element) {
     this.body = $(element);
 

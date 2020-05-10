@@ -1,6 +1,23 @@
 import Entity from "../entity";
 
+/**
+ *
+ *
+ * @class Item
+ * @extends {Entity}
+ */
 class Item extends Entity {
+  /**
+   * Creates an instance of Item.
+   *
+   * @param {number} id
+   * @param {number} kind
+   * @param {number} count
+   * @param {number} ability
+   * @param {number} abilityLevel
+   *
+   * @memberof Item
+   */
   constructor(id, kind, count, ability, abilityLevel) {
     super(id, kind);
 

@@ -1,6 +1,21 @@
 import Container from "./container/container";
+import Game from '../game'
+import Interface from '../controllers/interface'
 
+/**
+ *
+ *
+ * @class Header
+ */
 class Header {
+  /**
+   * Creates an instance of Header.
+   *
+   * @param {Game} game
+   * @param {Interface} intrface
+   *
+   * @memberof Header
+   */
   constructor(game, intrface) {
     this.game = game;
     this.player = game.player;

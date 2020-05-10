@@ -13,7 +13,7 @@ class ExportMap {
   constructor() {
     this.source = process.argv[2];
 
-    if (!this.source) this.source = "data/map-refactor.json";
+    if (!this.source) this.source = "data/main.json";
 
     fs.access(this.source, error => {
       if (error) {
@@ -51,7 +51,7 @@ class ExportMap {
 
     fs.writeFile(destination, mapString, (error, file) => {
       if (error) log.error("An error has occurred while writing map files.");
-      else log.notice(`[${mode.format()}] Map saved at: ${destination}`);
+      else log.notice(`[${mode}] Map saved at: ${destination}`);
     });
 
     return map;

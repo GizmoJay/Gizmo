@@ -1,7 +1,20 @@
 import Worker from "./mapworker";
 import mapData from "../../data/maps/map.json";
+import Game from "../game";
 
+/**
+ *
+ *
+ * @class Map
+ */
 class Map {
+  /**
+   * Creates an instance of Map.
+   *
+   * @param {Game} game
+   *
+   * @memberof Map
+   */
   constructor(game) {
     this.game = game;
     this.renderer = this.game.renderer;
@@ -131,11 +144,11 @@ class Map {
     const tileset = new Image();
 
     tileset.index = this.rawTilesets.indexOf(rawTileset);
-    tileset.name = rawTileset.imageName;
+    tileset.name = require(`../../img/tilesets/${rawTileset.name}.png`).default;
 
     tileset.crossOrigin = "Anonymous";
-    tileset.path = require("../../img/tilesets/" + tileset.name).default;
-    tileset.src = require("../../img/tilesets/" + tileset.name).default;
+    tileset.path = tileset.name;
+    tileset.src = tileset.name;
     tileset.raw = tileset;
     tileset.firstGID = rawTileset.firstGID;
     tileset.lastGID = rawTileset.lastGID;

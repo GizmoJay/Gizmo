@@ -1,4 +1,16 @@
+/**
+ *
+ *
+ * @class Slot
+ */
 class Slot {
+  /**
+   * Creates an instance of Slot.
+   *
+   * @param {number} index
+   *
+   * @memberof Slot
+   */
   constructor(index) {
     this.index = index;
 

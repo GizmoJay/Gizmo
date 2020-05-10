@@ -1,4 +1,18 @@
+import Renderer from "./renderer";
+
+/**
+ *
+ *
+ * @class Camera
+ */
 class Camera {
+  /**
+   * Creates an instance of Camera.
+   *
+   * @param {Renderer} renderer
+   *
+   * @memberof Camera
+   */
   constructor(renderer) {
     this.renderer = renderer;
     this.map = renderer.map;
@@ -53,12 +67,12 @@ class Camera {
     this.prevGridX = this.gridX;
     this.prevGridY = this.gridY;
 
-    this.gridX = Math.floor(x / 16);
-    this.gridY = Math.floor(y / 16);
+    this.gridX = Math.floor(x / 32);
+    this.gridY = Math.floor(y / 32);
   }
 
   clip() {
-    this.setGridPosition(Math.round(this.x / 16), Math.round(this.y / 16));
+    this.setGridPosition(Math.round(this.x / 32), Math.round(this.y / 32));
   }
 
   center() {
@@ -90,8 +104,8 @@ class Camera {
     this.gridX = x;
     this.gridY = y;
 
-    this.x = this.gridX * 16;
-    this.y = this.gridY * 16;
+    this.x = this.gridX * 32;
+    this.y = this.gridY * 32;
   }
 
   setPlayer(player) {
@@ -136,14 +150,14 @@ class Camera {
 
     if (nextX >= 0 && nextX <= this.borderX && !this.lockX) {
       this.x = nextX;
-      this.gridX = Math.round(entity.x / 16) - width;
+      this.gridX = Math.round(entity.x / 32) - width;
     } else {
       this.offsetX(nextX);
     }
 
     if (nextY >= 0 && nextY <= this.borderY && !this.lockY) {
       this.y = nextY;
-      this.gridY = Math.round(entity.y / 16) - height;
+      this.gridY = Math.round(entity.y / 32) - height;
     } else {
       this.offsetY(nextY);
     }
@@ -158,29 +172,29 @@ class Camera {
     const height = Math.floor(this.gridHeight / 2);
 
     this.x = entity.x - width * this.tileSize;
-    this.gridX = Math.round(entity.x / 16) - width;
+    this.gridX = Math.round(entity.x / 32) - width;
 
     this.y = entity.y - height * this.tileSize;
-    this.gridY = Math.round(entity.y / 16) - height;
+    this.gridY = Math.round(entity.y / 32) - height;
   }
 
   offsetX(nextX) {
-    if (nextX <= 16) {
+    if (nextX <= 32) {
       this.x = 0;
       this.gridX = 0;
     } else if (nextX >= this.borderX) {
       this.x = this.borderX;
-      this.gridX = Math.round(this.borderX / 16);
+      this.gridX = Math.round(this.borderX / 32);
     }
   }
 
   offsetY(nextY) {
-    if (nextY <= 16) {
+    if (nextY <= 32) {
       this.y = 0;
       this.gridY = 0;
     } else if (nextY >= this.borderY) {
       this.y = this.borderY;
-      this.gridY = Math.round(this.borderY / 16);
+      this.gridY = Math.round(this.borderY / 32);
     }
   }
 

@@ -2,7 +2,21 @@ import Entity from "../entity";
 import Transition from "../../utils/transition";
 import Animation from "../animation";
 
+/**
+ *
+ *
+ * @class Character
+ * @extends {Entity}
+ */
 class Character extends Entity {
+  /**
+   * Creates an instance of Character.
+   *
+   * @param {number} id
+   * @param {number} kind
+   *
+   * @memberof Character
+   */
   constructor(id, kind) {
     super(id, kind);
 

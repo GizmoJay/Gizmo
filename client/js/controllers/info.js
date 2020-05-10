@@ -1,8 +1,21 @@
+import Game from "../game";
 import Queue from "../utils/queue";
 import Splat from "../renderer/infos/splat";
 import Countdown from "../renderer/infos/countdown";
 
+/**
+ *
+ *
+ * @class Info
+ */
 class Info {
+  /**
+   * Creates an instance of Info.
+   *
+   * @param {Game} game
+   *
+   * @memberof Info
+   */
   constructor(game) {
     this.game = game;
 

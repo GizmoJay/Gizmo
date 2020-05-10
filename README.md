@@ -89,10 +89,11 @@ Before starting Gizmo, there is some pre-configuration that must be done. Run
 npm run setup
 ```
 
-this renames the client configurations([`config.js-dist`](config.js-dist) to
-[`config.js`](config.js)), and the server
-configurations([`config.js-dist`](config.js-dist) to
-[`config.json`](config.js-dist)). Make sure the settings in the client match
+this renames the client
+configurations([`config.json-dist`](client/data/config.json-dist) to
+[`config.json`](client/data/config.json)), and the server
+configurations([`config.js-dist`](server/config.js-dist) to
+[`config.js`](server/config.js)). Make sure the settings in the client match
 those in the server. Modify the file accordingly to fit your needs.
 
 ```console
@@ -110,7 +111,7 @@ and `port` of the server in the [server configuration](server/config.js) and
 ## Map Parsing
 
 Once you finish modifying your map in [`tools/map/data`](tools/map/data) you can
-parse the map data by executing [`exportmap.js`](exportmap.js) in
+parse the map data by executing [`exportmap.js`](tools/map/exportmap.js) in
 [`tools/map`](tools/map) directory. Example command:
 
 ```console

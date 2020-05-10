@@ -1,6 +1,20 @@
 import Page from "../page";
+import Game from '../../../game'
 
+/**
+ *
+ *
+ * @class State
+ * @extends {Page}
+ */
 class State extends Page {
+  /**
+   * Creates an instance of State.
+   *
+   * @param {Game} game
+   *
+   * @memberof State
+   */
   constructor(game) {
     super("#statePage");
 

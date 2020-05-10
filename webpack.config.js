@@ -27,7 +27,11 @@ module.exports = {
   mode: process.env.NODE_ENV || "development",
   // watch: !inProduction,
   context: path.join(__dirname, "client"),
-  entry: ["./js/lib/home.js", "./scss/home.scss"],
+  entry: [
+    "webpack-hot-middleware/client?path=/__webpack_hmr",
+    "./js/lib/home.js",
+    "./scss/home.scss"
+  ],
   devtool: inProduction ? "" : "inline-source-map", // ? "source-map" // If we want source maps in production
   output: {
     path: path.join(__dirname, "client-dist"),
@@ -74,9 +78,7 @@ module.exports = {
       {
         test: /\.s?[ac]ss$/i,
         use: [
-          inProduction
-            ? MiniCssExtractPlugin.loader
-            : "style-loader",
+          inProduction ? MiniCssExtractPlugin.loader : "style-loader",
           {
             loader: "css-loader",
             options: {

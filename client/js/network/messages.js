@@ -1,15 +1,25 @@
+import App from "../app";
+
+/**
+ * Do not clutter up the Socket class with callbacks,
+ * have this class here until a better method arises in my head.
+ *
+ * This class should not have any complex functionality, its main
+ * role is to provide organization for packets and increase readability
+ *
+ * Please respect the order of the Packets Enum and arrange functions
+ * accordingly.
+ *
+ * @class Messages
+ */
 class Messages {
   /**
-   * Do not clutter up the Socket class with callbacks,
-   * have this class here until a better method arises in my head.
+   * Creates an instance of Messages.
    *
-   * This class should not have any complex functionality, its main
-   * role is to provide organization for packets and increase readability
+   * @param {App} app
    *
-   * Please respect the order of the Packets Enum and arrange functions
-   * accordingly.
+   * @memberof Messages
    */
-
   constructor(app) {
     this.app = app;
 

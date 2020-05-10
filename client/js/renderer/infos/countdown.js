@@ -1,4 +1,17 @@
+/**
+ *
+ *
+ * @class Countdown
+ */
 class Countdown {
+  /**
+   * Creates an instance of Countdown.
+   *
+   * @param {number} id
+   * @param {number} time
+   *
+   * @memberof Countdown
+   */
   constructor(id, time) {
     this.id = id;
     this.time = time;

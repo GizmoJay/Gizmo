@@ -32,10 +32,21 @@
 //   };
 // }
 
+/**
+ *
+ * @param {number} n
+ *
+ * @function
+ */
 const isInt = n => {
   return n % 1 === 0;
 };
 
+/**
+ * @constant
+ * @type {string}
+ * @default
+ */
 const TRANSITIONEND = "transitionend webkitTransitionEnd oTransitionEnd";
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -46,12 +57,20 @@ if (!window.requestAnimationFrame) {
       window.mozRequestAnimationFrame || // comment out if FF4 is slow (it caps framerate at ~30fps: https://bugzilla.mozilla.org/show_bug.cgi?id=630127)
       window.oRequestAnimationFrame ||
       window.msRequestAnimationFrame ||
-      ((
-        /* function FrameRequestCallback */ callback,
-        /* DOMElement Element */ element
-      ) => {
+      /**
+       *
+       *
+       * @param {FrameRequestCallback} callback
+       * @param {HTMLElement} element
+       *
+       * @function
+       */
+      function(
+        callback,
+        element
+      ) {
         window.setTimeout(callback, 17);
-      })
+      }
     );
   })();
 }

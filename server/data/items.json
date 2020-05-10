@@ -808,11 +808,11 @@
   },
 
 
-  "ClothArmor": {
+  "Naked": {
     "id": 114,
     "defense": 1,
     "type": "armor",
-    "name": "Cloth Armour"
+    "name": "Naked"
   },
 
   "LeatherArmor": {

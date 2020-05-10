@@ -1,3 +1,4 @@
+import Game from "../game";
 import Camera from "./camera";
 import Tile from "./tile";
 import Player from "../entity/character/player/player";
@@ -16,7 +17,25 @@ const ROT_90_DEG = Math.PI / 2;
 const ROT_NEG_90_DEG = ROT_90_DEG * -1;
 const ROT_180_DEG = Math.PI;
 
+/**
+ *
+ *
+ * @class Renderer
+ */
 class Renderer {
+  /**
+   * Creates an instance of Renderer.
+   *
+   * @param {HTMLCanvasElement} background
+   * @param {HTMLCanvasElement} entities
+   * @param {HTMLCanvasElement} foreground
+   * @param {HTMLCanvasElement} overlay
+   * @param {HTMLCanvasElement} textCanvas
+   * @param {HTMLCanvasElement} cursor
+   * @param {Game} game
+   *
+   * @memberof Renderer
+   */
   constructor(
     background,
     entities,
@@ -79,7 +98,7 @@ class Renderer {
     this.entities = null;
     this.input = null;
 
-    this.tileSize = 16;
+    this.tileSize = 32;
     this.fontSize = 16;
 
     this.screenWidth = 0;
@@ -474,7 +493,7 @@ class Renderer {
     const y = frame.y * this.superScaling;
     const dx = entity.x * this.superScaling;
     const dy = entity.y * this.superScaling;
-    const flipX = dx + this.tileSize * this.superScaling;
+    const flipX = dx + this.tileSize / 2 * this.superScaling;
     const flipY = dy + data.height;
 
     this.context.save();
@@ -504,7 +523,7 @@ class Renderer {
     }
 
     if (entity.spriteFlipX) {
-      this.context.translate(flipX, dy);
+      this.context.translate(flipX, dy); //
       this.context.scale(-1, 1);
     } else if (entity.spriteFlipY) {
       this.context.translate(dx, flipY);
@@ -620,7 +639,7 @@ class Renderer {
         if (sprite) {
           const animation = entity.getEffectAnimation();
           const index = animation.currentFrame.index;
-          const x = sprite.width * index * this.superScaling;
+          const x = sprite.width * animation.column * this.superScaling;
           const y = sprite.height * animation.row * this.superScaling;
           const width = sprite.width * this.superScaling;
           const height = sprite.height * this.superScaling;
@@ -777,9 +796,9 @@ class Renderer {
   drawLighting(lighting) {
     if (lighting.relative) {
       const lightX =
-        (lighting.light.origX - this.camera.x / 16) * this.lightTileSize;
+        (lighting.light.origX - this.camera.x / 32) * this.lightTileSize;
       const lightY =
-        (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
+        (lighting.light.origY - this.camera.y / 32) * this.lightTileSize;
 
       lighting.light.position = new Vec2(lightX, lightY);
       lighting.compute(this.overlay.width, this.overlay.height);
@@ -1546,7 +1565,7 @@ class Renderer {
     light.origX = light.position.x;
     light.origY = light.position.y;
 
-    light.diff = Math.round(light.distance / 16);
+    light.diff = Math.round(light.distance / 32);
 
     if (this.hasLighting(lighting)) {
       return;

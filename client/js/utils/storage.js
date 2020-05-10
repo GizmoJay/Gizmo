@@ -1,7 +1,20 @@
+import App from "../app";
 const storage = window.localStorage;
 const name = "data";
 
+/**
+ *
+ *
+ * @class Storage
+ */
 class Storage {
+  /**
+   * Creates an instance of Storage.
+   *
+   * @param {App} app
+   *
+   * @memberof Storage
+   */
   constructor(app) {
     this.app = app;
     this.data = null;

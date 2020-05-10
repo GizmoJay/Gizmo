@@ -1,3 +1,7 @@
+/**
+ * @global
+ * @module Modules
+ */
 Modules = {
   Orientation: {
     Up: 0,

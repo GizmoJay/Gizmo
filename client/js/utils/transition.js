@@ -1,4 +1,14 @@
+/**
+ *
+ *
+ * @class Transition
+ */
 class Transition {
+  /**
+   * Creates an instance of Transition.
+   *
+   * @memberof Transition
+   */
   constructor() {
     this.startValue = 0;
     this.endValue = 0;

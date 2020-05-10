@@ -1,6 +1,19 @@
 import TeamWar from "./impl/teamwar";
+import Game from "../game";
 
+/**
+ *
+ *
+ * @class Connection
+ */
 class Connection {
+  /**
+   * Creates an instance of Connection.
+   *
+   * @param {Game} game
+   *
+   * @memberof Connection
+   */
   constructor(game) {
     this.game = game;
     this.app = game.app;
@@ -969,7 +982,7 @@ class Connection {
 
         case Packets.PointerOpcode.Location:
           this.pointer.create(info.id, Modules.Pointers.Position);
-          this.pointer.setToPosition(info.id, info.x * 16, info.y * 16);
+          this.pointer.setToPosition(info.id, info.x * 32, info.y * 32);
 
           break;
 

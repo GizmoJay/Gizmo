@@ -1,8 +1,21 @@
+import Game from "../game";
 import Animation from "../entity/animation";
 import Chat from "./chat";
 import Overlay from "./overlay";
 
+/**
+ *
+ *
+ * @class Input
+ */
 class Input {
+  /**
+   * Creates an instance of Input.
+   *
+   * @param {Game} game
+   *
+   * @memberof Input
+   */
   constructor(game) {
     this.game = game;
     this.app = game.app;
@@ -50,7 +63,7 @@ class Input {
      * cell spinner sprite (only on desktop)
      */
 
-    this.targetAnimation = new Animation("move", 4, 0, 16, 16);
+    this.targetAnimation = new Animation("move", 4, 0, 32, 32);
     this.targetAnimation.setSpeed(50);
 
     this.chatHandler = new Chat(this.game);
@@ -129,6 +142,7 @@ class Input {
             this.chatHandler.input.val("/");
 
           // eslint-disable-next-line no-fallthrough
+          case Modules.Keys.T:
           case Modules.Keys.Enter:
             this.chatHandler.toggle();
 
@@ -514,8 +528,8 @@ class Input {
       y: frame.y * superScale,
       width: sprite.width * superScale,
       height: sprite.height * superScale,
-      dx: this.selectedX * 16 * superScale,
-      dy: this.selectedY * 16 * superScale,
+      dx: this.selectedX * 32 * superScale,
+      dy: this.selectedY * 32 * superScale,
       dw: sprite.width * superScale,
       dh: sprite.height * superScale
     });
