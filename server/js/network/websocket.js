@@ -1,5 +1,6 @@
 /* global module */
 
+const fs = require("fs");
 const Socket = require("./socket");
 const Connection = require("./connection");
 const connect = require("connect");
@@ -13,6 +14,7 @@ const webpackConfig = require(process.env.WEBPACK_CONFIG
 const compiler = webpack(webpackConfig);
 const http = require("http");
 const https = require("https");
+const http2 = require("http2");
 const Utils = require("../util/utils");
 
 class WebSocket extends Socket {
@@ -34,7 +36,6 @@ class WebSocket extends Socket {
       app.use(
         require("webpack-hot-middleware")(compiler, {
           path: "/__webpack_hmr",
-          reload: true,
           heartbeat: 10 * 1000
         })
       );
@@ -47,14 +48,29 @@ class WebSocket extends Socket {
       if (this.webSocketReadyCallback) this.webSocketReadyCallback();
     };
 
-    const server = config.ssl ? https : http;
-
-    this.httpServer = server.createServer(app).listen(port, host, () => {
-      readyWebSocket(port);
-    });
+    if (config.ssl) {
+      this.httpServer = http2
+        .createSecureServer(
+          {
+            key: fs.readFileSync("security/cert.key", "utf8"),
+            cert: fs.readFileSync("security/cert.pem", "utf8")
+          },
+          app
+        )
+        .listen(port, host, () => {
+          readyWebSocket(port);
+        });
+    } else {
+      this.httpServer = http
+        .createServer(app)
+        .listen(port, host, () => {
+          readyWebSocket(port);
+        });
+    }
 
     this.io = new SocketIO(this.httpServer, {
-      cookie: false
+      cookie: false,
+      secure: config.ssl
     });
     this.io.on("connection", socket => {
       if (socket.handshake.headers["cf-connecting-ip"]) {
