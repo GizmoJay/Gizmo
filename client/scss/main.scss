@@ -235,7 +235,13 @@ footer div {
 }
 
 #parchment label {
-  display: none;
+  display: block;
+  color: transparent;
+  background-color: transparent;
+
+  &::selection {
+    background-color: transparent;
+  }
 }
 
 #parchment select {
@@ -491,8 +497,11 @@ footer div {
   }
 
   #parchment input {
-    margin-top: 30px;
     height: 60px;
+  }
+
+  #parchment label {
+    height: 30px;
   }
 
   #parchment select {
@@ -502,8 +511,11 @@ footer div {
   }
 
   #parchment.createCharacter input {
-    margin-top: 24px;
     height: 45px;
+  }
+
+  #parchment.createCharacter label {
+    height: 24px;
   }
 
   .parchment-left,
@@ -625,8 +637,11 @@ footer div {
   }
 
   #parchment input {
-    margin-top: 20px;
     height: 41px;
+  }
+
+  #parchment label {
+    height: 20px;
   }
 
   #parchment select {
@@ -636,8 +651,11 @@ footer div {
   }
 
   #parchment.createCharacter input {
-    margin-top: 15px;
     height: 30px;
+  }
+
+  #parchment.createCharacter label {
+    height: 15px;
   }
 
   .parchment-left,
@@ -746,8 +764,11 @@ footer div {
   }
 
   #parchment input {
-    margin-top: 10px;
     height: 20px;
+  }
+
+  #parchment label {
+    height: 10px;
   }
 
   #parchment select {
@@ -757,8 +778,11 @@ footer div {
   }
 
   #parchment.createCharacter input {
-    margin-top: 8px;
     height: 15px;
+  }
+
+  #parchment.createCharacter label {
+    height: 8px;
   }
 
   .parchment-left,

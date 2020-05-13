@@ -211,9 +211,18 @@ body {
   height: 100%;
   color: white;
   z-index: 9999;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-indent: 1px;
+  text-overflow: "";
   background-color: rgba(0, 0, 0, 0.75);
   border-radius: 4px;
   font-family: "AdvoCut", sans-serif;
+
+  &::-ms-expand {
+    display: none;
+  }
 }
 
 #abilityShortcut {
