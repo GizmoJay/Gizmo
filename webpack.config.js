@@ -4,6 +4,7 @@ const path = require("path");
 
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const WebpackPwaManifest = require("webpack-pwa-manifest");
@@ -18,6 +19,13 @@ const manifest = JSON.parse(
 
 const inProduction = process.env.NODE_ENV === "production";
 
+const entry = ["./js/main.js", "./scss/home.scss"];
+if (!inProduction) {
+  entry.unshift(
+    "webpack-hot-middleware/client?path=/__webpack_hmr&reload=true"
+  );
+}
+
 /**
  * Client Config
  */
@@ -27,11 +35,7 @@ module.exports = {
   mode: process.env.NODE_ENV || "development",
   // watch: !inProduction,
   context: path.join(__dirname, "client"),
-  entry: [
-    "webpack-hot-middleware/client?path=/__webpack_hmr",
-    "./js/lib/home.js",
-    "./scss/home.scss"
-  ],
+  entry,
   devtool: inProduction ? "" : "inline-source-map", // ? "source-map" // If we want source maps in production
   output: {
     path: path.join(__dirname, "client-dist"),
@@ -49,7 +53,26 @@ module.exports = {
     host: "localhost"
   },
   optimization: {
-    noEmitOnErrors: true
+    noEmitOnErrors: true,
+    minimize: true, // Uncompressed code now caps the Cache Quota limit 😅
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            booleans_as_integers: true,
+            drop_console: inProduction,
+            drop_debugger: inProduction
+          },
+          output: {
+            comments: !inProduction,
+            safari10: true
+          },
+          mangle: {
+            safari10: true
+          }
+        }
+      })
+    ]
   },
   module: {
     rules: [
@@ -132,12 +155,10 @@ module.exports = {
       multiStep: true
     }),
     new CleanWebpackPlugin({
-      copyUnmodified: !inProduction
+      // copyUnmodified: !inProduction
     }),
     new CopyPlugin([
-      { from: "lib", to: "lib" },
-      { from: "js/lib", to: "js/lib" },
-      { from: "js/utils", to: "js/utils" },
+      { from: "lib/require.js", to: "lib/require.js" },
       "browserconfig.xml",
       "favicon.ico"
     ]),
@@ -161,6 +182,17 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "[name].[hash:8].css",
       chunkFilename: "[name].[chunkhash].css"
+    }),
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      _: "underscore",
+      io: "socket.io-client",
+      log: [path.resolve("./client/js/lib/log"), "default"],
+      Modules: [path.resolve("./client/js/utils/modules"), "default"],
+      Packets: [path.resolve("./client/js/network/packets"), "default"],
+      Detect: [path.resolve("./client/js/utils/detect"), "default"],
+      illuminated: [path.resolve("./client/lib/illuminated"), "default"]
     }),
     new WebpackPwaManifest(
       Object.assign(manifest, {
@@ -232,7 +264,7 @@ module.exports = {
     ),
     new WorkboxPlugin.InjectManifest({
       swSrc: "./sw.js",
-      maximumFileSizeToCacheInBytes: 5e6
+      maximumFileSizeToCacheInBytes: 6e6
     })
   ]
 };

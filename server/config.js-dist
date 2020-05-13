@@ -1,3 +1,5 @@
+const isDev = process.env.NODE_ENV === "development";
+
 const Config = {
   /**
    * Connectivity/Hosting Configuration
@@ -5,7 +7,7 @@ const Config = {
   name: "Gizmo",
   host: "0.0.0.0",
   /**
-   * Server port, make sure this matches the client's
+   * Server port, make sure this matches the client"s
    */
   port: 8080,
   /**
@@ -15,7 +17,7 @@ const Config = {
   /**
    * Will be used for local debugging.
    */
-  devClient: false,
+  devClient: isDev,
 
   /**
    * API Configuration
@@ -82,12 +84,16 @@ const Config = {
    * Game version
    */
   gver: 1,
+  /**
+   * Check trees every 3 seconds.
+   */
+  treeTick: 3000,
 
   /**
    * @example
-   * i.e. ['user1', 'user2', 'user3'] (case-insensitive)
+   * i.e. ["user1", "user2", "user3"] (case-insensitive)
    */
-  administrators: [],
+  administrators: ["admin@gizmo.com"],
   moderators: [],
   manager: [],
   scripting: [],
@@ -97,7 +103,7 @@ const Config = {
   sfx: [],
 
   // Debugging
-  debug: false,
+  debug: isDev,
   debugLevel: "all",
   /**
    * filestream debugging -> Write to a filestream instead of stdout.
