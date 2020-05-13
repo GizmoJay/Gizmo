@@ -2,7 +2,7 @@
  * @global
  * @module Modules
  */
-Modules = {
+const Modules = {
   Orientation: {
     Up: 0,
     Down: 1,
@@ -92,7 +92,7 @@ Modules = {
     SFX: 1
   },
 
-  DamageColours: {
+  DamageColors: {
     received: {
       fill: "rgb(255, 50, 50)",
       stroke: "rgb(255, 180, 180)"
@@ -157,3 +157,5 @@ Modules = {
     "Splash"
   ]
 };
+
+export default Modules;

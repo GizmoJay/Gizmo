@@ -2,8 +2,6 @@ import Game from "../game";
 import Pointers from "../renderer/pointers/pointer";
 
 /**
- *
- *
  * @class Pointer
  */
 class Pointer {
@@ -69,8 +67,8 @@ class Pointer {
 
   setSize(element) {
     element.css({
-      width: `${32}${32 * this.scale}px`,
-      height: `${32}${32 * this.scale}px`,
+      width: `${32 * this.scale}px`,
+      height: `${32 * this.scale}px`,
       margin: "inherit",
       "margin-top": `-${6 * this.scale}px`,
       top: `${10 * this.scale}px`,
@@ -96,15 +94,12 @@ class Pointer {
   set(pointer, posX, posY) {
     this.updateCamera();
 
-    const tileSize = 48; // 32 * this.scale
+    const tileSize = 32 * this.scale;
     const x = (posX - this.camera.x) * this.scale;
-    const width = parseInt(
-      pointer.element.css("width") + 24
-    );
+    const width = parseInt(pointer.element.css("width") + 24);
     const offset = width / 2 - tileSize / 2;
 
-    const y =
-                               (posY - this.camera.y) * this.scale - tileSize;
+    const y = (posY - this.camera.y) * this.scale - tileSize;
 
     const outX = x / this.game.renderer.canvasWidth;
     const outY = y / this.game.renderer.canvasHeight;
@@ -116,10 +111,7 @@ class Pointer {
       pointer.element.css("top", "50%");
       pointer.element.css("bottom", "");
 
-      pointer.element.css(
-        "transform",
-        "rotate(-90deg)"
-      );
+      pointer.element.css("transform", "rotate(-90deg)");
     } else if (outY >= 1.5) {
       // bottom
       pointer.element.css("left", "50%");
@@ -135,10 +127,7 @@ class Pointer {
       pointer.element.css("top", "50%");
       pointer.element.css("bottom", "");
 
-      pointer.element.css(
-        "transform",
-        "rotate(90deg)"
-      );
+      pointer.element.css("transform", "rotate(90deg)");
     } else if (outY <= 0) {
       // top
       pointer.element.css("left", "");
@@ -146,10 +135,7 @@ class Pointer {
       pointer.element.css("top", "0");
       pointer.element.css("bottom", "");
 
-      pointer.element.css(
-        "transform",
-        "rotate(180deg)"
-      );
+      pointer.element.css("transform", "rotate(180deg)");
     } else {
       pointer.element.css("left", x - offset + "px");
       pointer.element.css("right", "");

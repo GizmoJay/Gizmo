@@ -1,8 +1,6 @@
 import Map from "../map/map";
 
 /**
- *
- *
  * @class Grids
  */
 class Grids {

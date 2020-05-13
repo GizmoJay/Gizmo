@@ -1,8 +1,6 @@
 import EntityHandler from "./entityhandler";
 
 /**
- *
- *
  * @class Entity
  */
 class Entity {
@@ -31,7 +29,7 @@ class Entity {
 
     this.animations = null;
     this.currentAnimation = null;
-    this.idleSpeed = 450; // 450
+    this.idleSpeed = 100; // 450
 
     this.shadowOffsetY = 0;
     this.hidden = false;

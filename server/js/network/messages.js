@@ -229,14 +229,14 @@ Messages.Quest = class {
 };
 
 Messages.Notification = class {
-  constructor(opcode, message, colour) {
+  constructor(opcode, message, color) {
     this.opcode = opcode;
     this.message = message;
-    this.colour = colour;
+    this.color = color;
   }
 
   serialize() {
-    return [Packets.Notification, this.opcode, this.message, this.colour];
+    return [Packets.Notification, this.opcode, this.message, this.color];
   }
 };
 

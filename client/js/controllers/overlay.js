@@ -1,8 +1,6 @@
 import Input from "./input";
 
 /**
- *
- *
  * @class Overlay
  */
 class Overlay {

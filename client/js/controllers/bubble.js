@@ -2,8 +2,6 @@ import Game from "../game";
 import Blob from "../renderer/bubbles/blob";
 
 /**
- *
- *
  * @class Bubble
  */
 class Bubble {
@@ -66,9 +64,9 @@ class Bubble {
 
     bubble.element.css(
       "left",
-      x - offset + (2 + this.game.renderer.scale) + "px"
+      `${x - offset}${2 + this.game.renderer.scale}px`
     );
-    bubble.element.css("top", y + "px");
+    bubble.element.css("top", `${y}px`);
   }
 
   update(time) {

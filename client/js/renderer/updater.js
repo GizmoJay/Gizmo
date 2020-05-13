@@ -2,8 +2,6 @@ import Character from "../entity/character/character";
 import Game from "../game";
 
 /**
- *
- *
  * @class Updater
  */
 class Updater {

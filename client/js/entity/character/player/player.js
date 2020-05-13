@@ -6,8 +6,6 @@ import Boots from "./equipment/boots";
 import Ring from "./equipment/ring";
 
 /**
- *
- *
  * @class Player
  * @extends {Character}
  */

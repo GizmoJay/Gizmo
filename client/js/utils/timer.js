@@ -1,6 +1,4 @@
 /**
- *
- *
  * @class Timer
  */
 class Timer {

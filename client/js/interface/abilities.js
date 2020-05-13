@@ -1,8 +1,6 @@
 import Game from "../game";
 
 /**
- *
- *
  * @class Abilities
  */
 class Abilities {

@@ -3,8 +3,6 @@ const storage = window.localStorage;
 const name = "data";
 
 /**
- *
- *
  * @class Storage
  */
 class Storage {

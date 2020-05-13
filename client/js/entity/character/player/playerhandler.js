@@ -2,8 +2,6 @@ import Game from "../../../game";
 import Player from "./player";
 
 /**
- *
- *
  * @class PlayerHandler
  */
 class PlayerHandler {

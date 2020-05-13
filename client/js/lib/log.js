@@ -63,7 +63,4 @@ Logger.prototype.error = function (message, stacktrace) {
   }
 };
 
-/**
- * @global
- */
-log = new Logger("debug");
+export default new Logger("debug");

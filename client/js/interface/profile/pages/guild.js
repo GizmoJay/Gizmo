@@ -2,8 +2,6 @@ import Page from "../page";
 import Game from "../../../game";
 
 /**
- *
- *
  * @class Guild
  * @extends {Page}
  */

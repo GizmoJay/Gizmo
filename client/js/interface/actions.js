@@ -1,8 +1,6 @@
 import Interface from "../controllers/interface";
 
 /**
- *
- *
  * @class Actions
  */
 class Actions {

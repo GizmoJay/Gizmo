@@ -9,8 +9,6 @@ import Shop from "../interface/shop";
 import Header from "../interface/header";
 
 /**
- *
- *
  * @class Interface
  */
 class Interface {
@@ -266,20 +264,20 @@ class Interface {
     }
   }
 
-  showNotification(title, message, colour) {
+  showNotification(title, message, color) {
     const top = window.innerHeight - this.notification.height();
 
     if (this.isNotificationVisible()) {
       this.hideNotification();
 
       setTimeout(function() {
-        this.showNotification(title, message, colour);
+        this.showNotification(title, message, color);
       }, 700);
 
       return;
     }
 
-    this.title.css("colour", colour);
+    this.title.css("color", color);
 
     this.title.text(title);
     this.description.text(message);

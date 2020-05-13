@@ -1,10 +1,9 @@
 import Worker from "./mapworker";
 import mapData from "../../data/maps/map.json";
 import Game from "../game";
+import { isInt } from "../utils/util";
 
 /**
- *
- *
  * @class Map
  */
 class Map {
@@ -289,7 +288,7 @@ class Map {
         imageheight: this.tilesets[i].height,
         name: this.tilesets[i].name.split(".png")[0],
         tilecount:
-          (this.tilesets[i].width / 16) * (this.tilesets[i].height / 16),
+          (this.tilesets[i].width / 32) * (this.tilesets[i].height / 32),
         tilewidth: object.tilewidth,
         tileheight: object.tileheight,
         tiles: []

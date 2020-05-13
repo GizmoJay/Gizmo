@@ -25,8 +25,8 @@ if ("serviceWorker" in navigator) {
   // ? Maybe prompt user before force refreshing
   navigator.serviceWorker.addEventListener("controllerchange", function() {
     if (refreshing) return;
-    window.location.reload();
     refreshing = true;
+    window.location.reload();
   });
 
   window.addEventListener("beforeinstallprompt", function(e) {

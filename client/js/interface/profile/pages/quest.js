@@ -1,8 +1,6 @@
 import Page from "../page";
 
 /**
- *
- *
  * @class Quest
  * @extends {Page}
  */

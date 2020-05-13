@@ -1,8 +1,6 @@
 import Entity from "../entity";
 
 /**
- *
- *
  * @class Chest
  * @extends {Entity}
  */

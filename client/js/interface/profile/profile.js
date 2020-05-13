@@ -6,8 +6,6 @@ import Guild from "./pages/guild";
 import Game from "../../game";
 
 /**
- *
- *
  * @class Profile
  */
 class Profile {

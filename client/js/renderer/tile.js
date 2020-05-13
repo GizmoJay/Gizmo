@@ -1,8 +1,6 @@
 import Map from "../map/map";
 
 /**
- *
- *
  * @class Tile
  */
 class Tile {

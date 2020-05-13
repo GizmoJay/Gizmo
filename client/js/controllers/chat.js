@@ -1,8 +1,6 @@
 import Game from "../game";
 
 /**
- *
- *
  * @class Chat
  */
 class Chat {
@@ -37,7 +35,7 @@ class Chat {
     });
   }
 
-  add(source, text, colour) {
+  add(source, text, color) {
     const element = $(`<p>${source} » ${text}</p>`);
 
     this.showChat();
@@ -48,7 +46,7 @@ class Chat {
 
     this.hideChat();
 
-    element.css("color", colour || "white");
+    element.css("color", color || "white");
 
     this.log.append(element);
     this.log.scrollTop(99999);

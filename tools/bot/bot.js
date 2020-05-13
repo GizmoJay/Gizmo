@@ -103,7 +103,7 @@ class Bot {
 
     switch (opcode) {
       case 0:
-        this.send(connection, 1, [2, "n" + this.bots.length, "n", "n"]);
+        this.send(connection, 1, [2, `n${this.bots.length}`, "n", "n"]);
 
         break;
 

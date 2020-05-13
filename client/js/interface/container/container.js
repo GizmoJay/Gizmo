@@ -1,8 +1,6 @@
 import Slot from "./slot";
 
 /**
- *
- *
  * @class Container
  */
 class Container {

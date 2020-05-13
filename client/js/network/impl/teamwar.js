@@ -1,6 +1,4 @@
 /**
- *
- *
  * @class TeamWar
  */
 class TeamWar {

@@ -1,20 +1,6 @@
-/* global log, Detect */
-
-// import "../lib/gl-tiled";
-// import "../lib/gl-tiled.resource-loader";
-// import "../lib/illuminated";
-// import "./utils/detect";
-// import "./lib/log";
-// import "../lib/socket.io";
-// import "./lib/underscore";
-// import "./lib/jquery";
-// import "./utils/util";
-
-// import "../manifest.json";
-// import "../browserconfig.xml";
-
 import App from "./app";
 import Game from "./game";
+import "./lib/modernizr.js";
 
 let app, body, chatInput, game;
 

@@ -2,8 +2,6 @@ import Container from "./container/container";
 import Game from "../game";
 
 /**
- *
- *
  * @class Inventory
  */
 class Inventory {

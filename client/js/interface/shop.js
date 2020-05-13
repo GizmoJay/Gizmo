@@ -3,8 +3,6 @@ import Game from "../game";
 import Interface from "../controllers/interface";
 
 /**
- *
- *
  * @class Shop
  */
 class Shop {
@@ -24,8 +22,8 @@ class Shop {
     this.inventory = $("#shopInventorySlots");
 
     /**
-     * sellSlot represents what the player currently has queued for sale
-     * and sellSlotReturn shows the currency the player is receiving.
+     * `sellSlot` represents what the player currently has queued for sale
+     * and `sellSlotReturn` shows the currency the player is receiving.
      * The reason for this is because shops are written such that
      * they can handle different currencies.
      */

@@ -1,8 +1,6 @@
 import Renderer from "./renderer";
 
 /**
- *
- *
  * @class Camera
  */
 class Camera {

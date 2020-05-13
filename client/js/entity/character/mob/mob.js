@@ -1,8 +1,6 @@
 import Character from "../character";
 
 /**
- *
- *
  * @class Mob
  * @extends {Character}
  */

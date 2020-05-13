@@ -1,6 +1,4 @@
 /**
- *
- *
  * @class Page
  */
 class Page {

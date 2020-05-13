@@ -2,8 +2,6 @@ import Game from "../game";
 import Interface from "../controllers/interface";
 
 /**
- *
- *
  * @class Enchant
  */
 class Enchant {

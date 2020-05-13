@@ -1,8 +1,6 @@
 import Timer from "../../utils/timer";
 
 /**
- *
- *
  * @class Blob
  */
 class Blob {

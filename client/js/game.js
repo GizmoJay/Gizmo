@@ -18,12 +18,7 @@ import Pointer from "./controllers/pointer";
 import Overlay from "./renderer/overlay";
 import Connection from "./network/connection";
 
-import "./utils/modules";
-import "./network/packets";
-
 /**
- *
- *
  * @class Game
  */
 class Game {

@@ -3,8 +3,6 @@ import Transition from "../../utils/transition";
 import Animation from "../animation";
 
 /**
- *
- *
  * @class Character
  * @extends {Entity}
  */
@@ -125,11 +123,9 @@ class Character extends Entity {
 
     if (o.indexOf(animation) > -1) {
       animation += `_${
-        orientation === Modules.Orientation.Left
-          ? "right"
-          : this.orientationToString(orientation)
+        this.orientationToString(orientation)
       }`;
-      this.spriteFlipX = this.orientation === Modules.Orientation.Left;
+      // this.spriteFlipX = this.orientation === Modules.Orientation.Left;
     }
 
     this.setAnimation(animation, speed, count, onEndCount);

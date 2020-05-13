@@ -1,14 +1,10 @@
 /**
- * Detect
- *
  * @global
  * @module Detect
  */
-Detect = {};
+const Detect = {};
 
 /**
- *
- *
  * @function isIpad
  * @memberof Detect
  * @instance
@@ -18,8 +14,6 @@ Detect.isIpad = () => {
 };
 
 /**
- *
- *
  * @function isAndroid
  * @memberof Detect
  * @instance
@@ -29,8 +23,6 @@ Detect.isAndroid = () => {
 };
 
 /**
- *
- *
  * @function isWindows
  * @memberof Detect
  * @instance
@@ -40,8 +32,6 @@ Detect.isWindows = () => {
 };
 
 /**
- *
- *
  * @function isFirefox
  * @memberof Detect
  * @instance
@@ -51,8 +41,6 @@ Detect.isFirefox = () => {
 };
 
 /**
- *
- *
  * @function isSafari
  * @memberof Detect
  * @instance
@@ -64,8 +52,6 @@ Detect.isSafari = () => {
 };
 
 /**
- *
- *
  * @function isOpera
  * @memberof Detect
  * @instance
@@ -75,8 +61,6 @@ Detect.isOpera = () => {
 };
 
 /**
- *
- *
  * @function isInternetExplorer
  * @memberof Detect
  * @instance
@@ -86,8 +70,6 @@ Detect.isInternetExplorer = () => {
 };
 
 /**
- *
- *
  * @function isEdge
  * @memberof Detect
  * @instance
@@ -97,8 +79,6 @@ Detect.isEdge = () => {
 };
 
 /**
- *
- *
  * @function isFirefoxAndroid
  * @memberof Detect
  * @instance
@@ -110,8 +90,6 @@ Detect.isFirefoxAndroid = () => {
 };
 
 /**
- *
- *
  * @function userAgentContains
  * @memberof Detect
  * @instance
@@ -121,8 +99,6 @@ Detect.userAgentContains = string => {
 };
 
 /**
- *
- *
  * @function getUserAgent
  * @memberof Detect
  * @instance
@@ -132,8 +108,6 @@ Detect.getUserAgent = () => {
 };
 
 /**
- *
- *
  * @function isTablet
  * @memberof Detect
  * @instance
@@ -147,8 +121,6 @@ Detect.isTablet = () => {
 };
 
 /**
- *
- *
  * @function isMobile
  * @memberof Detect
  * @instance
@@ -158,8 +130,6 @@ Detect.isMobile = () => {
 };
 
 /**
- *
- *
  * @function iOSVersion
  * @memberof Detect
  * @instance
@@ -186,8 +156,6 @@ Detect.iOSVersion = () => {
 };
 
 /**
- *
- *
  * @function androidVersion
  * @memberof Detect
  * @instance
@@ -204,8 +172,6 @@ Detect.androidVersion = () => {
 };
 
 /**
- *
- *
  * @function supportsWebGL
  * @memberof Detect
  * @instance
@@ -218,8 +184,6 @@ Detect.supportsWebGL = () => {
 };
 
 /**
- *
- *
  * @function isAppleDevice
  * @memberof Detect
  * @instance
@@ -246,8 +210,6 @@ Detect.isAppleDevice = () => {
 };
 
 /**
- *
- *
  * @function isOldAndroid
  * @memberof Detect
  * @instance
@@ -258,8 +220,6 @@ Detect.isOldAndroid = () => {
 };
 
 /**
- *
- *
  * @function isOldApple
  * @memberof Detect
  * @instance
@@ -269,8 +229,6 @@ Detect.isOldApple = () => {
 };
 
 /**
- *
- *
  * @function useCenteredCamera
  * @memberof Detect
  * @instance
@@ -278,3 +236,5 @@ Detect.isOldApple = () => {
 Detect.useCenteredCamera = () => {
   return Detect.isOldAndroid() || Detect.isOldApple() || Detect.isIpad();
 };
+
+export default Detect;

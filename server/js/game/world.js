@@ -790,12 +790,12 @@ class World {
     else delete this.chests[chest.instance];
   }
 
-  globalMessage(source, message, colour, isGlobal, withBubble) {
+  globalMessage(source, message, color, isGlobal, withBubble) {
     this.push(Packets.PushOpcode.Broadcast, {
       message: new Messages.Chat({
         name: source,
         text: message,
-        colour: colour,
+        color: color,
         isGlobal: isGlobal,
         withBubble: withBubble
       })

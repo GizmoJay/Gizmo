@@ -108,20 +108,20 @@ class API {
 
     const text = Utils.parseMessage(request.body.text);
     const source = Utils.parseMessage(request.body.source);
-    const colour = request.body.colour;
+    const color = request.body.color;
     const username = request.body.username;
 
     if (username) {
       const player = this.world.getPlayerByName(username);
 
-      if (player) player.chat(source, text, colour);
+      if (player) player.chat(source, text, color);
 
       response.json({ status: "success" });
 
       return;
     }
 
-    this.world.globalMessage(source, text, colour);
+    this.world.globalMessage(source, text, color);
 
     response.json({ status: "success" });
   }
@@ -220,7 +220,7 @@ class API {
 
         // No error has occurred.
 
-        // TODO - Add chat colours/format to config.
+        // TODO - Add chat colors/format to config.
         source.chat(`[To ${target}]`, text, "aquamarine");
       } catch (e) {
         log.error("Could not send privateMessage to hub.", error);

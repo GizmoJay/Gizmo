@@ -89,7 +89,7 @@ Utils.formatUsername = username => {
 
 /**
  * This function is responsible for parsing a message and looking for special
- * characters (primarily used for colour codes). This function will be expanded
+ * characters (primarily used for color codes). This function will be expanded
  * if necessary in the nearby future.
  */
 Utils.parseMessage = message => {
@@ -98,13 +98,13 @@ Utils.parseMessage = message => {
 
     if (messageBlocks.length % 2 === 0) {
       log.warning("Improper message block format!");
-      log.warning("Ensure format follows @COLOUR@ format.");
+      log.warning("Ensure format follows @COLOR@ format.");
       return messageBlocks.join(" ");
     }
 
     _.each(messageBlocks, (block, index) => {
       if (index % 2 !== 0) {
-        // we hit a colour code.
+        // we hit a color code.
         messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
       }
     });

@@ -1,6 +1,4 @@
 /**
- *
- *
  * @class Countdown
  */
 class Countdown {

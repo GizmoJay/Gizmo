@@ -1,8 +1,6 @@
 import Equipment from "./equipment";
 
 /**
- *
- *
  * @class Armour
  * @extends {Equipment}
  */

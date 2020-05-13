@@ -1,8 +1,6 @@
 import AStar from "../lib/astar";
 
 /**
- *
- *
  * @class Pathfinder
  */
 class Pathfinder {

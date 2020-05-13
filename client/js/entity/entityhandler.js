@@ -2,8 +2,6 @@ import Entity from "./entity";
 import Character from "./character/character";
 
 /**
- *
- *
  * @class EntityHandler
  */
 class EntityHandler {

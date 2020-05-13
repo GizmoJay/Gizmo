@@ -2,10 +2,9 @@ import Game from "../game";
 import Queue from "../utils/queue";
 import Splat from "../renderer/infos/splat";
 import Countdown from "../renderer/infos/countdown";
+import { isInt } from "../utils/util";
 
 /**
- *
- *
  * @class Info
  */
 class Info {
@@ -37,11 +36,11 @@ class Info {
         }
 
         const hitSplat = new Splat(dId, type, damage, x, y, false);
-        const dColour = isTarget
-          ? Modules.DamageColours.received
-          : Modules.DamageColours.inflicted;
+        const dColor = isTarget
+          ? Modules.DamageColors.received
+          : Modules.DamageColors.inflicted;
 
-        hitSplat.setColours(dColour.fill, dColour.stroke);
+        hitSplat.setColors(dColor.fill, dColor.stroke);
 
         this.addInfo(hitSplat);
 
@@ -55,7 +54,7 @@ class Info {
         const amount = data.shift();
         const id = this.generateId(this.game.time, amount, x, y);
         let text = "+";
-        let colour;
+        let color;
 
         if (amount < 1 || !isInt(amount)) {
           return;
@@ -72,16 +71,16 @@ class Info {
         const splat = new Splat(id, type, text + amount, x, y, false);
 
         if (type === Modules.Hits.Heal) {
-          colour = Modules.DamageColours.healed;
+          color = Modules.DamageColors.healed;
         } else if (type === Modules.Hits.Mana) {
-          colour = Modules.DamageColours.mana;
+          color = Modules.DamageColors.mana;
         } else if (type === Modules.Hits.Experience) {
-          colour = Modules.DamageColours.exp;
+          color = Modules.DamageColors.exp;
         } else if (type === Modules.Hits.Poison) {
-          colour = Modules.DamageColours.poison;
+          color = Modules.DamageColors.poison;
         }
 
-        splat.setColours(colour.fill, colour.stroke);
+        splat.setColors(color.fill, color.stroke);
 
         this.addInfo(splat);
 
@@ -91,9 +90,9 @@ class Info {
       case Modules.Hits.LevelUp: {
         const lId = this.generateId(this.game.time, "-1", x, y);
         const levelSplat = new Splat(lId, type, "Level Up!", x, y, false);
-        const lColour = Modules.DamageColours.exp;
+        const lColor = Modules.DamageColors.exp;
 
-        levelSplat.setColours(lColour.fill, lColour.stroke);
+        levelSplat.setColors(lColor.fill, lColor.stroke);
 
         this.addInfo(levelSplat);
 

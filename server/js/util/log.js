@@ -50,12 +50,12 @@ class Log {
     this.send("\x1b[35m%s\x1b[0m", `[${new Date()}] TRACE ${message}`, true);
   }
 
-  send(colour, message, trace) {
+  send(color, message, trace) {
     if (this.stream) this.stream.write(message + "\n");
 
-    if (!colour) console.log(message);
-    else if (trace) console.trace(colour, message);
-    else console.log(colour, message);
+    if (!color) console.log(message);
+    else if (trace) console.trace(color, message);
+    else console.log(color, message);
   }
 
   isLoggable(type) {

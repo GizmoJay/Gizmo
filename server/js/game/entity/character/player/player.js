@@ -659,7 +659,7 @@ class Player extends Character {
       this.send(
         new Messages.Overlay(Packets.OverlayOpcode.Set, {
           image: overlay.fog ? overlay.fog : "empty",
-          colour: "rgba(0,0,0," + overlay.darkness + ")"
+          color: "rgba(0,0,0," + overlay.darkness + ")"
         })
       );
     } else this.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
@@ -1179,7 +1179,7 @@ class Player extends Character {
     this.save();
   }
 
-  notify(message, colour) {
+  notify(message, color) {
     if (!message) return;
 
     message = Utils.parseMessage(message);
@@ -1188,7 +1188,7 @@ class Player extends Character {
       new Messages.Notification(
         Packets.NotificationOpcode.Text,
         message,
-        colour
+        color
       )
     );
   }
@@ -1198,14 +1198,14 @@ class Player extends Character {
    * show special messages to the player.
    */
 
-  chat(source, text, colour, isGlobal, withBubble) {
+  chat(source, text, color, isGlobal, withBubble) {
     if (!source || !text) return;
 
     this.send(
       new Messages.Chat({
         name: source,
         text: text,
-        colour: colour,
+        color: color,
         isGlobal: isGlobal,
         withBubble: withBubble
       })

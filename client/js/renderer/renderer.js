@@ -18,8 +18,6 @@ const ROT_NEG_90_DEG = ROT_90_DEG * -1;
 const ROT_180_DEG = Math.PI;
 
 /**
- *
- *
  * @class Renderer
  */
 class Renderer {
@@ -99,7 +97,7 @@ class Renderer {
     this.input = null;
 
     this.tileSize = 32;
-    this.fontSize = 16;
+    this.fontSize = 24;
 
     this.screenWidth = 0;
     this.screenHeight = 0;
@@ -543,6 +541,7 @@ class Renderer {
     if (entity.hasShadow()) {
       this.context.globalCompositeOperation = "source-over";
 
+      this.context.scale(2, 2);
       this.context.drawImage(
         this.shadowSprite.image,
         0,
@@ -639,7 +638,7 @@ class Renderer {
         if (sprite) {
           const animation = entity.getEffectAnimation();
           const index = animation.currentFrame.index;
-          const x = sprite.width * animation.column * this.superScaling;
+          const x = sprite.width * index * this.superScaling;
           const y = sprite.height * animation.row * this.superScaling;
           const width = sprite.width * this.superScaling;
           const height = sprite.height * this.superScaling;
@@ -692,7 +691,7 @@ class Renderer {
       return;
     }
 
-    const barLength = 16;
+    const barLength = 32;
     const healthX = entity.x * this.superScaling - barLength / 2 + 8;
     const healthY = (entity.y - 6) * this.superScaling;
     const healthWidth = Math.round(
@@ -724,20 +723,20 @@ class Renderer {
       return;
     }
 
-    let colour = entity.wanted ? "red" : "white";
+    let color = entity.wanted ? "red" : "white";
 
     if (entity.rights > 1) {
-      colour = "#ba1414";
+      color = "#ba1414";
     } else if (entity.rights > 0) {
-      colour = "#a59a9a";
+      color = "#a59a9a";
     }
 
     if (entity.id === this.game.player.id) {
-      colour = "#fcda5c";
+      color = "#fcda5c";
     }
 
-    if (entity.nameColour) {
-      colour = entity.nameColour;
+    if (entity.nameColor) {
+      color = entity.nameColor;
     }
 
     this.textContext.save();
@@ -745,23 +744,23 @@ class Renderer {
     this.textContext.font = "11px AdvoCut";
 
     if (!entity.hasCounter) {
-      const x = entity.x + 8;
-      const y = entity.y - 10;
+      const x = entity.x + 17.5;
+      const y = entity.y - 20;
 
       if (this.drawNames && entity instanceof Character) {
-        this.drawText(entity.name, x, y + 30, true, colour, "#000");
+        this.drawText(entity.name, x, y + 60, true, color, "#000");
       }
 
       if (
         this.drawLevels &&
         (entity.type === "mob" || entity.type === "player")
       ) {
-        this.drawText(`Level ${entity.level}`, x, y, true, colour, "#000");
+        this.drawText(`Level ${entity.level}`, x, y, true, color, "#000");
       }
 
       if (entity.type === "item") {
         if (entity.count > 1) {
-          this.drawText(entity.count, x, y, true, colour);
+          this.drawText(entity.count, x, y, true, color);
         }
 
         if (entity.ability > -1) {
@@ -772,7 +771,7 @@ class Renderer {
             x,
             entity.y + 20,
             true,
-            colour
+            color
           );
         }
       }
@@ -787,7 +786,7 @@ class Renderer {
         entity.hasCounter = false;
       }
 
-      this.drawText(entity.counter, entity.x + 8, entity.y - 10, true, colour);
+      this.drawText(entity.counter, entity.x + 8, entity.y - 10, true, color);
     }
 
     this.textContext.restore();
@@ -1116,7 +1115,7 @@ class Renderer {
     }
   }
 
-  drawText(text, x, y, centered, colour, strokeColour, fontSize) {
+  drawText(text, x, y, centered, color, strokeColor, fontSize) {
     const strokeSize = 3;
     const context = this.textContext;
 
@@ -1127,11 +1126,11 @@ class Renderer {
         context.textAlign = "center";
       }
 
-      context.strokeStyle = strokeColour || "#373737";
+      context.strokeStyle = strokeColor || "#373737";
       context.lineWidth = strokeSize;
       context.font = (fontSize || this.fontSize) + "px AdvoCut";
       context.strokeText(text, x * this.superScaling, y * this.superScaling);
-      context.fillStyle = colour || "white";
+      context.fillStyle = color || "white";
       context.fillText(text, x * this.superScaling, y * this.superScaling);
 
       context.restore();
@@ -1169,7 +1168,7 @@ class Renderer {
     }, 2);
   }
 
-  drawCellRect(x, y, colour) {
+  drawCellRect(x, y, color) {
     const multiplier = this.tileSize * this.superScaling;
 
     this.context.save();
@@ -1179,17 +1178,17 @@ class Renderer {
 
     this.context.translate(x + 2, y + 2);
 
-    this.context.strokeStyle = colour;
+    this.context.strokeStyle = color;
     this.context.strokeRect(0, 0, multiplier - 4, multiplier - 4);
 
     this.context.restore();
   }
 
-  drawCellHighlight(x, y, colour) {
+  drawCellHighlight(x, y, color) {
     this.drawCellRect(
       x * this.superScaling * this.tileSize,
       y * this.superScaling * this.tileSize,
-      colour
+      color
     );
   }
 
@@ -1219,7 +1218,7 @@ class Renderer {
       this.drawCellHighlight(
         location.x,
         location.y,
-        isColliding ? "rgba(230, 0, 0, 0.7)" : this.input.targetColour
+        isColliding ? "rgba(230, 0, 0, 0.7)" : this.input.targetColor
       );
     }
   }

@@ -2,8 +2,6 @@ import TeamWar from "./impl/teamwar";
 import Game from "../game";
 
 /**
- *
- *
  * @class Connection
  */
 class Connection {
@@ -357,9 +355,9 @@ class Connection {
         doTeleport();
       }
       /* this.renderer.transition(15, false, () => {
-                        if (this.queueColour) {
-                            this.renderer.updateDarkMask(this.queueColour);
-                            this.queueColour = null;
+                        if (this.queueColor) {
+                            this.renderer.updateDarkMask(this.queueColor);
+                            this.queueColor = null;
                         }
                     }); */
     });
@@ -601,7 +599,7 @@ class Connection {
         info.name = "[Global] " + info.name;
       }
 
-      this.input.chatHandler.add(info.name, info.text, info.colour);
+      this.input.chatHandler.add(info.name, info.text, info.color);
     });
 
     this.messages.onCommand(info => {
@@ -722,7 +720,7 @@ class Connection {
       }
     });
 
-    this.messages.onNotification((opcode, message, colour) => {
+    this.messages.onNotification((opcode, message, color) => {
       switch (opcode) {
         case Packets.NotificationOpcode.Ok:
           this.interface.displayNotify(message);
@@ -735,7 +733,7 @@ class Connection {
           break;
 
         case Packets.NotificationOpcode.Text:
-          this.input.chatHandler.add("WORLD", message, colour);
+          this.input.chatHandler.add("WORLD", message, color);
 
           break;
       }
@@ -1102,9 +1100,9 @@ class Connection {
           this.overlays.updateOverlay(info.image);
 
           if (!this.renderer.transitioning) {
-            this.renderer.updateDarkMask(info.colour);
+            this.renderer.updateDarkMask(info.color);
           } else {
-            this.queueColour = info.colour;
+            this.queueColor = info.color;
           }
 
           break;
@@ -1134,7 +1132,7 @@ class Connection {
           break;
 
         case Packets.OverlayOpcode.Darkness:
-          this.renderer.updateDarkMask(info.colour);
+          this.renderer.updateDarkMask(info.color);
 
           break;
       }

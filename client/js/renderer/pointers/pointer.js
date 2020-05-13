@@ -1,6 +1,4 @@
 /**
- *
- *
  * @class Pointers
  */
 class Pointers {

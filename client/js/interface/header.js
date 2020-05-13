@@ -1,10 +1,8 @@
 import Container from "./container/container";
-import Game from '../game'
-import Interface from '../controllers/interface'
+import Game from "../game";
+import Interface from "../controllers/interface";
 
 /**
- *
- *
  * @class Header
  */
 class Header {

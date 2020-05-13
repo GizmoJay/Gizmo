@@ -10,8 +10,6 @@ import NPC from "../entity/character/npc/npc";
 import Projectile from "../entity/objects/projectile";
 
 /**
- *
- *
  * @class Entities
  */
 class Entities {
@@ -263,8 +261,8 @@ class Entities {
     entity.idle();
     entity.type = info.type;
 
-    if (info.nameColour) {
-      entity.nameColour = info.nameColour;
+    if (info.nameColor) {
+      entity.nameColor = info.nameColor;
     }
 
     if (info.customScale) {

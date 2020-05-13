@@ -332,10 +332,10 @@ class Messages {
   receiveNotification(data) {
     const opcode = data.shift();
     const message = data.shift();
-    const colour = data.shift();
+    const color = data.shift();
 
     if (this.notificationCallback) {
-      this.notificationCallback(opcode, message, colour);
+      this.notificationCallback(opcode, message, color);
     }
   }
 

@@ -1,9 +1,7 @@
 import Page from "../page";
-import Game from '../../../game'
+import Game from "../../../game";
 
 /**
- *
- *
  * @class State
  * @extends {Page}
  */

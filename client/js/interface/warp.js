@@ -1,7 +1,5 @@
 import Game from "../game";
 /**
- *
- *
  * @class Warp
  */
 class Warp {

@@ -156,14 +156,14 @@ class Entity {
       y: this.y
     };
 
-    if (this.specialState) data.nameColour = this.getNameColour();
+    if (this.specialState) data.nameColor = this.getNameColor();
 
     if (this.customScale) data.customScale = this.customScale;
 
     return data;
   }
 
-  getNameColour() {
+  getNameColor() {
     switch (this.specialState) {
       case "boss":
         return "#660033";

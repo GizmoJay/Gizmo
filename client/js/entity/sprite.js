@@ -1,12 +1,28 @@
 import Animation from "./animation";
 
 /**
- * @typedef {{ [animation]: { length: string, row: number, column: number } }} SpriteAnimation
+ * @typedef {Object} SpriteAnimationRow
+ * @property {number} SpriteAnimationRow.length
+ * @property {number} SpriteAnimationRow.row
  */
 
 /**
- *
- *
+ * @typedef {Object} SpriteAnimation
+ * @property {SpriteAnimationRow} atk_down
+ * @property {SpriteAnimationRow} walk_down
+ * @property {SpriteAnimationRow} idle_down
+ * @property {SpriteAnimationRow} atk_up
+ * @property {SpriteAnimationRow} walk_up
+ * @property {SpriteAnimationRow} idle_up
+ * @property {SpriteAnimationRow} atk_right
+ * @property {SpriteAnimationRow} walk_right
+ * @property {SpriteAnimationRow} idle_right
+ * @property {SpriteAnimationRow} atk_left
+ * @property {SpriteAnimationRow} walk_left
+ * @property {SpriteAnimationRow} idle_left
+ */
+
+/**
  * @class Sprite
  */
 class Sprite {
@@ -101,7 +117,7 @@ class Sprite {
 
         animations[name] = new Animation(
           name,
-          a.column,
+          a.length,
           a.row,
           this.width,
           this.height

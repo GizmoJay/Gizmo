@@ -3,8 +3,6 @@ import install from "../lib/pwa";
 import config from "../data/config.json";
 
 /**
- *
- *
  * @class App
  */
 class App {

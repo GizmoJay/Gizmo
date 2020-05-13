@@ -1,8 +1,6 @@
 import Equipment from "./equipment";
 
 /**
- *
- *
  * @class Ring
  * @extends {Equipment}
  */

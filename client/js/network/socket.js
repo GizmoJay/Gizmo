@@ -3,8 +3,6 @@ import Messages from "./messages";
 import Game from "../game";
 
 /**
- *
- *
  * @class Socket
  */
 class Socket {
@@ -70,6 +68,7 @@ class Socket {
       }
 
       this.connection = io(url, {
+        secure: this.config.ssl,
         forceNew: true,
         reconnection: false
       });

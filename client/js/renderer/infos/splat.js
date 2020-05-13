@@ -1,6 +1,4 @@
 /**
- *
- *
  * @class Splat
  */
 class Splat {
@@ -33,7 +31,7 @@ class Splat {
     this.duration = type === Modules.Hits.Heal ? 400 : 1000;
   }
 
-  setColours(fill, stroke) {
+  setColors(fill, stroke) {
     this.fill = fill;
     this.stroke = stroke;
   }

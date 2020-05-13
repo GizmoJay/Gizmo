@@ -4,8 +4,6 @@ import Chat from "./chat";
 import Overlay from "./overlay";
 
 /**
- *
- *
  * @class Input
  */
 class Input {
@@ -33,9 +31,9 @@ class Input {
     this.newCursor = null;
 
     this.targetData = null;
-    this.targetColour = null;
-    this.newTargetColour = null;
-    this.mobileTargetColour = "rgba(51, 255, 0)";
+    this.targetColor = null;
+    this.newTargetColor = null;
+    this.mobileTargetColor = "rgba(51, 255, 0)";
 
     this.keyMovement = true;
     this.cursorMoved = false;
@@ -81,7 +79,7 @@ class Input {
     this.cursors.bow = this.game.getSprite("bow");
 
     this.newCursor = this.cursors.hand;
-    this.newTargetColour = "rgba(255, 255, 255, 0.5)";
+    this.newTargetColor = "rgba(255, 255, 255, 0.5)";
 
     if (this.game.isDebug()) {
       log.info("Loaded Cursors!");
@@ -387,8 +385,8 @@ class Input {
       this.cursor = this.newCursor;
     }
 
-    if (this.newTargetColour !== this.targetColour) {
-      this.targetColour = this.newTargetColour;
+    if (this.newTargetColor !== this.targetColor) {
+      this.targetColor = this.newTargetColor;
     }
   }
 
@@ -482,12 +480,12 @@ class Input {
 
   setAttackTarget() {
     this.targetAnimation.setRow(1);
-    this.mobileTargetColour = "rgb(255, 51, 0)";
+    this.mobileTargetColor = "rgb(255, 51, 0)";
   }
 
   setPassiveTarget() {
     this.targetAnimation.setRow(0);
-    this.mobileTargetColour = "rgb(51, 255, 0)";
+    this.mobileTargetColor = "rgb(51, 255, 0)";
   }
 
   getAttackCursor() {
