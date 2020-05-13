@@ -2327,7 +2327,6 @@
     "offsetX": -5,
     "offsetY": -13
   },
-
   {
     "id": "pickle",
     "width": 32,
@@ -2373,60 +2372,62 @@
     "offsetX": -8,
     "offsetY": -12
   },
-
   {
     "id": "naked",
-    "width": 24,
-    "height": 64,
+    "width": 23.33,
+    "height": 30.75,
     "animations": {
-      "atk_right": {
-        "length": 2,
-        "row": 0,
-        "column": 3.5
-      },
-      "walk_right": {
-        "length": 2,
-        "row": 0,
-        "column": 3.5
-      },
-      "idle_right": {
-        "length": 2,
-        "row": 0,
-        "column": 3.5
-      },
-      "atk_up": {
-        "length": 2,
-        "row": 0,
-        "column": 2.5
-      },
-      "walk_up": {
-        "length": 2,
-        "row": 0,
-        "column": 2.5
-      },
-      "idle_up": {
-        "length": 2,
-        "row": 0,
-        "column": 2.5
-      },
       "atk_down": {
-        "length": 2,
-        "row": 0,
-        "column": 1.5
+        "length": 0,
+        "row": 0
       },
       "walk_down": {
-        "length": 2,
-        "row": 0,
-        "column": 1.5
+        "length": 8,
+        "row": 4
       },
       "idle_down": {
-        "length": 2,
-        "row": 0,
-        "column": 1.5
+        "length": 24,
+        "row": 0
+      },
+      "atk_up": {
+        "length": 0,
+        "row": 0
+      },
+      "walk_up": {
+        "length": 8,
+        "row": 5
+      },
+      "idle_up": {
+        "length": 12,
+        "row": 1
+      },
+      "atk_right": {
+        "length": 0,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 8,
+        "row": 6
+      },
+      "idle_right": {
+        "length": 24,
+        "row": 2
+      },
+      "atk_left": {
+        "length": 0,
+        "row": 0
+      },
+      "walk_left": {
+        "length": 8,
+        "row": 7
+      },
+      "idle_left": {
+        "length": 24,
+        "row": 3
       }
     },
     "offsetX": -4,
-    "offsetY": -24
+    "offsetY": -10
   },
   {
     "id": "clotharmor",
