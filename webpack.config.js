@@ -22,7 +22,7 @@ const inProduction = process.env.NODE_ENV === "production";
 const entry = ["./js/main.js", "./scss/home.scss"];
 if (!inProduction) {
   entry.unshift(
-    "webpack-hot-middleware/client?path=/__webpack_hmr&reload=true"
+    "webpack-hot-middleware/client?path=/__webpack_hmr&reload=true&timeout=20000"
   );
 }
 
@@ -33,24 +33,15 @@ module.exports = {
   name: "Client",
   target: "web",
   mode: process.env.NODE_ENV || "development",
-  // watch: !inProduction,
   context: path.join(__dirname, "client"),
   entry,
-  devtool: inProduction ? "" : "inline-source-map", // ? "source-map" // If we want source maps in production
+  devtool: inProduction ? "" : "inline-source-map", // ? "source-map"
   output: {
     path: path.join(__dirname, "client-dist"),
-    filename: "js/[name].[hash:8].js",
+    filename: "js/[name].[hash].js",
     chunkFilename: "js/[name].[chunkhash].js",
     libraryTarget: "amd"
     // globalObject: "this"
-  },
-  devServer: {
-    contentBase: "./client-dist",
-    historyApiFallback: true,
-    port: process.env.PORT,
-    hot: true,
-    inline: true,
-    host: "localhost"
   },
   optimization: {
     noEmitOnErrors: true,
@@ -101,7 +92,12 @@ module.exports = {
       {
         test: /\.s?[ac]ss$/i,
         use: [
-          inProduction ? MiniCssExtractPlugin.loader : "style-loader",
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: !inProduction
+            }
+          },
           {
             loader: "css-loader",
             options: {
@@ -180,7 +176,7 @@ module.exports = {
         : false
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].[hash:8].css",
+      filename: "[name].[hash].css",
       chunkFilename: "[name].[chunkhash].css"
     }),
     new webpack.ProvidePlugin({

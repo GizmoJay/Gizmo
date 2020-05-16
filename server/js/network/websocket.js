@@ -8,10 +8,7 @@ const serve = require("serve-static");
 const request = require("request");
 const SocketIO = require("socket.io");
 const webpack = require("webpack");
-const webpackConfig = require(process.env.WEBPACK_CONFIG
-  ? process.env.WEBPACK_CONFIG
-  : "../../../webpack.config");
-const compiler = webpack(webpackConfig);
+const webpackConfig = require("../../../webpack.config");
 const http = require("http");
 const https = require("https");
 const http2 = require("http2");
@@ -28,13 +25,23 @@ class WebSocket extends Socket {
 
     const app = connect();
     if (webpackConfig.mode === "development") {
+      const compiler = webpack(webpackConfig);
+      const { filename, publicPath } = webpackConfig.output;
+
       app.use(
         require("webpack-dev-middleware")(compiler, {
-          publicPath: webpackConfig.output.publicPath
+          hot: true,
+          filename,
+          publicPath,
+          stats: {
+            colors: true
+          },
+          historyApiFallback: true
         })
       );
       app.use(
         require("webpack-hot-middleware")(compiler, {
+          log: log.debug,
           path: "/__webpack_hmr",
           heartbeat: 10 * 1000
         })
@@ -61,11 +68,9 @@ class WebSocket extends Socket {
           readyWebSocket(port);
         });
     } else {
-      this.httpServer = http
-        .createServer(app)
-        .listen(port, host, () => {
-          readyWebSocket(port);
-        });
+      this.httpServer = http.createServer(app).listen(port, host, () => {
+        readyWebSocket(port);
+      });
     }
 
     this.io = new SocketIO(this.httpServer, {
