@@ -65,10 +65,7 @@ if (!window.requestAnimationFrame) {
        *
        * @function
        */
-      function(
-        callback,
-        element
-      ) {
+      function(callback, element) {
         window.setTimeout(callback, 17);
       }
     );

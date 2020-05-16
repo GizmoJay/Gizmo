@@ -1,8 +1,23 @@
 import App from "./app";
 import Game from "./game";
-import "./lib/modernizr.js";
+import "./lib/modernizr";
 
-let app, body, chatInput, game;
+/**
+ * @type {App}
+ */
+let app;
+/**
+ * @type {Game}
+ */
+let game;
+/**
+ * @type {JQuery<HTMLBodyElement>}
+ */
+let body;
+/**
+ * @type {JQuery<HTMLInputElement>}
+ */
+let chatInput;
 
 const addClasses = () => {
   if (Detect.isWindows()) body.addClass("windows");
@@ -15,7 +30,14 @@ const addClasses = () => {
 const initGame = () => {
   app.sendStatus("Loading game");
 
-  if (app.config.debug) log.info("Loading the main application...");
+  if (app.config.debug) {
+    log.info("Loading the main application...");
+
+    if (module?.hot) {
+      module.hot.accept();
+    }
+  }
+
   if (app.config.worldSwitch) $("#worlds-switch").show();
 
   game = new Game(app);

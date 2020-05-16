@@ -1,7 +1,7 @@
 import Animation from "./animation";
 
 /**
- * @typedef {Object} SpriteAnimationRow
+ * @typedef {Object.<string, number>} SpriteAnimationRow
  * @property {number} SpriteAnimationRow.length
  * @property {number} SpriteAnimationRow.row
  */

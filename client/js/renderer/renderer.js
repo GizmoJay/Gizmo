@@ -491,7 +491,7 @@ class Renderer {
     const y = frame.y * this.superScaling;
     const dx = entity.x * this.superScaling;
     const dy = entity.y * this.superScaling;
-    const flipX = dx + this.tileSize / 2 * this.superScaling;
+    const flipX = dx + (this.tileSize / 2) * this.superScaling;
     const flipY = dy + data.height;
 
     this.context.save();

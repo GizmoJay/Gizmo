@@ -34,21 +34,69 @@ class Game {
 
     this.id = -1;
 
+    /**
+     * @type {Socket}
+     */
     this.socket = null;
+    /**
+     * @type {Messages}
+     */
     this.messages = null;
+    /**
+     * @type {Renderer}
+     */
     this.renderer = null;
+    /**
+     * @type {Updater}
+     */
     this.updater = null;
+    /**
+     * @type {Storage}
+     */
     this.storage = null;
+    /**
+     * @type {Entities}
+     */
     this.entities = null;
+    /**
+     * @type {Input}
+     */
     this.input = null;
+    /**
+     * @type {Map}
+     */
     this.map = null;
+    /**
+     * @type {PlayerHandler}
+     */
     this.playerHandler = null;
+    /**
+     * @type {Pathfinder}
+     */
     this.pathfinder = null;
+    /**
+     * @type {Zoning}
+     */
     this.zoning = null;
+    /**
+     * @type {Info}
+     */
     this.info = null;
+    /**
+     * @type {Interface}
+     */
     this.interface = null;
+    /**
+     * @type {Audio}
+     */
+    /**
+     * @type {Audio}
+     */
     this.audio = null;
 
+    /**
+     * @type {Player}
+     */
     this.player = null;
 
     this.stopped = false;

@@ -1,6 +1,7 @@
 /* global log, Class, Detect, Modules */
 import install from "../lib/pwa";
 import config from "../data/config.json";
+import Game from "./game";
 
 /**
  * @class App
@@ -43,9 +44,18 @@ class App {
 
     this.footer = $("footer");
 
+    /**
+     * @type {Array<JQuery<HTMLElement>>(2)}
+     */
     this.loginFields = [];
+    /**
+     * @type {Array<JQuery<HTMLElement>>(3)}
+     */
     this.registerFields = [];
 
+    /**
+     * @type {Game}
+     */
     this.game = null;
     this.config = config;
     this.parchmentAnimating = false;
