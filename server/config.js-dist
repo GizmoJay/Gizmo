@@ -9,7 +9,7 @@ const Config = {
   /**
    * Server port, make sure this matches the client"s
    */
-  port: 8080,
+  port: 5000,
   /**
    * Whether to use `https` module or `http`
    */
@@ -25,7 +25,7 @@ const Config = {
   serverId: "gizmo_server01",
   accessToken: "",
   apiEnabled: false,
-  apiPort: 9002,
+  apiPort: 8080,
 
   /**
    * TODO: Hub Configuration

@@ -18,7 +18,7 @@
       "name": "Launch Chrome",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:8080",
+      "url": "http://localhost:5000",
       "webRoot": "${workspaceFolder}/client",
       "sourceMaps": true
     },
@@ -27,7 +27,7 @@
       "type": "msedge",
       "request": "launch",
       "version": "dev",
-      "url": "http://localhost:8080",
+      "url": "http://localhost:5000",
       "webRoot": "${workspaceFolder}/client",
       "sourceMaps": true
     },
@@ -36,7 +36,7 @@
       "type": "chrome",
       "request": "launch",
       "runtimeExecutable": "C:/Program Files (x86)/BraveSoftware/Brave-Browser/Application/brave.exe",
-      "url": "http://localhost:8080",
+      "url": "http://localhost:5000",
       "webRoot": "${workspaceFolder}/client",
       "sourceMaps": true
     },
@@ -44,7 +44,7 @@
       "name": "Launch Firefox",
       "type": "firefox",
       "request": "launch",
-      "url": "http://localhost:8080",
+      "url": "http://localhost:5000",
       "reAttach": true,
       "webRoot": "${workspaceFolder}/client"
     }
